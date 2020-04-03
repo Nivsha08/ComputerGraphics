@@ -36,8 +36,7 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
-		// TODO: You may initialize your additional fields and apply some preliminary
-		// calculations.
+		// TODO: You may initialize your additional fields and apply some preliminary calculations.
 
 		this.logger.log("preliminary calculations were ended.");
 	}
@@ -47,8 +46,11 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private BufferedImage reduceImageWidth() {
-		// TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("reduceImageWidth");
+//		for each seam in numSeams:
+//			s = new Seam(workingImage);
+//					for the bonus - save each of the seam
+//			seamPath = s.findOptimalPath();
+//			remove the result seam path from the image and update working image (width--)
 	}
 
 	private BufferedImage increaseImageWidth() {
