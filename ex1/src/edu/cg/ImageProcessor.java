@@ -99,7 +99,6 @@ public class ImageProcessor extends FunctioalForEachLoops {
 		int g = rgbWeights.greenWeight;
 		int b = rgbWeights.blueWeight;
 		int weightsAmount = rgbWeights.weightsAmount;
-		int max = rgbWeights.maxWeight;
 		BufferedImage ans = newEmptyInputSizedImage();
 
 		forEach((y, x) -> {
@@ -118,8 +117,21 @@ public class ImageProcessor extends FunctioalForEachLoops {
 	}
 
 	public BufferedImage nearestNeighbor() {
-		// TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("nearestNeighbor");
+		logger.log("Preparing to resize image using Nearest Neighbor method...");
+
+		double widthScale = (double) inWidth / outWidth;
+		double heightScale = (double) inHeight / outHeight;
+		BufferedImage result = newEmptyOutputSizedImage();
+
+		setForEachOutputParameters();
+		forEach((y, x) -> {
+			int widthLocation = (int)(x * widthScale);
+			int heightLocation = (int)(y * heightScale);
+			result.setRGB(x, y, workingImage.getRGB(widthLocation, heightLocation));
+		});
+
+		logger.log("Resizing done!");
+		return result;
 	}
 
 }
