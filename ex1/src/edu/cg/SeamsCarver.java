@@ -2,6 +2,7 @@ package edu.cg;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class SeamsCarver extends ImageProcessor {
 
@@ -48,15 +49,14 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private ImagePixel[][] createEnergyMap() {
-		ImagePixel[][] result = new ImagePixel[inWidth][inHeight];
+		ImagePixel[][] result = new ImagePixel[inHeight][inWidth];
 		setForEachInputParameters();
-
+		System.out.println("inWidth: "+inWidth + ", inHeight: " + inHeight);
 		forEach((y, x) -> {
 			Color pixelColor = new Color(workingImage.getRGB(x, y));
 			int pixelEnergy = calculatePixelEnergy(x, y);
-			result[x][y] = new ImagePixel(x, y, pixelColor, pixelEnergy);
+			result[y][x] = new ImagePixel(x, y, pixelColor, pixelEnergy);
 		});
-
 		return result;
 	}
 
@@ -69,18 +69,24 @@ public class SeamsCarver extends ImageProcessor {
 	private int calculatePixelEnergy(int x, int y) {
 		int current = getPixelGrayscaleColor(x, y);
 		int deltaX = (x == inWidth - 1) ?
-				(current - getPixelGrayscaleColor(x, y - 1)) : (current - getPixelGrayscaleColor(x, y + 1));
-		int deltaY = (y == inHeight - 1) ?
 				(current - getPixelGrayscaleColor(x - 1, y)) : (current - getPixelGrayscaleColor(x + 1, y));
+		int deltaY = (y == inHeight - 1) ?
+				(current - getPixelGrayscaleColor(x, y - 1)) : (current - getPixelGrayscaleColor(x, y + 1));
 		return Math.abs(deltaX) + Math.abs(deltaY);
 	}
 
 	private BufferedImage reduceImageWidth() {
+		for (int i = 0; i < numOfSeams; i++) {
+			Seam s = new Seam(workingImage, energyMap);
+		}
 //		for each seam in numSeams:
-//			s = new Seam(workingImage);
+//			s = new Seam(workingImage, energyMap);
 //					for the bonus - save each of the seam
 //			seamPath = s.findOptimalPath();
-//			remove the result seam path from the image and update working image (width--)
+//			remove the result seam path from the image
+//			update working image
+//			update energy map
+		return gradientMap();
 	}
 
 	private BufferedImage increaseImageWidth() {
@@ -104,4 +110,21 @@ public class SeamsCarver extends ImageProcessor {
 		// need to also remove (replicate) the matching entries from the mask as well.
 		throw new UnimplementedMethodException("getMaskAfterSeamCarving");
 	}
+
+	//testing
+	public BufferedImage gradientMap() {
+		logger.log("Preparing for showing gradient map...");
+		BufferedImage ans = newEmptyInputSizedImage();
+
+		forEach((y, x) -> {
+			long energyLevel = energyMap[y][x].getEnergy();
+			int greyColor = (int)energyLevel;
+			Color color = new Color(greyColor, greyColor, greyColor);
+			ans.setRGB(x, y, color.getRGB());
+		});
+
+		logger.log("Changing to gradient map done!");
+		return ans;
+	}
+
 }

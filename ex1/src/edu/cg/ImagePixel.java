@@ -1,54 +1,65 @@
 package edu.cg;
 
-import com.sun.nio.sctp.SendFailedNotification;
-
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ImagePixel {
+public class ImagePixel implements Comparable<ImagePixel> {
 
     int widthLoc = 0;
     int heightLoc = 0;
     Color color = new Color(0, 0,0);
-    int energy = 0;
+    long energy = 0;
     ArrayList<ImagePixel> optimalCumulativePath = null;
-    long cumulativePathTotalCost = 0;
 
     public ImagePixel(int x, int y) {
         widthLoc = x;
         heightLoc = y;
+        optimalCumulativePath = new ArrayList<>();
+        optimalCumulativePath.add(this);
     }
 
     public ImagePixel(int x, int y, Color pixelColor) {
-        widthLoc = x;
-        heightLoc = y;
+        this(x, y);
         color = pixelColor;
     }
 
-    public ImagePixel(int x, int y, Color pixelColor, int energy) {
-        widthLoc = x;
-        heightLoc = y;
+    public ImagePixel(int x, int y, Color pixelColor, long energy) {
+        this(x, y);
         color = pixelColor;
         this.energy = energy;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public int getGrayscaleColor() {
         return (color.getRed() + color.getBlue() + color.getGreen()) / 3;
     }
 
+    public long getEnergy() {
+        return this.energy;
+    }
+
     public void setEnergy(int energy) {
         this.energy = energy;
     }
 
-    public void setOptimalPath(ArrayList<ImagePixel> optimalPath) {
-        this.optimalCumulativePath = optimalPath;
-        this.cumulativePathTotalCost = optimalPath.stream()
-                .map(pixel -> pixel.getPathCost())
-                .reduce(0L, (a, b) -> a + b);
+    public void updatePath(ImagePixel minimalNeighbor) {
+        this.optimalCumulativePath.addAll(minimalNeighbor.getOptimalPath());
     }
 
-    public long getPathCost() {
-        return this.cumulativePathTotalCost;
-    }
+    public ArrayList<ImagePixel> getOptimalPath() {
+        return this.optimalCumulativePath;
+    };
 
+    @Override
+    public int compareTo(ImagePixel o) {
+        if (energy > o.getEnergy())
+            return 1;
+        else if (energy < o.getEnergy())
+            return -1;
+        else
+            return 0;
+    }
 }

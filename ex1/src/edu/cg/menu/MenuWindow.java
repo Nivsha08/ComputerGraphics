@@ -114,10 +114,10 @@ public class MenuWindow extends JFrame implements Logger {
 		default: // seam carving
 			SeamsCarver sc = new SeamsCarver(this, duplicateImage(), outWidth, rgbWeights, duplicateMask());
 			img = sc.resize();
-			boolean[][] new_mask = sc.getMaskAfterSeamCarving();
-			img = new SeamsCarver(this, rotateClockwise(img), outHeight, rgbWeights, rotateMaskClockwise(new_mask))
-					.resize();
-			img = rotateCounterclockwise(img);
+//			boolean[][] new_mask = sc.getMaskAfterSeamCarving();
+//			img = new SeamsCarver(this, rotateClockwise(img), outHeight, rgbWeights, rotateMaskClockwise(new_mask))
+//					.resize();
+//			img = rotateCounterclockwise(img);
 			break;
 		}
 
