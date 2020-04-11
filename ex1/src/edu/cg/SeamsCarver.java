@@ -1,5 +1,6 @@
 package edu.cg;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class SeamsCarver extends ImageProcessor {
@@ -10,11 +11,10 @@ public class SeamsCarver extends ImageProcessor {
 		BufferedImage resize();
 	}
 
-	// MARK: Fields
 	private int numOfSeams;
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
-	// TODO: Add some additional fields
+	ImagePixel[][] energyMap;
 
 	public SeamsCarver(Logger logger, BufferedImage workingImage, int outWidth, RGBWeights rgbWeights,
 			boolean[][] imageMask) {
@@ -36,6 +36,8 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
+		energyMap = this.createEnergyMap();
+
 		// TODO: You may initialize your additional fields and apply some preliminary calculations.
 
 		this.logger.log("preliminary calculations were ended.");
@@ -43,6 +45,34 @@ public class SeamsCarver extends ImageProcessor {
 
 	public BufferedImage resize() {
 		return resizeOp.resize();
+	}
+
+	private ImagePixel[][] createEnergyMap() {
+		ImagePixel[][] result = new ImagePixel[inWidth][inHeight];
+		setForEachInputParameters();
+
+		forEach((y, x) -> {
+			Color pixelColor = new Color(workingImage.getRGB(x, y));
+			int pixelEnergy = calculatePixelEnergy(x, y);
+			result[x][y] = new ImagePixel(x, y, pixelColor, pixelEnergy);
+		});
+
+		return result;
+	}
+
+	private int getPixelGrayscaleColor(int x, int y) {
+		Color c = new Color(workingImage.getRGB(x, y));
+		int greyColor = this.getGrayscaleColor(c, rgbWeights);
+		return greyColor;
+	}
+
+	private int calculatePixelEnergy(int x, int y) {
+		int current = getPixelGrayscaleColor(x, y);
+		int deltaX = (x == inWidth - 1) ?
+				(current - getPixelGrayscaleColor(x, y - 1)) : (current - getPixelGrayscaleColor(x, y + 1));
+		int deltaY = (y == inHeight - 1) ?
+				(current - getPixelGrayscaleColor(x - 1, y)) : (current - getPixelGrayscaleColor(x + 1, y));
+		return Math.abs(deltaX) + Math.abs(deltaY);
 	}
 
 	private BufferedImage reduceImageWidth() {

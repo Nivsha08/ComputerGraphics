@@ -91,22 +91,22 @@ public class ImageProcessor extends FunctioalForEachLoops {
 
 		return output;
 	}
+
+	protected int getGrayscaleColor(Color pixelRGB, RGBWeights weights) {
+		int red = weights.redWeight * pixelRGB.getRed();
+		int green = weights.greenWeight * pixelRGB.getGreen();
+		int blue = weights.blueWeight * pixelRGB.getBlue();
+		int greyColor = (red + green + blue) / weights.weightsAmount;
+		return greyColor;
+	}
 	
 	public BufferedImage greyscale() {
 		logger.log("Preparing for grayscale...");
-
-		int r = rgbWeights.redWeight;
-		int g = rgbWeights.greenWeight;
-		int b = rgbWeights.blueWeight;
-		int weightsAmount = rgbWeights.weightsAmount;
 		BufferedImage ans = newEmptyInputSizedImage();
 
 		forEach((y, x) -> {
 			Color c = new Color(workingImage.getRGB(x, y));
-			int red = r * c.getRed();
-			int green = g * c.getGreen();
-			int blue = b * c.getBlue();
-			int greyColor = (red + green + blue) / weightsAmount;
+			int greyColor = this.getGrayscaleColor(c, rgbWeights);
 			Color color = new Color(greyColor, greyColor, greyColor);
 			ans.setRGB(x, y, color.getRGB());
 		});

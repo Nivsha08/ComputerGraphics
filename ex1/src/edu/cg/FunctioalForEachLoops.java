@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 public abstract class FunctioalForEachLoops {
 	private int width;
 	private int height;
-	
-	private class Params {
+
+    private class Params {
 		public final int width, height;
 		
 		public Params() {
