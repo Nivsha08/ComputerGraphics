@@ -43,8 +43,6 @@ public class SeamsCarver extends ImageProcessor {
 		energyMap = this.createEnergyMap();
 		selectedSeams = new ArrayList<>();
 
-		// TODO: You may initialize your additional fields and apply some preliminary calculations.
-
 		this.logger.log("preliminary calculations were ended.");
 	}
 
@@ -88,7 +86,7 @@ public class SeamsCarver extends ImageProcessor {
 
 	private BufferedImage reduceImageWidth() {
 		for (int i = 0; i < numOfSeams; i++) {
-			Seam s = new Seam(resultImage, energyMap, i);
+			Seam s = new Seam(resultImage, energyMap);
 			resultImage = removeSeamFromImage(s);
 			energyMap = updateEnergyMapAfterSeamRemoval(s);
 			selectedSeams.add(s);
@@ -100,7 +98,7 @@ public class SeamsCarver extends ImageProcessor {
 		BufferedImage result = newEmptyImage(resultImage.getWidth() - 1, resultImage.getHeight());
 		for (int i = 0; i < resultImage.getHeight(); i++) {
 			int resultCol = 0;
-			int seamPixelIndex = s.optimalPath.get(i).widthLoc;
+			int seamPixelIndex = s.getPath().get(i).getWidth();
 			for (int j = 0; j < resultImage.getWidth(); j++) {
 				if (j != seamPixelIndex) {
 					result.setRGB(resultCol, i, resultImage.getRGB(j, i));
@@ -115,20 +113,23 @@ public class SeamsCarver extends ImageProcessor {
 		ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
 		for (int i = 0; i < energyMap.length; i++) {
 			int resultCol = 0;
-			int seamPixelIndex = s.optimalPath.get(i).widthLoc;
+			int seamPixelIndex = s.getPath().get(i).getWidth();
 			for (int j = 0; j < energyMap[0].length; j++) {
-				if (j != seamPixelIndex) {
-					if (j == seamPixelIndex + 1) {
-						result[i][resultCol] = ImagePixel.createCopy(energyMap[i][j]);
+				ImagePixel current = energyMap[i][j];
+				if (j < seamPixelIndex) {
+					result[i][resultCol] = ImagePixel.createCopy(current);
+					if (j == seamPixelIndex - 1) {
 						result[i][resultCol].setEnergy(calculatePixelEnergy(j, i));
-					}
-					else {
-						result[i][resultCol] = ImagePixel.createCopy(energyMap[i][j]);
 					}
 					resultCol++;
 				}
-				else {
-					result[i][j - 1].setEnergy(calculatePixelEnergy(j - 1, i));
+				else if (j > seamPixelIndex) {
+					result[i][resultCol] = ImagePixel.createCopy(current);
+					result[i][resultCol].widthLoc--;
+					if (j == seamPixelIndex + 1) {
+						result[i][resultCol].setEnergy(calculatePixelEnergy(j, i));
+					}
+					resultCol++;
 				}
 			}
 		}
@@ -144,8 +145,8 @@ public class SeamsCarver extends ImageProcessor {
 		reduceImageWidth();
 		BufferedImage result = duplicateWorkingImage();
 		for (Seam s : selectedSeams) {
-			for (ImagePixel p : s.optimalPath) {
-				result.setRGB(p.widthLoc, p.heightLoc, seamColorRGB);
+			for (SeamCoordinates p : s.optimalPath) {
+				result.setRGB(p.getWidth(), p.getHeight(), seamColorRGB);
 			}
 		}
 		return result;

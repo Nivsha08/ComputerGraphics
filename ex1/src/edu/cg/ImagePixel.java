@@ -2,6 +2,8 @@ package edu.cg;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class ImagePixel implements Comparable<ImagePixel> {
 
@@ -9,13 +11,10 @@ public class ImagePixel implements Comparable<ImagePixel> {
     int heightLoc = 0;
     Color color = new Color(0, 0,0);
     long energy = 0;
-    ArrayList<ImagePixel> optimalCumulativePath = null;
 
     public ImagePixel(int x, int y) {
         widthLoc = x;
         heightLoc = y;
-        optimalCumulativePath = new ArrayList<>();
-        optimalCumulativePath.add(this);
     }
 
     public ImagePixel(int x, int y, Color pixelColor) {
@@ -27,6 +26,10 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this(x, y);
         color = pixelColor;
         this.energy = energy;
+    }
+
+    public SeamCoordinates toSeamCoordinates(ImagePixel p) {
+        return new SeamCoordinates(p.widthLoc, p.heightLoc);
     }
 
     public static ImagePixel createCopy(ImagePixel src) {
@@ -49,13 +52,32 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this.energy = energy;
     }
 
-    public void updatePath(ImagePixel minimalNeighbor) {
-        this.optimalCumulativePath.addAll(0, minimalNeighbor.getOptimalPath());
+    public ArrayList<SeamCoordinates> traceBackOptimalPath(ImagePixel[][] costMatrix) {
+        ArrayList<SeamCoordinates> path = new ArrayList<>();
+        ImagePixel current = this;
+        while (current.heightLoc > 0) {
+            path.add(toSeamCoordinates(current));
+            ArrayList<ImagePixel> neighbors = current.getTopRowNeighbors(costMatrix);
+            current = Collections.min(neighbors);
+        }
+        path.add(toSeamCoordinates(current));
+        return path;
     }
 
-    public ArrayList<ImagePixel> getOptimalPath() {
-        return this.optimalCumulativePath;
-    };
+    public ArrayList<ImagePixel> getTopRowNeighbors(ImagePixel[][] pixels) {
+        ArrayList<ImagePixel> neighbors = new ArrayList<>();
+        neighbors.add(pixels[heightLoc - 1][widthLoc]);
+        if (widthLoc == 0) {
+            neighbors.add(pixels[heightLoc - 1][widthLoc + 1]);
+        }
+        else if (widthLoc == pixels[0].length - 1) {
+            neighbors.add(pixels[heightLoc - 1][widthLoc - 1]);
+        }
+        else {
+            neighbors.addAll(Arrays.asList(pixels[heightLoc - 1][widthLoc - 1], pixels[heightLoc - 1][widthLoc + 1]));
+        }
+        return neighbors;
+    }
 
     @Override
     public int compareTo(ImagePixel o) {
