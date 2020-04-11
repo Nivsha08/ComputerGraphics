@@ -92,6 +92,14 @@ public class ImageProcessor extends FunctioalForEachLoops {
 		return output;
 	}
 
+	public BufferedImage duplicateImage(BufferedImage src) {
+		BufferedImage output = newEmptyImage(src.getWidth(), src.getHeight());
+
+		forEach((y, x) -> output.setRGB(x, y, src.getRGB(x, y)));
+
+		return output;
+	}
+
 	protected int getGrayscaleColor(Color pixelRGB, RGBWeights weights) {
 		int red = weights.redWeight * pixelRGB.getRed();
 		int green = weights.greenWeight * pixelRGB.getGreen();

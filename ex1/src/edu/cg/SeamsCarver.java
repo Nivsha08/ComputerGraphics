@@ -15,7 +15,9 @@ public class SeamsCarver extends ImageProcessor {
 	private int numOfSeams;
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
+	BufferedImage originalImage;
 	ImagePixel[][] energyMap;
+	ArrayList<Seam> selectedSeams;
 
 	public SeamsCarver(Logger logger, BufferedImage workingImage, int outWidth, RGBWeights rgbWeights,
 			boolean[][] imageMask) {
@@ -37,7 +39,9 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
+		originalImage = duplicateWorkingImage();
 		energyMap = this.createEnergyMap();
+		selectedSeams = new ArrayList<>();
 
 		// TODO: You may initialize your additional fields and apply some preliminary calculations.
 
@@ -78,6 +82,7 @@ public class SeamsCarver extends ImageProcessor {
 	private BufferedImage reduceImageWidth() {
 		for (int i = 0; i < numOfSeams; i++) {
 			Seam s = new Seam(workingImage, energyMap);
+			selectedSeams.add(s);
 		}
 //		for each seam in numSeams:
 //			s = new Seam(workingImage, energyMap);
@@ -95,8 +100,14 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	public BufferedImage showSeams(int seamColorRGB) {
-		// TODO: Implement this method (bonus), remove the exception.
-		throw new UnimplementedMethodException("showSeams");
+		reduceImageWidth();
+		BufferedImage result = duplicateImage(originalImage);
+		for (Seam s : selectedSeams) {
+			for (ImagePixel p : s.optimalPath) {
+				result.setRGB(p.heightLoc, p.widthLoc, seamColorRGB);
+			}
+		}
+		return result;
 	}
 
 	public boolean[][] getMaskAfterSeamCarving() {

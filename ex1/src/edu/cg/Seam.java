@@ -10,7 +10,6 @@ public class Seam {
     BufferedImage workingImage;
     ImagePixel[][] energyMap;
     ImagePixel[][] costMatrix;
-
     ArrayList<ImagePixel> optimalPath;
 
     public Seam(BufferedImage workingImage, ImagePixel[][] energyMap) {
@@ -21,7 +20,8 @@ public class Seam {
 
     private ArrayList<ImagePixel> findOptimalPath() {
         costMatrix = calculateCostsMatrix();
-        ImagePixel lastPixelInSeam = this.getLastPixelInSeam();
+        ImagePixel lastPixelInSeam = getLastPixelInSeam();
+        System.out.println("minimal pixel in last row: " + lastPixelInSeam.getEnergy());
         return lastPixelInSeam.getOptimalPath();
     }
 
