@@ -15,7 +15,7 @@ public class SeamsCarver extends ImageProcessor {
 	private int numOfSeams;
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
-	BufferedImage originalImage;
+	BufferedImage resultImage;
 	ImagePixel[][] energyMap;
 	ArrayList<Seam> selectedSeams;
 
@@ -39,7 +39,7 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
-		originalImage = duplicateWorkingImage();
+		resultImage = duplicateWorkingImage();
 		energyMap = this.createEnergyMap();
 		selectedSeams = new ArrayList<>();
 
@@ -53,45 +53,86 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private ImagePixel[][] createEnergyMap() {
-		ImagePixel[][] result = new ImagePixel[inHeight][inWidth];
+		ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
 		setForEachInputParameters();
-		System.out.println("inWidth: "+inWidth + ", inHeight: " + inHeight);
 		forEach((y, x) -> {
-			Color pixelColor = new Color(workingImage.getRGB(x, y));
+			Color pixelColor = new Color(resultImage.getRGB(x, y));
 			int pixelEnergy = calculatePixelEnergy(x, y);
 			result[y][x] = new ImagePixel(x, y, pixelColor, pixelEnergy);
 		});
 		return result;
 	}
 
-	private int getPixelGrayscaleColor(int x, int y) {
-		Color c = new Color(workingImage.getRGB(x, y));
+	private int calculatePixelEnergy(int x, int y) {
+		int current = getPixelGrayscaleValue(x, y);
+		int deltaX = isOnXBoundary(x) ?
+				(current - getPixelGrayscaleValue(x - 1, y)) : (current - getPixelGrayscaleValue(x + 1, y));
+		int deltaY = isOnYBoundary(y) ?
+				(current - getPixelGrayscaleValue(x, y - 1)) : (current - getPixelGrayscaleValue(x, y + 1));
+		return Math.abs(deltaX) + Math.abs(deltaY);
+	}
+
+	private int getPixelGrayscaleValue(int x, int y) {
+		Color c = new Color(resultImage.getRGB(x, y));
 		int greyColor = this.getGrayscaleColor(c, rgbWeights);
 		return greyColor;
 	}
 
-	private int calculatePixelEnergy(int x, int y) {
-		int current = getPixelGrayscaleColor(x, y);
-		int deltaX = (x == inWidth - 1) ?
-				(current - getPixelGrayscaleColor(x - 1, y)) : (current - getPixelGrayscaleColor(x + 1, y));
-		int deltaY = (y == inHeight - 1) ?
-				(current - getPixelGrayscaleColor(x, y - 1)) : (current - getPixelGrayscaleColor(x, y + 1));
-		return Math.abs(deltaX) + Math.abs(deltaY);
+	private boolean isOnXBoundary(int x) {
+		return (x == resultImage.getWidth() - 1);
+	}
+
+	private boolean isOnYBoundary(int y) {
+		return (y == resultImage.getHeight() - 1);
 	}
 
 	private BufferedImage reduceImageWidth() {
 		for (int i = 0; i < numOfSeams; i++) {
-			Seam s = new Seam(workingImage, energyMap);
+			Seam s = new Seam(resultImage, energyMap, i);
+			resultImage = removeSeamFromImage(s);
+			energyMap = updateEnergyMapAfterSeamRemoval(s);
 			selectedSeams.add(s);
 		}
-//		for each seam in numSeams:
-//			s = new Seam(workingImage, energyMap);
-//					for the bonus - save each of the seam
-//			seamPath = s.findOptimalPath();
-//			remove the result seam path from the image
-//			update working image
-//			update energy map
-		return gradientMap();
+		return resultImage;
+	}
+
+	private BufferedImage removeSeamFromImage(Seam s) {
+		BufferedImage result = newEmptyImage(resultImage.getWidth() - 1, resultImage.getHeight());
+		for (int i = 0; i < resultImage.getHeight(); i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.optimalPath.get(i).widthLoc;
+			for (int j = 0; j < resultImage.getWidth(); j++) {
+				if (j != seamPixelIndex) {
+					result.setRGB(resultCol, i, resultImage.getRGB(j, i));
+					resultCol++;
+				}
+			}
+		}
+		return result;
+	}
+
+	private ImagePixel[][] updateEnergyMapAfterSeamRemoval(Seam s) {
+		ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
+		for (int i = 0; i < energyMap.length; i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.optimalPath.get(i).widthLoc;
+			for (int j = 0; j < energyMap[0].length; j++) {
+				if (j != seamPixelIndex) {
+					if (j == seamPixelIndex + 1) {
+						result[i][resultCol] = ImagePixel.createCopy(energyMap[i][j]);
+						result[i][resultCol].setEnergy(calculatePixelEnergy(j, i));
+					}
+					else {
+						result[i][resultCol] = ImagePixel.createCopy(energyMap[i][j]);
+					}
+					resultCol++;
+				}
+				else {
+					result[i][j - 1].setEnergy(calculatePixelEnergy(j - 1, i));
+				}
+			}
+		}
+		return result;
 	}
 
 	private BufferedImage increaseImageWidth() {
@@ -101,10 +142,10 @@ public class SeamsCarver extends ImageProcessor {
 
 	public BufferedImage showSeams(int seamColorRGB) {
 		reduceImageWidth();
-		BufferedImage result = duplicateImage(originalImage);
+		BufferedImage result = duplicateWorkingImage();
 		for (Seam s : selectedSeams) {
 			for (ImagePixel p : s.optimalPath) {
-				result.setRGB(p.heightLoc, p.widthLoc, seamColorRGB);
+				result.setRGB(p.widthLoc, p.heightLoc, seamColorRGB);
 			}
 		}
 		return result;

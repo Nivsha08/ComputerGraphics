@@ -7,14 +7,16 @@ import java.util.Collections;
 
 public class Seam {
 
-    BufferedImage workingImage;
+    int seamIndex;
+    BufferedImage resultImage;
     ImagePixel[][] energyMap;
     ImagePixel[][] costMatrix;
     ArrayList<ImagePixel> optimalPath;
 
-    public Seam(BufferedImage workingImage, ImagePixel[][] energyMap) {
-        this.workingImage = workingImage;
+    public Seam(BufferedImage resultImage, ImagePixel[][] energyMap, int seamIndex) {
+        this.resultImage = resultImage;
         this.energyMap = energyMap;
+        this.seamIndex = seamIndex;
         optimalPath = findOptimalPath();
     }
 
@@ -26,7 +28,7 @@ public class Seam {
     }
 
     private ImagePixel[][] calculateCostsMatrix() {
-        ImagePixel[][] result = new ImagePixel[workingImage.getHeight()][workingImage.getWidth()];
+        ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
 
         for (int i = 0; i < result[0].length; i++) {
             result[0][i] = energyMap[0][i];
@@ -47,8 +49,10 @@ public class Seam {
                 }
                 ImagePixel minimalNeighbor = Collections.min(pixelNeighbors);
                 pixelEnergy += minimalNeighbor.getEnergy();
-                result[i][j] = new ImagePixel(i, j, energyMap[i][j].getColor(), pixelEnergy);
-                result[i][j].updatePath(minimalNeighbor);
+                ImagePixel updatedPixel = ImagePixel.createCopy(energyMap[i][j]);
+                updatedPixel.setEnergy(pixelEnergy);
+                updatedPixel.updatePath(minimalNeighbor);
+                result[i][j] = updatedPixel;
             }
         }
 //        printGrid(result);
@@ -58,6 +62,10 @@ public class Seam {
     private ImagePixel getLastPixelInSeam() {
         ArrayList<ImagePixel> costMatrixLastRow = new ArrayList<>(Arrays.asList(costMatrix[costMatrix.length - 1]));
         return Collections.min(costMatrixLastRow);
+    }
+
+    public int getIndex() {
+        return this.seamIndex;
     }
 
     public void printGrid(ImagePixel[][] a)

@@ -29,6 +29,10 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this.energy = energy;
     }
 
+    public static ImagePixel createCopy(ImagePixel src) {
+        return new ImagePixel(src.widthLoc, src.heightLoc, src.getColor(), src.getEnergy());
+    }
+
     public Color getColor() {
         return color;
     }
@@ -41,12 +45,12 @@ public class ImagePixel implements Comparable<ImagePixel> {
         return this.energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(long energy) {
         this.energy = energy;
     }
 
     public void updatePath(ImagePixel minimalNeighbor) {
-        this.optimalCumulativePath.addAll(minimalNeighbor.getOptimalPath());
+        this.optimalCumulativePath.addAll(0, minimalNeighbor.getOptimalPath());
     }
 
     public ArrayList<ImagePixel> getOptimalPath() {
