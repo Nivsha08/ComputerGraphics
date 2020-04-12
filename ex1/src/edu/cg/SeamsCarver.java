@@ -127,7 +127,7 @@ public class SeamsCarver extends ImageProcessor {
 					result[i][resultCol] = ImagePixel.createCopy(current);
 					result[i][resultCol].widthLoc--;
 					if (j == seamPixelIndex + 1) {
-						result[i][resultCol].setEnergy(calculatePixelEnergy(j, i));
+						result[i][resultCol].setEnergy(calculatePixelEnergy(resultCol, i));
 					}
 					resultCol++;
 				}

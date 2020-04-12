@@ -56,11 +56,11 @@ public class ImagePixel implements Comparable<ImagePixel> {
         ArrayList<SeamCoordinates> path = new ArrayList<>();
         ImagePixel current = this;
         while (current.heightLoc > 0) {
-            path.add(toSeamCoordinates(current));
+            path.add(0, toSeamCoordinates(current));
             ArrayList<ImagePixel> neighbors = current.getTopRowNeighbors(costMatrix);
             current = Collections.min(neighbors);
         }
-        path.add(toSeamCoordinates(current));
+        path.add(0, toSeamCoordinates(current));
         return path;
     }
 
