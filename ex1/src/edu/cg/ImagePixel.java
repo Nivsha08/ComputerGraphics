@@ -40,10 +40,6 @@ public class ImagePixel implements Comparable<ImagePixel> {
         return color;
     }
 
-    public int getGrayscaleColor() {
-        return (color.getRed() + color.getBlue() + color.getGreen()) / 3;
-    }
-
     public long getEnergy() {
         return this.energy;
     }

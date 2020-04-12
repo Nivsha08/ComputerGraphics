@@ -55,19 +55,23 @@ public class SeamsCarver extends ImageProcessor {
 		setForEachInputParameters();
 		forEach((y, x) -> {
 			Color pixelColor = new Color(resultImage.getRGB(x, y));
-			int pixelEnergy = calculatePixelEnergy(x, y);
+			long pixelEnergy = calculatePixelEnergy(x, y);
 			result[y][x] = new ImagePixel(x, y, pixelColor, pixelEnergy);
 		});
 		return result;
 	}
 
-	private int calculatePixelEnergy(int x, int y) {
+	private long calculatePixelEnergy(int x, int y) {
 		int current = getPixelGrayscaleValue(x, y);
 		int deltaX = isOnXBoundary(x) ?
-				(current - getPixelGrayscaleValue(x - 1, y)) : (current - getPixelGrayscaleValue(x + 1, y));
+				(getPixelGrayscaleValue(x - 1, y) - current) : (getPixelGrayscaleValue(x + 1, y) - current);
 		int deltaY = isOnYBoundary(y) ?
-				(current - getPixelGrayscaleValue(x, y - 1)) : (current - getPixelGrayscaleValue(x, y + 1));
-		return Math.abs(deltaX) + Math.abs(deltaY);
+				(getPixelGrayscaleValue(x, y - 1) - current) : (getPixelGrayscaleValue(x, y + 1) - current);
+		return (long)this.calculateEuclideanNorm(deltaX, deltaY);
+	}
+
+	private double calculateEuclideanNorm(int deltaX, int deltaY) {
+		return Math.abs(Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)));
 	}
 
 	private int getPixelGrayscaleValue(int x, int y) {
@@ -145,7 +149,7 @@ public class SeamsCarver extends ImageProcessor {
 		reduceImageWidth();
 		BufferedImage result = duplicateWorkingImage();
 		for (Seam s : selectedSeams) {
-			for (SeamCoordinates p : s.optimalPath) {
+			for (SeamCoordinates p : s.getPath()) {
 				result.setRGB(p.getWidth(), p.getHeight(), seamColorRGB);
 			}
 		}
