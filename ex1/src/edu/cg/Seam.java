@@ -21,7 +21,7 @@ public class Seam {
     private ArrayList<SeamCoordinates> findOptimalPath() {
         costMatrix = calculateCostsMatrix();
         ImagePixel lastPixelInSeam = getLastPixelInSeam();
-        return lastPixelInSeam.traceBackOptimalPath(costMatrix);
+        return lastPixelInSeam.traceBackOptimalPath(costMatrix, resultImage);
     }
 
     private ImagePixel[][] calculateCostsMatrix() {
@@ -33,10 +33,9 @@ public class Seam {
         for (int i = 1; i < result.length; i++) {
             for (int j = 0; j < result[0].length; j++) {
                 ImagePixel current = energyMap[i][j];
-                ArrayList<ImagePixel> pixelNeighbors = current.getTopRowNeighbors(result);
-                ImagePixel minimalNeighbor = Collections.min(pixelNeighbors);
                 ImagePixel updatedPixel = ImagePixel.createCopy(current);
-                updatedPixel.setEnergy(current.getEnergy() + minimalNeighbor.getEnergy());
+                updatedPixel.setEnergy(current.getEnergy() +
+                        current.getMinimalSeamStepCost(result, resultImage).getCost());
                 result[i][j] = updatedPixel;
             }
         }
