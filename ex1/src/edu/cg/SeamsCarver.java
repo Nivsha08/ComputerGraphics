@@ -16,7 +16,6 @@ public class SeamsCarver extends ImageProcessor {
 	private int numOfSeams;
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
-	BufferedImage resultImage;
 	int[][] greyscaleArray;
 	ImagePixel[][] energyMap;
 	ArrayList<Seam> selectedSeams;
@@ -41,7 +40,6 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
-		resultImage = duplicateWorkingImage();
 		greyscaleArray = initGreyscaleArray();
 		selectedSeams = new ArrayList<>();
 
@@ -63,10 +61,10 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private ImagePixel[][] createEnergyMap() {
-		ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
+		ImagePixel[][] result = new ImagePixel[workingImage.getHeight()][workingImage.getWidth()];
 		setForEachInputParameters();
 		forEach((y, x) -> {
-			Color pixelColor = new Color(resultImage.getRGB(x, y));
+			Color pixelColor = new Color(workingImage.getRGB(x, y));
 			if (imageMask[y][x]) {
 				result[y][x] = new ImagePixel(x, y, pixelColor, Long.MIN_VALUE);
 			}
@@ -89,12 +87,6 @@ public class SeamsCarver extends ImageProcessor {
 
 	private double calculateEuclideanNorm(int deltaX, int deltaY) {
 		return Math.abs(Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)));
-	}
-
-	private int getPixelGrayscaleValue(int x, int y) {
-		Color c = new Color(resultImage.getRGB(x, y));
-		int greyColor = this.getGrayscaleColor(c, rgbWeights);
-		return greyColor;
 	}
 
 	private boolean isOnXBoundary(int x) {
@@ -199,11 +191,56 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
-
-
 	private BufferedImage increaseImageWidth() {
-		// TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("increaseImageWidth");
+		BufferedImage result = duplicateWorkingImage();
+		selectedSeams = findSeams();
+		int indent = 0;
+		for (Seam s : selectedSeams) {
+			result = duplicateSeamInImage(result, s, indent);
+			imageMask = increaseMaskSize(s, indent);
+			indent++;
+		}
+		return result;
+	}
+
+	private BufferedImage duplicateSeamInImage(BufferedImage image, Seam s, int indent) {
+		BufferedImage result = newEmptyImage(image.getWidth() + 1, image.getHeight());
+		for (int i = 0; i < image.getHeight(); i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.getPath().get(i).getWidth() + indent;
+			for (int j = 0; j < image.getWidth(); j++) {
+				if (j == seamPixelIndex) {
+					result.setRGB(resultCol, i, image.getRGB(j, i));
+					resultCol++;
+					result.setRGB(resultCol, i, image.getRGB(j, i));
+				}
+				else {
+					result.setRGB(resultCol, i, image.getRGB(j, i));
+				}
+				resultCol++;
+			}
+		}
+		return result;
+	}
+
+	private boolean[][] increaseMaskSize(Seam s, int indent) {
+		boolean[][] result = new boolean[imageMask.length][imageMask[0].length + 1];
+		for (int i = 0; i < imageMask.length; i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.getPath().get(i).getWidth() + indent;
+			for (int j = 0; j < imageMask[0].length; j++) {
+				if (j == seamPixelIndex) {
+					result[i][resultCol] = imageMask[i][j];
+					resultCol++;
+					result[i][resultCol] = imageMask[i][j];
+				}
+				else {
+					result[i][resultCol] = imageMask[i][j];
+				}
+				resultCol++;
+			}
+		}
+		return result;
 	}
 
 	public BufferedImage showSeams(int seamColorRGB) {
