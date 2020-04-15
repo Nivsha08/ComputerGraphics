@@ -4,6 +4,7 @@ import edu.cg.menu.NeighborResult;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class ImagePixel implements Comparable<ImagePixel> {
@@ -80,15 +81,21 @@ public class ImagePixel implements Comparable<ImagePixel> {
 
     public NeighborResult getMinimalSeamStepCost(ImagePixel[][] costMatrix, int[][] greyscaleArray) {
         Map<NeighborPositions, ImagePixel> neighbors = this.getTopRowNeighbors(costMatrix);
-        long aboveCost = neighbors.get(NeighborPositions.ABOVE).getEnergy() + calcAboveSeamCost(greyscaleArray);
-        long leftCost = (neighbors.containsKey(NeighborPositions.TOP_LEFT)) ?
-             neighbors.get(NeighborPositions.TOP_LEFT).getEnergy() + calcLeftSeamCost(greyscaleArray) : Long.MAX_VALUE;
-        long rightCost = (neighbors.containsKey(NeighborPositions.TOP_RIGHT)) ?
-                neighbors.get(NeighborPositions.TOP_RIGHT).getEnergy() + calcRightSeamCost(greyscaleArray) : Long.MAX_VALUE;
-        NeighborResult topLeft = new NeighborResult(neighbors.get(NeighborPositions.TOP_LEFT), leftCost);
-        NeighborResult above = new NeighborResult(neighbors.get(NeighborPositions.ABOVE), aboveCost);
-        NeighborResult topRight = new NeighborResult(neighbors.get(NeighborPositions.TOP_RIGHT), rightCost);
-        return Collections.min(Arrays.asList(topLeft, above, topRight));
+        ArrayList<NeighborResult> neighborCosts = new ArrayList<>();
+        for (NeighborPositions p : neighbors.keySet()) {
+            long cost = neighbors.get(p).getEnergy() + getNeighborCost(p, greyscaleArray);
+            NeighborResult result = new NeighborResult(neighbors.get(p), cost);
+            neighborCosts.add(result);
+        }
+        return Collections.min(neighborCosts);
+    }
+
+    private long getNeighborCost(NeighborPositions p, int[][] greyscaleArray) {
+        long cost = 0;
+        if (p == NeighborPositions.ABOVE) cost = calcAboveSeamCost(greyscaleArray);
+        else if (p == NeighborPositions.TOP_RIGHT) cost = calcRightSeamCost(greyscaleArray);
+        else if (p == NeighborPositions.TOP_LEFT) cost = calcLeftSeamCost(greyscaleArray);
+        return cost;
     }
 
     public Map<NeighborPositions, ImagePixel> getTopRowNeighbors(ImagePixel[][] table) {
