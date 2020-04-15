@@ -1,8 +1,9 @@
 package edu.cg;
 
+import edu.cg.menu.SeamCarvingResult;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SeamsCarver extends ImageProcessor {
@@ -48,6 +49,10 @@ public class SeamsCarver extends ImageProcessor {
 		this.logger.log("preliminary calculations were ended.");
 	}
 
+	public BufferedImage resize() {
+		return resizeOp.resize();
+	}
+
 	private int[][] initGreyscaleArray() {
 		int[][] result = new int[workingImage.getHeight()][workingImage.getWidth()];
 		BufferedImage greyscaleImage = greyscale();
@@ -56,10 +61,6 @@ public class SeamsCarver extends ImageProcessor {
 			result[y][x] = getGrayscaleColor(new Color(greyscaleImage.getRGB(x, y)), rgbWeights);
 		});
 		return result;
-	}
-
-	public BufferedImage resize() {
-		return resizeOp.resize();
 	}
 
 	private ImagePixel[][] createEnergyMap() {
@@ -100,13 +101,11 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private BufferedImage reduceImageWidth() {
-		BufferedImage result = duplicateWorkingImage();
 		selectedSeams = findSeams();
-		for (Seam s : selectedSeams) {
-			 result = removeSeamFromImage(result, s);
-			 imageMask = reduceMaskSize(s);
-		}
-		return result;
+		SeamsReducer reducer = new SeamsReducer(workingImage, originalImageMask);
+		SeamCarvingResult result = reducer.reduceImageWidth(selectedSeams);
+		imageMask = result.getUpdatedImageMask();
+		return result.getUpdatedImage();
 	}
 
 	private ArrayList<Seam> findSeams() {
@@ -115,8 +114,8 @@ public class SeamsCarver extends ImageProcessor {
 		for (int i = 0; i < numOfSeams; i++) {
 			Seam s = new Seam(energyMap, greyscaleArray);
 			seamsList.add(s);
-			greyscaleArray = reduceGreyscaleArray(s);
-			imageMask = reduceMaskSize(s);
+			greyscaleArray = updateGreyscaleArray(s);
+			imageMask = updateImageMask(s);
 			energyMap = updateEnergyMap(s);
 		}
 		resetImageMask();
@@ -127,7 +126,7 @@ public class SeamsCarver extends ImageProcessor {
 		imageMask = originalImageMask;
 	}
 
-	private int[][] reduceGreyscaleArray(Seam s) {
+	private int[][] updateGreyscaleArray(Seam s) {
 		int[][] result = new int[greyscaleArray.length][greyscaleArray[0].length - 1];
 		for (int i = 0; i < greyscaleArray.length; i++) {
 			int resultCol = 0;
@@ -142,7 +141,7 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
-	private boolean[][] reduceMaskSize(Seam s) {
+	private boolean[][] updateImageMask(Seam s) {
 		boolean[][] result = new boolean[imageMask.length][imageMask[0].length - 1];
 		for (int i = 0; i < imageMask.length; i++) {
 			int resultCol = 0;
@@ -177,21 +176,6 @@ public class SeamsCarver extends ImageProcessor {
 					if (j == seamPixelIndex + 1) {
 						result[i][resultCol].setEnergy(calculatePixelEnergy(resultCol, i));
 					}
-					resultCol++;
-				}
-			}
-		}
-		return result;
-	}
-
-	private BufferedImage removeSeamFromImage(BufferedImage image, Seam s) {
-		BufferedImage result = newEmptyImage(image.getWidth() - 1, image.getHeight());
-		for (int i = 0; i < image.getHeight(); i++) {
-			int resultCol = 0;
-			int seamPixelIndex = s.getPath().get(i).getWidth();
-			for (int j = 0; j < image.getWidth(); j++) {
-				if (j != seamPixelIndex) {
-					result.setRGB(resultCol, i, image.getRGB(j, i));
 					resultCol++;
 				}
 			}
