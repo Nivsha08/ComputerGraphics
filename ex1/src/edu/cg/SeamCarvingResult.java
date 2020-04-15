@@ -1,4 +1,4 @@
-package edu.cg.menu;
+package edu.cg;
 
 import java.awt.image.BufferedImage;
 

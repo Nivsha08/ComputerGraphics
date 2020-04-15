@@ -1,7 +1,5 @@
 package edu.cg;
 
-import edu.cg.menu.SeamCarvingResult;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 

@@ -10,11 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import edu.cg.RGBWeights;
-import edu.cg.ImageProcessor;
-import edu.cg.Logger;
-import edu.cg.SeamsCarver;
-import edu.cg.UnimplementedMethodException;
+import edu.cg.*;
 import edu.cg.menu.components.ActionsController;
 import edu.cg.menu.components.ColorMixer;
 import edu.cg.menu.components.ImagePicker;
@@ -243,14 +239,9 @@ public class MenuWindow extends JFrame implements Logger {
 	}
 
 	public void removeObjectFromImage(boolean[][] srcMask) {
-
-		// TODO: Implement this method, remove the exception.
-		throw new UnimplementedMethodException("removeObjectFromImage");
-
-		// TODO: After completing the implementation - make sure you present the result.
-		// Just uncomment the following line, and replace 'result' with your
-		// result variable.
-		// present(result, "Image After Object Removal");
+		ObjectRemover remover = new ObjectRemover(workingImage, imageMask, this, colorMixer.getRGBWeights());
+		SeamCarvingResult result = remover.removeObject();
+		present(result.getUpdatedImage(), "Image After Object Removal");
 	}
 
 	public void maskImage() {
