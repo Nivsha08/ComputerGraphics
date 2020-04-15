@@ -16,6 +16,7 @@ public class SeamsCarver extends ImageProcessor {
 	private int numOfSeams;
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
+	boolean[][] originalImageMask;
 	int[][] greyscaleArray;
 	ImagePixel[][] energyMap;
 	ArrayList<Seam> selectedSeams;
@@ -26,6 +27,7 @@ public class SeamsCarver extends ImageProcessor {
 
 		numOfSeams = Math.abs(outWidth - inWidth);
 		this.imageMask = imageMask;
+		this.originalImageMask = imageMask;
 		if (inWidth < 2 | inHeight < 2)
 			throw new RuntimeException("Can not apply seam carving: workingImage is too small");
 
@@ -102,6 +104,7 @@ public class SeamsCarver extends ImageProcessor {
 		selectedSeams = findSeams();
 		for (Seam s : selectedSeams) {
 			 result = removeSeamFromImage(result, s);
+			 imageMask = reduceMaskSize(s);
 		}
 		return result;
 	}
@@ -116,7 +119,12 @@ public class SeamsCarver extends ImageProcessor {
 			imageMask = reduceMaskSize(s);
 			energyMap = updateEnergyMap(s);
 		}
+		resetImageMask();
 		return seamsList;
+	}
+
+	private void resetImageMask() {
+		imageMask = originalImageMask;
 	}
 
 	private int[][] reduceGreyscaleArray(Seam s) {
