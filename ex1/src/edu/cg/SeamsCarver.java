@@ -63,6 +63,20 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	private ArrayList<Seam> findSeams() {
+		ArrayList<Seam> seamsList = new ArrayList<>();
+		energyMap = this.createEnergyMap();
+		for (int i = 0; i < numOfSeams; i++) {
+			Seam s = new Seam(energyMap, greyscaleArray);
+			seamsList.add(s);
+			greyscaleArray = updateGreyscaleArray(s);
+			imageMask = updateImageMask(s);
+			energyMap = updateEnergyMap(s);
+		}
+		resetImageMask();
+		return seamsList;
+	}
+
 	private ImagePixel[][] createEnergyMap() {
 		ImagePixel[][] result = new ImagePixel[workingImage.getHeight()][workingImage.getWidth()];
 		setForEachInputParameters();
@@ -106,20 +120,6 @@ public class SeamsCarver extends ImageProcessor {
 		SeamCarvingResult result = reducer.reduceImageWidth(selectedSeams);
 		imageMask = result.getUpdatedImageMask();
 		return result.getUpdatedImage();
-	}
-
-	private ArrayList<Seam> findSeams() {
-		ArrayList<Seam> seamsList = new ArrayList<>();
-		energyMap = this.createEnergyMap();
-		for (int i = 0; i < numOfSeams; i++) {
-			Seam s = new Seam(energyMap, greyscaleArray);
-			seamsList.add(s);
-			greyscaleArray = updateGreyscaleArray(s);
-			imageMask = updateImageMask(s);
-			energyMap = updateEnergyMap(s);
-		}
-		resetImageMask();
-		return seamsList;
 	}
 
 	private void resetImageMask() {
@@ -184,55 +184,11 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private BufferedImage increaseImageWidth() {
-		BufferedImage result = duplicateWorkingImage();
 		selectedSeams = findSeams();
-		int indent = 0;
-		for (Seam s : selectedSeams) {
-			result = duplicateSeamInImage(result, s, indent);
-			imageMask = increaseMaskSize(s, indent);
-			indent++;
-		}
-		return result;
-	}
-
-	private BufferedImage duplicateSeamInImage(BufferedImage image, Seam s, int indent) {
-		BufferedImage result = newEmptyImage(image.getWidth() + 1, image.getHeight());
-		for (int i = 0; i < image.getHeight(); i++) {
-			int resultCol = 0;
-			int seamPixelIndex = s.getPath().get(i).getWidth() + indent;
-			for (int j = 0; j < image.getWidth(); j++) {
-				if (j == seamPixelIndex) {
-					result.setRGB(resultCol, i, image.getRGB(j, i));
-					resultCol++;
-					result.setRGB(resultCol, i, image.getRGB(j, i));
-				}
-				else {
-					result.setRGB(resultCol, i, image.getRGB(j, i));
-				}
-				resultCol++;
-			}
-		}
-		return result;
-	}
-
-	private boolean[][] increaseMaskSize(Seam s, int indent) {
-		boolean[][] result = new boolean[imageMask.length][imageMask[0].length + 1];
-		for (int i = 0; i < imageMask.length; i++) {
-			int resultCol = 0;
-			int seamPixelIndex = s.getPath().get(i).getWidth() + indent;
-			for (int j = 0; j < imageMask[0].length; j++) {
-				if (j == seamPixelIndex) {
-					result[i][resultCol] = imageMask[i][j];
-					resultCol++;
-					result[i][resultCol] = imageMask[i][j];
-				}
-				else {
-					result[i][resultCol] = imageMask[i][j];
-				}
-				resultCol++;
-			}
-		}
-		return result;
+		SeamsIncreaser increaser = new SeamsIncreaser(workingImage, originalImageMask);
+		SeamCarvingResult result = increaser.increaseImageWidth(selectedSeams);
+		imageMask = result.getUpdatedImageMask();
+		return result.getUpdatedImage();
 	}
 
 	public BufferedImage showSeams(int seamColorRGB) {
