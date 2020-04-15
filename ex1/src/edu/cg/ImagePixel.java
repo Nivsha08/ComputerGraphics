@@ -109,8 +109,7 @@ public class ImagePixel implements Comparable<ImagePixel> {
 
     private int calcLeftSeamCost(BufferedImage image) {
         if (widthLoc == 0)
-            return getDiff(widthLoc + 1, heightLoc, widthLoc, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc - 1, image);
+            return Integer.MAX_VALUE;
         else if (widthLoc == image.getWidth() - 1) {
             return getDiff(widthLoc, heightLoc, widthLoc - 1, heightLoc, image) +
                     getDiff(widthLoc, heightLoc - 1, widthLoc, heightLoc - 1, image);
@@ -125,10 +124,8 @@ public class ImagePixel implements Comparable<ImagePixel> {
         if (widthLoc == 0)
             return getDiff(widthLoc, heightLoc, widthLoc + 1, heightLoc, image) +
                     getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, image);
-        else if (widthLoc == image.getWidth() - 1) {
-            return getDiff(widthLoc, heightLoc, widthLoc - 1, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc, heightLoc, image);
-        }
+        else if (widthLoc == image.getWidth() - 1)
+            return Integer.MAX_VALUE;
         else {
             return getDiff(widthLoc + 1, heightLoc, widthLoc - 1, heightLoc, image) +
                     getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, image);
@@ -137,9 +134,9 @@ public class ImagePixel implements Comparable<ImagePixel> {
 
     private int calcAboveSeamCost(BufferedImage image) {
         if (widthLoc == 0)
-            return getDiff(widthLoc, heightLoc, widthLoc + 1, heightLoc, image);
+            return 0;
         else if (widthLoc == image.getWidth() - 1)
-            return getDiff(widthLoc - 1, heightLoc, widthLoc, heightLoc, image);
+            return 0;
         else
             return getDiff(widthLoc - 1, heightLoc, widthLoc + 1, heightLoc, image);
     }

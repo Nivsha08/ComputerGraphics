@@ -67,7 +67,8 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private long calculatePixelEnergy(int x, int y) {
-		if (imageMask[y][x]) return Long.MIN_VALUE;
+		if (imageMask[y][x])
+			return Long.MIN_VALUE;
 		int current = getPixelGrayscaleValue(x, y);
 		int deltaX = isOnXBoundary(x) ?
 				(getPixelGrayscaleValue(x - 1, y) - current) : (getPixelGrayscaleValue(x + 1, y) - current);
@@ -97,10 +98,10 @@ public class SeamsCarver extends ImageProcessor {
 	private BufferedImage reduceImageWidth() {
 		for (int i = 0; i < numOfSeams; i++) {
 			Seam s = new Seam(resultImage, energyMap);
+			selectedSeams.add(s);
 			resultImage = removeSeamFromImage(s);
 			imageMask = removeSeamFromMask(s);
 			energyMap = updateEnergyMapAfterSeamRemoval(s);
-			selectedSeams.add(s);
 		}
 		return resultImage;
 	}
@@ -136,7 +137,7 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	private ImagePixel[][] updateEnergyMapAfterSeamRemoval(Seam s) {
-		ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
+		ImagePixel[][] result = new ImagePixel[energyMap.length][energyMap[0].length - 1];
 		for (int i = 0; i < energyMap.length; i++) {
 			int resultCol = 0;
 			int seamPixelIndex = s.getPath().get(i).getWidth();
