@@ -53,7 +53,7 @@ public class SeamsCarver extends ImageProcessor {
 		BufferedImage greyscaleImage = greyscale();
 		setForEachInputParameters();
 		forEach((y, x) -> {
-			result[y][x] = (new Color(greyscaleImage.getRGB(x, y))).getRed(); // fixme!
+			result[y][x] = getGrayscaleColor(new Color(greyscaleImage.getRGB(x, y)), rgbWeights);
 		});
 		return result;
 	}

@@ -3,8 +3,6 @@ package edu.cg;
 import edu.cg.menu.NeighborResult;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ImagePixel implements Comparable<ImagePixel> {
@@ -34,13 +32,6 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this(x, y);
         color = pixelColor;
         this.energy = energy;
-    }
-
-    public static int toGreyscale(int rgb) {
-        int r = (rgb >> 16) & 0xff;
-        int g = (rgb >> 8) & 0xff;
-        int b = rgb & 0xff;
-        return (r + g + b) / 3;
     }
 
     public SeamCoordinates toSeamCoordinates(ImagePixel p) {
@@ -90,14 +81,6 @@ public class ImagePixel implements Comparable<ImagePixel> {
         return Collections.min(neighborCosts);
     }
 
-    private long getNeighborCost(NeighborPositions p, int[][] greyscaleArray) {
-        long cost = 0;
-        if (p == NeighborPositions.ABOVE) cost = calcAboveSeamCost(greyscaleArray);
-        else if (p == NeighborPositions.TOP_RIGHT) cost = calcRightSeamCost(greyscaleArray);
-        else if (p == NeighborPositions.TOP_LEFT) cost = calcLeftSeamCost(greyscaleArray);
-        return cost;
-    }
-
     public Map<NeighborPositions, ImagePixel> getTopRowNeighbors(ImagePixel[][] table) {
         Map<NeighborPositions, ImagePixel> neighbors = new HashMap<>();
         neighbors.put(NeighborPositions.ABOVE, table[heightLoc - 1][widthLoc]);
@@ -112,6 +95,14 @@ public class ImagePixel implements Comparable<ImagePixel> {
             neighbors.put(NeighborPositions.TOP_LEFT, table[heightLoc - 1][widthLoc - 1]);
         }
         return neighbors;
+    }
+
+    private long getNeighborCost(NeighborPositions p, int[][] greyscaleArray) {
+        long cost = 0;
+        if (p == NeighborPositions.ABOVE) cost = calcAboveSeamCost(greyscaleArray);
+        else if (p == NeighborPositions.TOP_RIGHT) cost = calcRightSeamCost(greyscaleArray);
+        else if (p == NeighborPositions.TOP_LEFT) cost = calcLeftSeamCost(greyscaleArray);
+        return cost;
     }
 
     private int calcLeftSeamCost(int[][] greyscaleArray) {
