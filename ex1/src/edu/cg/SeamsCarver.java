@@ -93,7 +93,7 @@ public class SeamsCarver extends ImageProcessor {
 		forEach((y, x) -> {
 			Color pixelColor = new Color(workingImage.getRGB(x, y));
 			if (imageMask[y][x]) {
-				result[y][x] = new ImagePixel(x, y, pixelColor, Long.MIN_VALUE);
+				result[y][x] = new ImagePixel(x, y, pixelColor, Integer.MIN_VALUE);
 			}
 			else {
 				long pixelEnergy = calculatePixelEnergy(x, y);
@@ -105,7 +105,7 @@ public class SeamsCarver extends ImageProcessor {
 
 	private long calculatePixelEnergy(int x, int y) {
 		if (imageMask[y][x])
-			return -1000000000000L;
+			return Integer.MIN_VALUE;
 		int current = greyscaleArray[y][x];
 		int deltaX = isOnXBoundary(x) ? (greyscaleArray[y][x - 1] - current) : (greyscaleArray[y][x + 1] - current);
 		int deltaY = isOnYBoundary(y) ? (greyscaleArray[y - 1][x] - current) : (greyscaleArray[y + 1][x] - current);
@@ -218,7 +218,6 @@ public class SeamsCarver extends ImageProcessor {
 		for (Seam s : selectedSeams) {
 			for (SeamCoordinates p : s.getPath()) {
 				result.setRGB(p.getOriginalWidthLoc(), p.getHeight(), seamColorRGB);
-//				result.setRGB(p.getWidth(), p.getHeight(), seamColorRGB);
 			}
 		}
 		return result;
