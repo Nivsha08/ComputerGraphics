@@ -180,15 +180,7 @@ public class SeamsCarver extends ImageProcessor {
 	}
 
 	public boolean[][] getMaskAfterSeamCarving() {
-		// TODO: Implement this method, remove the exception.
-		// This method should return the mask of the resize image after seam carving.
-		// Meaning, after applying Seam Carving on the input image,
-		// getMaskAfterSeamCarving() will return a mask, with the same dimensions as the
-		// resized image, where the mask values match the original mask values for the
-		// corresponding pixels.
-		// HINT: Once you remove (replicate) the chosen seams from the input image, you
-		// need to also remove (replicate) the matching entries from the mask as well.
-		throw new UnimplementedMethodException("getMaskAfterSeamCarving");
+		return imageMask;
 	}
 
 	//testing
