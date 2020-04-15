@@ -55,13 +55,19 @@ public class SeamsCarver extends ImageProcessor {
 		setForEachInputParameters();
 		forEach((y, x) -> {
 			Color pixelColor = new Color(resultImage.getRGB(x, y));
-			long pixelEnergy = calculatePixelEnergy(x, y);
-			result[y][x] = new ImagePixel(x, y, pixelColor, pixelEnergy);
+			if (imageMask[y][x]) {
+				result[y][x] = new ImagePixel(x, y, pixelColor, Long.MIN_VALUE);
+			}
+			else {
+				long pixelEnergy = calculatePixelEnergy(x, y);
+				result[y][x] = new ImagePixel(x, y, pixelColor, pixelEnergy);
+			}
 		});
 		return result;
 	}
 
 	private long calculatePixelEnergy(int x, int y) {
+		if (imageMask[y][x]) return Long.MIN_VALUE;
 		int current = getPixelGrayscaleValue(x, y);
 		int deltaX = isOnXBoundary(x) ?
 				(getPixelGrayscaleValue(x - 1, y) - current) : (getPixelGrayscaleValue(x + 1, y) - current);
@@ -92,6 +98,7 @@ public class SeamsCarver extends ImageProcessor {
 		for (int i = 0; i < numOfSeams; i++) {
 			Seam s = new Seam(resultImage, energyMap);
 			resultImage = removeSeamFromImage(s);
+			imageMask = removeSeamFromMask(s);
 			energyMap = updateEnergyMapAfterSeamRemoval(s);
 			selectedSeams.add(s);
 		}
@@ -106,6 +113,21 @@ public class SeamsCarver extends ImageProcessor {
 			for (int j = 0; j < resultImage.getWidth(); j++) {
 				if (j != seamPixelIndex) {
 					result.setRGB(resultCol, i, resultImage.getRGB(j, i));
+					resultCol++;
+				}
+			}
+		}
+		return result;
+	}
+
+	private boolean[][] removeSeamFromMask(Seam s) {
+		boolean[][] result = new boolean[imageMask.length][imageMask[0].length - 1];
+		for (int i = 0; i < imageMask.length; i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.getPath().get(i).getWidth();
+			for (int j = 0; j < imageMask[0].length; j++) {
+				if (j != seamPixelIndex) {
+					result[i][resultCol] = imageMask[i][j];
 					resultCol++;
 				}
 			}
