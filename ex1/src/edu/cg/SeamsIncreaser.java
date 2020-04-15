@@ -55,6 +55,7 @@ public class SeamsIncreaser {
             int seamPixelIndex = s.getPath().get(i).getWidth() + indent;
             for (int j = 0; j < imageMask[0].length; j++) {
                 if (j == seamPixelIndex) {
+                    imageMask[i][j] = false;
                     result[i][resultCol] = imageMask[i][j];
                     resultCol++;
                     result[i][resultCol] = imageMask[i][j];

@@ -105,7 +105,7 @@ public class SeamsCarver extends ImageProcessor {
 
 	private long calculatePixelEnergy(int x, int y) {
 		if (imageMask[y][x])
-			return Long.MIN_VALUE;
+			return -1000000000000L;
 		int current = greyscaleArray[y][x];
 		int deltaX = isOnXBoundary(x) ? (greyscaleArray[y][x - 1] - current) : (greyscaleArray[y][x + 1] - current);
 		int deltaY = isOnYBoundary(y) ? (greyscaleArray[y - 1][x] - current) : (greyscaleArray[y + 1][x] - current);
@@ -218,6 +218,7 @@ public class SeamsCarver extends ImageProcessor {
 		for (Seam s : selectedSeams) {
 			for (SeamCoordinates p : s.getPath()) {
 				result.setRGB(p.getOriginalWidthLoc(), p.getHeight(), seamColorRGB);
+//				result.setRGB(p.getWidth(), p.getHeight(), seamColorRGB);
 			}
 		}
 		return result;
