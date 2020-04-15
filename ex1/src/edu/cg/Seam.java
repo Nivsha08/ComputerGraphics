@@ -7,13 +7,13 @@ import java.util.Collections;
 
 public class Seam {
 
-    BufferedImage resultImage;
+    int[][] greyscaleArray;
     ImagePixel[][] energyMap;
     ImagePixel[][] costMatrix;
     ArrayList<SeamCoordinates> optimalPath;
 
-    public Seam(BufferedImage resultImage, ImagePixel[][] energyMap) {
-        this.resultImage = resultImage;
+    public Seam(ImagePixel[][] energyMap, int[][] greyscaleArray) {
+        this.greyscaleArray = greyscaleArray;
         this.energyMap = energyMap;
         optimalPath = findOptimalPath();
     }
@@ -21,11 +21,11 @@ public class Seam {
     private ArrayList<SeamCoordinates> findOptimalPath() {
         costMatrix = calculateCostsMatrix();
         ImagePixel lastPixelInSeam = getLastPixelInSeam();
-        return lastPixelInSeam.traceBackOptimalPath(costMatrix, resultImage);
+        return lastPixelInSeam.traceBackOptimalPath(costMatrix, greyscaleArray);
     }
 
     private ImagePixel[][] calculateCostsMatrix() {
-        ImagePixel[][] result = new ImagePixel[resultImage.getHeight()][resultImage.getWidth()];
+        ImagePixel[][] result = new ImagePixel[greyscaleArray.length][greyscaleArray[0].length];
 
         for (int i = 0; i < result[0].length; i++) {
             result[0][i] = ImagePixel.createCopy(energyMap[0][i]);
@@ -35,7 +35,7 @@ public class Seam {
                 ImagePixel current = energyMap[i][j];
                 ImagePixel updatedPixel = ImagePixel.createCopy(current);
                 updatedPixel.setEnergy(current.getEnergy() +
-                        current.getMinimalSeamStepCost(result, resultImage).getCost());
+                        current.getMinimalSeamStepCost(result, greyscaleArray).getCost());
                 result[i][j] = updatedPixel;
             }
         }

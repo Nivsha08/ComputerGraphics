@@ -66,25 +66,25 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this.energy = energy;
     }
 
-    public ArrayList<SeamCoordinates> traceBackOptimalPath(ImagePixel[][] costMatrix, BufferedImage resultImage) {
+    public ArrayList<SeamCoordinates> traceBackOptimalPath(ImagePixel[][] costMatrix, int[][] greyscaleArray) {
         ArrayList<SeamCoordinates> path = new ArrayList<>();
         ImagePixel current = this;
         while (current.heightLoc > 0) {
             path.add(0, toSeamCoordinates(current));
-            NeighborResult nextSeamStep = current.getMinimalSeamStepCost(costMatrix, resultImage);
+            NeighborResult nextSeamStep = current.getMinimalSeamStepCost(costMatrix, greyscaleArray);
             current = nextSeamStep.getPixel();
         }
         path.add(0, toSeamCoordinates(current));
         return path;
     }
 
-    public NeighborResult getMinimalSeamStepCost(ImagePixel[][] costMatrix, BufferedImage image) {
+    public NeighborResult getMinimalSeamStepCost(ImagePixel[][] costMatrix, int[][] greyscaleArray) {
         Map<NeighborPositions, ImagePixel> neighbors = this.getTopRowNeighbors(costMatrix);
-        long aboveCost = neighbors.get(NeighborPositions.ABOVE).getEnergy() + calcAboveSeamCost(image);
+        long aboveCost = neighbors.get(NeighborPositions.ABOVE).getEnergy() + calcAboveSeamCost(greyscaleArray);
         long leftCost = (neighbors.containsKey(NeighborPositions.TOP_LEFT)) ?
-             neighbors.get(NeighborPositions.TOP_LEFT).getEnergy() + calcLeftSeamCost(image) : Long.MAX_VALUE;
+             neighbors.get(NeighborPositions.TOP_LEFT).getEnergy() + calcLeftSeamCost(greyscaleArray) : Long.MAX_VALUE;
         long rightCost = (neighbors.containsKey(NeighborPositions.TOP_RIGHT)) ?
-                neighbors.get(NeighborPositions.TOP_RIGHT).getEnergy() + calcRightSeamCost(image) : Long.MAX_VALUE;
+                neighbors.get(NeighborPositions.TOP_RIGHT).getEnergy() + calcRightSeamCost(greyscaleArray) : Long.MAX_VALUE;
         NeighborResult topLeft = new NeighborResult(neighbors.get(NeighborPositions.TOP_LEFT), leftCost);
         NeighborResult above = new NeighborResult(neighbors.get(NeighborPositions.ABOVE), aboveCost);
         NeighborResult topRight = new NeighborResult(neighbors.get(NeighborPositions.TOP_RIGHT), rightCost);
@@ -107,42 +107,42 @@ public class ImagePixel implements Comparable<ImagePixel> {
         return neighbors;
     }
 
-    private int calcLeftSeamCost(BufferedImage image) {
+    private int calcLeftSeamCost(int[][] greyscaleArray) {
         if (widthLoc == 0)
             return Integer.MAX_VALUE;
-        else if (widthLoc == image.getWidth() - 1) {
-            return getDiff(widthLoc, heightLoc, widthLoc - 1, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc, heightLoc - 1, image);
+        else if (widthLoc == greyscaleArray[0].length - 1) {
+            return getDiff(widthLoc, heightLoc, widthLoc - 1, heightLoc, greyscaleArray) +
+                    getDiff(widthLoc, heightLoc - 1, widthLoc, heightLoc - 1, greyscaleArray);
         }
         else {
-            return getDiff(widthLoc + 1, heightLoc, widthLoc - 1, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc - 1, image);
+            return getDiff(widthLoc + 1, heightLoc, widthLoc - 1, heightLoc, greyscaleArray) +
+                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc - 1, greyscaleArray);
         }
     }
 
-    private int calcRightSeamCost(BufferedImage image) {
+    private int calcRightSeamCost(int[][] greyscaleArray) {
         if (widthLoc == 0)
-            return getDiff(widthLoc, heightLoc, widthLoc + 1, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, image);
-        else if (widthLoc == image.getWidth() - 1)
+            return getDiff(widthLoc, heightLoc, widthLoc + 1, heightLoc, greyscaleArray) +
+                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, greyscaleArray);
+        else if (widthLoc == greyscaleArray[0].length - 1)
             return Integer.MAX_VALUE;
         else {
-            return getDiff(widthLoc + 1, heightLoc, widthLoc - 1, heightLoc, image) +
-                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, image);
+            return getDiff(widthLoc + 1, heightLoc, widthLoc - 1, heightLoc, greyscaleArray) +
+                    getDiff(widthLoc, heightLoc - 1, widthLoc + 1, heightLoc, greyscaleArray);
         }
     }
 
-    private int calcAboveSeamCost(BufferedImage image) {
+    private int calcAboveSeamCost(int[][] greyscaleArray) {
         if (widthLoc == 0)
             return 0;
-        else if (widthLoc == image.getWidth() - 1)
+        else if (widthLoc == greyscaleArray[0].length - 1)
             return 0;
         else
-            return getDiff(widthLoc - 1, heightLoc, widthLoc + 1, heightLoc, image);
+            return getDiff(widthLoc - 1, heightLoc, widthLoc + 1, heightLoc, greyscaleArray);
     }
 
-    private int getDiff(int x1, int y1, int x2, int y2, BufferedImage image) {
-        return Math.abs(toGreyscale(image.getRGB(x1, y1)) - toGreyscale(image.getRGB(x2, y2)));
+    private int getDiff(int x1, int y1, int x2, int y2, int[][] greyscaleArray) {
+        return Math.abs(greyscaleArray[y1][x1] - greyscaleArray[y2][x2]);
     }
 
     @Override
