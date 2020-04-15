@@ -1,6 +1,5 @@
 package edu.cg;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,16 +11,16 @@ public class Seam {
     ImagePixel[][] costMatrix;
     ArrayList<SeamCoordinates> optimalPath;
 
-    public Seam(ImagePixel[][] energyMap, int[][] greyscaleArray) {
+    public Seam(ImagePixel[][] energyMap, int[][] greyscaleArray, int[][] originalPixelsIndices) {
         this.greyscaleArray = greyscaleArray;
         this.energyMap = energyMap;
-        optimalPath = findOptimalPath();
+        optimalPath = findOptimalPath(originalPixelsIndices);
     }
 
-    private ArrayList<SeamCoordinates> findOptimalPath() {
+    private ArrayList<SeamCoordinates> findOptimalPath(int[][] originalPixelsIndices) {
         costMatrix = calculateCostsMatrix();
         ImagePixel lastPixelInSeam = getLastPixelInSeam();
-        return lastPixelInSeam.traceBackOptimalPath(costMatrix, greyscaleArray);
+        return lastPixelInSeam.traceBackOptimalPath(costMatrix, greyscaleArray, originalPixelsIndices);
     }
 
     private ImagePixel[][] calculateCostsMatrix() {

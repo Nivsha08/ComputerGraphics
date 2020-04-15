@@ -18,6 +18,7 @@ public class SeamsCarver extends ImageProcessor {
 	private ResizeOperation resizeOp;
 	boolean[][] imageMask;
 	boolean[][] originalImageMask;
+	int[][] originalPixelsIndices;
 	int[][] greyscaleArray;
 	ImagePixel[][] energyMap;
 	ArrayList<Seam> selectedSeams;
@@ -43,10 +44,21 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
+		originalPixelsIndices = initOriginalIndicesHelperArray();
 		greyscaleArray = initGreyscaleArray();
 		selectedSeams = new ArrayList<>();
 
 		this.logger.log("preliminary calculations were ended.");
+	}
+
+	private int[][] initOriginalIndicesHelperArray() {
+		int[][] result = new int[workingImage.getHeight()][workingImage.getWidth()];
+		for (int i = 0; i < result.length; i++) {
+			for (int j = 0; j < result[0].length; j++) {
+				result[i][j] = j;
+			}
+		}
+		return result;
 	}
 
 	public BufferedImage resize() {
@@ -67,13 +79,13 @@ public class SeamsCarver extends ImageProcessor {
 		ArrayList<Seam> seamsList = new ArrayList<>();
 		energyMap = this.createEnergyMap();
 		for (int i = 0; i < numOfSeams; i++) {
-			Seam s = new Seam(energyMap, greyscaleArray);
+			Seam s = new Seam(energyMap, greyscaleArray, originalPixelsIndices);
 			seamsList.add(s);
 			greyscaleArray = updateGreyscaleArray(s);
 			imageMask = updateImageMask(s);
 			energyMap = updateEnergyMap(s);
+			originalPixelsIndices = updateOriginalPixelIndices(s);
 		}
-		resetImageMask();
 		return seamsList;
 	}
 
@@ -120,10 +132,6 @@ public class SeamsCarver extends ImageProcessor {
 		SeamCarvingResult result = reducer.reduceImageWidth(selectedSeams);
 		imageMask = result.getUpdatedImageMask();
 		return result.getUpdatedImage();
-	}
-
-	private void resetImageMask() {
-		imageMask = originalImageMask;
 	}
 
 	private int[][] updateGreyscaleArray(Seam s) {
@@ -183,6 +191,21 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	private int[][] updateOriginalPixelIndices(Seam s) {
+		int[][] result = new int[originalPixelsIndices.length][originalPixelsIndices[0].length - 1];
+		for (int i = 0; i < originalPixelsIndices.length; i++) {
+			int resultCol = 0;
+			int seamPixelIndex = s.getPath().get(i).getWidth();
+			for (int j = 0; j < originalPixelsIndices[0].length; j++) {
+				if (j != seamPixelIndex) {
+					result[i][resultCol] = originalPixelsIndices[i][j];
+					resultCol++;
+				}
+			}
+		}
+		return result;
+	}
+
 	private BufferedImage increaseImageWidth() {
 		selectedSeams = findSeams();
 		SeamsIncreaser increaser = new SeamsIncreaser(workingImage, originalImageMask);
@@ -196,7 +219,7 @@ public class SeamsCarver extends ImageProcessor {
 		BufferedImage result = duplicateWorkingImage();
 		for (Seam s : selectedSeams) {
 			for (SeamCoordinates p : s.getPath()) {
-				result.setRGB(p.getWidth(), p.getHeight(), seamColorRGB);
+				result.setRGB(p.getOriginalWidthLoc(), p.getHeight(), seamColorRGB);
 			}
 		}
 		return result;

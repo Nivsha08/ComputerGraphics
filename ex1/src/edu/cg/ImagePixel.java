@@ -15,7 +15,7 @@ public class ImagePixel implements Comparable<ImagePixel> {
 
     int widthLoc = 0;
     int heightLoc = 0;
-    Color color = new Color(0, 0,0);
+    Color color = null;
     long energy = 0;
 
     public ImagePixel(int x, int y) {
@@ -34,8 +34,8 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this.energy = energy;
     }
 
-    public SeamCoordinates toSeamCoordinates(ImagePixel p) {
-        return new SeamCoordinates(p.widthLoc, p.heightLoc);
+    public SeamCoordinates toSeamCoordinates(ImagePixel p, int originalWidthLoc) {
+        return new SeamCoordinates(p.widthLoc, originalWidthLoc, p.heightLoc);
     }
 
     public static ImagePixel createCopy(ImagePixel src) {
@@ -46,10 +46,6 @@ public class ImagePixel implements Comparable<ImagePixel> {
         return color;
     }
 
-    public int getGreyscale() {
-        return (color.getRed() + color.getGreen() + color.getBlue()) / 3;
-    };
-
     public long getEnergy() {
         return this.energy;
     }
@@ -58,15 +54,16 @@ public class ImagePixel implements Comparable<ImagePixel> {
         this.energy = energy;
     }
 
-    public ArrayList<SeamCoordinates> traceBackOptimalPath(ImagePixel[][] costMatrix, int[][] greyscaleArray) {
+    public ArrayList<SeamCoordinates> traceBackOptimalPath(ImagePixel[][] costMatrix,
+                                                           int[][] greyscaleArray, int[][] originalPixelsIndices) {
         ArrayList<SeamCoordinates> path = new ArrayList<>();
         ImagePixel current = this;
         while (current.heightLoc > 0) {
-            path.add(0, toSeamCoordinates(current));
+            path.add(0, toSeamCoordinates(current, originalPixelsIndices[current.heightLoc][current.widthLoc]));
             NeighborResult nextSeamStep = current.getMinimalSeamStepCost(costMatrix, greyscaleArray);
             current = nextSeamStep.getPixel();
         }
-        path.add(0, toSeamCoordinates(current));
+        path.add(0, toSeamCoordinates(current, originalPixelsIndices[current.heightLoc][current.widthLoc]));
         return path;
     }
 
