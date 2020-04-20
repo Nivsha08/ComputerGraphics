@@ -1,10 +1,12 @@
 package edu.cg;
 
-import edu.cg.menu.NeighborResult;
-
 import java.awt.*;
 import java.util.*;
 
+/**
+ * An object representing a single pixel to be used in cost matrix and energy calculations.
+ * Contains the logic for calculating a pixel cost and tracing back a seam passing through this pixel.
+ */
 public class ImagePixel implements Comparable<ImagePixel> {
 
     public static enum NeighborPositions {

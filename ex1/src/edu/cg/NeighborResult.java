@@ -1,7 +1,8 @@
-package edu.cg.menu;
+package edu.cg;
 
-import edu.cg.ImagePixel;
-
+/**
+ * An object containing details about an ImagePixel optimal neighbor calculation result.
+ */
 public class NeighborResult implements Comparable<NeighborResult> {
 
     long cost = 0;

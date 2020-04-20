@@ -1,5 +1,8 @@
 package edu.cg;
 
+/**
+ * An object for representing a pixel in a Seam.
+ */
 public class SeamCoordinates {
 
     int originalWidthLoc = 0;

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * An object for representing a Seam. Contains the logic for calculating the optimal seam at the
+ * given state of the energy map, by calculating the current cost matrix and performing the dynamic
+ * programming procedures.
+ */
 public class Seam {
 
     int[][] greyscaleArray;
@@ -16,6 +21,8 @@ public class Seam {
         this.energyMap = energyMap;
         optimalPath = findOptimalPath(originalPixelsIndices);
     }
+
+    public ArrayList<SeamCoordinates> getPath() { return this.optimalPath; }
 
     private ArrayList<SeamCoordinates> findOptimalPath(int[][] originalPixelsIndices) {
         costMatrix = calculateCostsMatrix();
@@ -44,20 +51,6 @@ public class Seam {
     private ImagePixel getLastPixelInSeam() {
         ArrayList<ImagePixel> costMatrixLastRow = new ArrayList<>(Arrays.asList(costMatrix[costMatrix.length - 1]));
         return Collections.min(costMatrixLastRow);
-    }
-
-    public ArrayList<SeamCoordinates> getPath() { return this.optimalPath; }
-
-    private void printGrid(ImagePixel[][] a)
-    {
-        for(int i = 0; i < a.length; i++)
-        {
-            for(int j = 0; j < a[0].length; j++)
-            {
-                System.out.printf("%5d ", a[i][j].getEnergy());
-            }
-            System.out.println();
-        }
     }
 
 }

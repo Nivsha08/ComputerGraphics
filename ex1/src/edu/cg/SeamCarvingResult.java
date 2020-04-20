@@ -2,6 +2,10 @@ package edu.cg;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * An object containing the details of a seam removal or insertion operation -
+ * the updated image and the updated mask.
+ */
 public class SeamCarvingResult {
 
     BufferedImage updatedImage;

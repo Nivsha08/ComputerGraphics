@@ -3,6 +3,9 @@ package edu.cg;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * A class responsible for reducing the image width, by removing the given seams list.
+ */
 public class SeamsReducer {
 
     BufferedImage workingImage;

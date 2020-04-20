@@ -42,6 +42,7 @@ public class SeamsCarver extends ImageProcessor {
 		else
 			resizeOp = this::duplicateWorkingImage;
 
+		// initializing custom class properties
 		originalPixelsIndices = initOriginalIndicesHelperArray();
 		greyscaleArray = initGreyscaleArray();
 		selectedSeams = new ArrayList<>();
@@ -49,6 +50,38 @@ public class SeamsCarver extends ImageProcessor {
 		this.logger.log("preliminary calculations were ended.");
 	}
 
+	public BufferedImage resize() {
+		return resizeOp.resize();
+	}
+
+	/**
+	 * Bonus function:
+	 * Calculates the K optimal seams in the working image, and stores them in {@link this.selectedSeams}.
+	 * Then, iterate through the results and set each pixel's RGB to the given RGB value.
+	 * @param seamColorRGB - the color to paint the seams with.
+	 * @return BufferedImage - a copy of the working image, with the colored K optimal seams.
+	 */
+	public BufferedImage showSeams(int seamColorRGB) {
+		selectedSeams = findSeams();
+		BufferedImage result = duplicateWorkingImage();
+		for (Seam s : selectedSeams) {
+			for (SeamCoordinates p : s.getPath()) {
+				result.setRGB(p.getOriginalWidthLoc(), p.getHeight(), seamColorRGB);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @returns The updated image mask after the resize operation.
+	 */
+	public boolean[][] getMaskAfterSeamCarving() {
+		return imageMask;
+	}
+
+	/**
+	 * Initializes the helper array containing the original indices of the pixels in the working image.
+	 */
 	private int[][] initOriginalIndicesHelperArray() {
 		int[][] result = new int[workingImage.getHeight()][workingImage.getWidth()];
 		for (int i = 0; i < result.length; i++) {
@@ -59,10 +92,9 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
-	public BufferedImage resize() {
-		return resizeOp.resize();
-	}
-
+	/**
+	 * Initializes a greyscale array containing the greyscale values of the pixels in the working image.
+	 */
 	private int[][] initGreyscaleArray() {
 		int[][] result = new int[workingImage.getHeight()][workingImage.getWidth()];
 		BufferedImage greyscaleImage = greyscale();
@@ -73,6 +105,11 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	/**
+	 * Finds the optimal {@link this.numOfSeams} in the working image, by iteratively finding a Seam then
+	 * updating the relevant matrices.
+	 * @return A list containing the optimal K seams.
+	 */
 	private ArrayList<Seam> findSeams() {
 		ArrayList<Seam> seamsList = new ArrayList<>();
 		energyMap = this.createEnergyMap();
@@ -87,6 +124,9 @@ public class SeamsCarver extends ImageProcessor {
 		return seamsList;
 	}
 
+	/**
+	 * Calculates the pixels energies and populating the initial energy map.
+	 */
 	private ImagePixel[][] createEnergyMap() {
 		ImagePixel[][] result = new ImagePixel[workingImage.getHeight()][workingImage.getWidth()];
 		setForEachInputParameters();
@@ -103,6 +143,11 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	/**
+	 * Calculates the energy of the pixel resides in I[x,y], with regards to the image boundaries.
+	 * @param x - width location
+	 * @param y - height location
+	 */
 	private long calculatePixelEnergy(int x, int y) {
 		if (imageMask[y][x])
 			return Integer.MIN_VALUE;
@@ -110,18 +155,6 @@ public class SeamsCarver extends ImageProcessor {
 		int deltaX = isOnXBoundary(x) ? (greyscaleArray[y][x - 1] - current) : (greyscaleArray[y][x + 1] - current);
 		int deltaY = isOnYBoundary(y) ? (greyscaleArray[y - 1][x] - current) : (greyscaleArray[y + 1][x] - current);
 		return (long)this.calculateEuclideanNorm(deltaX, deltaY);
-	}
-
-	private double calculateEuclideanNorm(int deltaX, int deltaY) {
-		return Math.abs(Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)));
-	}
-
-	private boolean isOnXBoundary(int x) {
-		return (x == greyscaleArray[0].length - 1);
-	}
-
-	private boolean isOnYBoundary(int y) {
-		return (y == greyscaleArray.length - 1);
 	}
 
 	private BufferedImage reduceImageWidth() {
@@ -132,6 +165,18 @@ public class SeamsCarver extends ImageProcessor {
 		return result.getUpdatedImage();
 	}
 
+	private BufferedImage increaseImageWidth() {
+		selectedSeams = findSeams();
+		SeamsIncreaser increaser = new SeamsIncreaser(workingImage, originalImageMask);
+		SeamCarvingResult result = increaser.increaseImageWidth(selectedSeams);
+		imageMask = result.getUpdatedImageMask();
+		return result.getUpdatedImage();
+	}
+
+	/**
+	 * Removes the given Seam from the greyscale array.
+	 * @param s - Seam
+	 */
 	private int[][] updateGreyscaleArray(Seam s) {
 		int[][] result = new int[greyscaleArray.length][greyscaleArray[0].length - 1];
 		for (int i = 0; i < greyscaleArray.length; i++) {
@@ -147,6 +192,10 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	/**
+	 * Removes the given Seam from the image mask.
+	 * @param s - Seam
+	 */
 	private boolean[][] updateImageMask(Seam s) {
 		boolean[][] result = new boolean[imageMask.length][imageMask[0].length - 1];
 		for (int i = 0; i < imageMask.length; i++) {
@@ -162,6 +211,11 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	/**
+	 * Removes the given Seam from the energy map. For the pixels resides in both sides of the given Seam,
+	 * calculates the new energy value in regards to their new neighbors.
+	 * @param s - Seam
+	 */
 	private ImagePixel[][] updateEnergyMap(Seam s) {
 		ImagePixel[][] result = new ImagePixel[energyMap.length][energyMap[0].length - 1];
 		for (int i = 0; i < energyMap.length; i++) {
@@ -189,6 +243,10 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
+	/**
+	 * Removes the given Seam from the original indices helper array.
+	 * @param s - Seam
+	 */
 	private int[][] updateOriginalPixelIndices(Seam s) {
 		int[][] result = new int[originalPixelsIndices.length][originalPixelsIndices[0].length - 1];
 		for (int i = 0; i < originalPixelsIndices.length; i++) {
@@ -204,43 +262,16 @@ public class SeamsCarver extends ImageProcessor {
 		return result;
 	}
 
-	private BufferedImage increaseImageWidth() {
-		selectedSeams = findSeams();
-		SeamsIncreaser increaser = new SeamsIncreaser(workingImage, originalImageMask);
-		SeamCarvingResult result = increaser.increaseImageWidth(selectedSeams);
-		imageMask = result.getUpdatedImageMask();
-		return result.getUpdatedImage();
+	private double calculateEuclideanNorm(int deltaX, int deltaY) {
+		return Math.abs(Math.sqrt((deltaX * deltaX) + (deltaY * deltaY)));
 	}
 
-	public BufferedImage showSeams(int seamColorRGB) {
-		selectedSeams = findSeams();
-		BufferedImage result = duplicateWorkingImage();
-		for (Seam s : selectedSeams) {
-			for (SeamCoordinates p : s.getPath()) {
-				result.setRGB(p.getOriginalWidthLoc(), p.getHeight(), seamColorRGB);
-			}
-		}
-		return result;
+	private boolean isOnXBoundary(int x) {
+		return (x == greyscaleArray[0].length - 1);
 	}
 
-	public boolean[][] getMaskAfterSeamCarving() {
-		return imageMask;
-	}
-
-	//testing
-	public BufferedImage gradientMap() {
-		logger.log("Preparing for showing gradient map...");
-		BufferedImage ans = newEmptyInputSizedImage();
-
-		forEach((y, x) -> {
-			long energyLevel = energyMap[y][x].getEnergy();
-			int greyColor = (int)energyLevel;
-			Color color = new Color(greyColor, greyColor, greyColor);
-			ans.setRGB(x, y, color.getRGB());
-		});
-
-		logger.log("Changing to gradient map done!");
-		return ans;
+	private boolean isOnYBoundary(int y) {
+		return (y == greyscaleArray.length - 1);
 	}
 
 }

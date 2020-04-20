@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * A class responsible for removing the pixels contained in the given image mask.
+ * Uses SeamCarver to manipulate the image dimensions.
+ */
 public class ObjectRemover {
 
     final BufferedImage workingImage;
