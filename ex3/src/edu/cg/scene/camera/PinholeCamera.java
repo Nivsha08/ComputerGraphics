@@ -32,7 +32,7 @@ public class PinholeCamera {
 	 */
 	public PinholeCamera(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
 		this.initResolution(200, 200, 90);
-		this.initImageSpace(cameraPosition, towardsVec, upVec, distanceToPlain);
+		this.initImageSpace(cameraPosition, towardsVec, upVec);
 		this.initImagePlain(distanceToPlain);
 	}
 
@@ -48,15 +48,16 @@ public class PinholeCamera {
 		this.Ry = height;
 		this.viewAngle = viewAngle;
 	}
-	private void initImageSpace(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
+
+	private void initImageSpace(Point cameraPosition, Vec towardsVec, Vec upVec) {
 		this.cameraPosition = cameraPosition;
-		this.Vtowards = towardsVec;
-		this.Vright = Ops.normalize(Ops.cross(upVec, towardsVec));
-		this.Vup = Ops.normalize(Ops.cross(this.Vright, this.Vtowards));
+		this.Vtowards = towardsVec.normalize();
+		this.Vright = upVec.normalize().cross(this.Vtowards).normalize();
+		this.Vup = this.Vright.cross(this.Vtowards).normalize();
 	}
 
 	private void initImagePlain(double distanceToPlain) {
-		this.plainCenter = Ops.add(cameraPosition, Ops.mult(distanceToPlain, this.Vtowards));
+		this.plainCenter = cameraPosition.add(this.Vtowards.mult(distanceToPlain));
 		this.imageWidth = distanceToPlain * Math.tan(this.viewAngle / 2) * 2;
 		this.imageHeight = this.pixelWidth * this.Ry;
 		this.pixelWidth = this.imageWidth / this.Rx;
@@ -71,9 +72,9 @@ public class PinholeCamera {
 	 * @return the middle point of the pixel (x,y) in the model coordinates.
 	 */
 	public Point transform(int x, int y) {
-		Vec deltaX = Ops.mult(x - Math.floor(this.Rx / 2), this.Vright);
-		Vec deltaY = Ops.mult(y - Math.floor(this.Ry / 2), Ops.neg(this.Vup));
-		return Ops.add(Ops.add(this.plainCenter, deltaX), deltaY);
+		Vec deltaX = this.Vright.mult(x - Math.floor(this.Rx / 2));
+		Vec deltaY = this.Vup.mult(y - Math.floor(this.Ry / 2));
+		return this.plainCenter.add(deltaX).add(deltaY.neg());
 	}
 
 	/**

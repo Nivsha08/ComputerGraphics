@@ -138,5 +138,18 @@ public class Scenes {
 		
 		return finalScene;
 	}
+
+	public static Scene scene5() {
+		Shape plainShape = new Plain(1,1,1,-15);
+		Material plainMaterial = new Material().initKa(new Vec(0.8, 0.05, 0.05)).initKd(new Vec(0.0)).initKs(new Vec(0.9))
+				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0);
+		Surface plainSurface = new Surface(plainShape, plainMaterial);
+		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -1.0), new Vec(0.9));
+
+		return new Scene().initAmbient(new Vec(1.0))
+				.initCamera(new Point(4, 4, 1.5), new Vec(-1.0, -1.0, -0.3), new Vec(0, 0, 1), 3)
+				.addLightSource(dirLight).addSurface(plainSurface).initName("scene5").initAntiAliasingFactor(1)
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+	}
 	
 }

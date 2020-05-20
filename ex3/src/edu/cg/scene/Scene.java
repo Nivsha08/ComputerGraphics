@@ -2,6 +2,8 @@ package edu.cg.scene;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -11,6 +13,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
+import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
@@ -172,9 +175,34 @@ public class Scene {
 		});
 	}
 
-	private Vec calcColor(Ray ray, int recusionLevel) {
-		// TODO: Implement this method.
-		// This is the recursive method in RayTracing.
-		throw new UnimplementedMethodException("calcColor");
+	private Vec calcColor(Ray ray, int recursionLevel) {
+		LinkedList<Hit> intersections = new LinkedList<>();
+		for (Surface s : this.surfaces) {
+			Hit hit = s.intersect(ray);
+			if (hit != null) {
+				intersections.add(hit);
+			}
+		}
+		if (intersections.size() > 0) {
+			Hit minHit = Collections.min(intersections);
+			Point hitPoint = ray.getHittingPoint(minHit);
+			return this.ambient;
+		}
+		return this.backgroundColor;
+//		throw new UnimplementedMethodException("calcColor");
 	}
+
+//	private Vec getSurfaceColor(Hit hitPoint, Ray ray) {
+//		Surface surface = hitPoint.getSurface();
+////		Vec ambientTerm = this.calcAmbientTerm(surface, hitPoint, ray);
+//		return this.ambient;
+//	}
+//
+//	private Vec calcAmbientTerm(Surface surface, Hit hitPoint, Ray ray) {
+//		Vec ambientTerm = new Vec(0);
+//		for (Light l : lightSources) {
+//			ambientTerm.add(surface.Ka().mult(l.intensity(ray.getHittingPoint(hitPoint), ray)));
+//		}
+//		return ambientTerm;
+//	}
 }
