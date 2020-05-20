@@ -10,6 +10,7 @@ public class Main {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		System.out.println("hello world!");
 		File scenesDir = new File("scenes");
 		if(!scenesDir.exists() && !scenesDir.mkdir())
 			throw new RuntimeException("Couldn't create the folder scenes...");
