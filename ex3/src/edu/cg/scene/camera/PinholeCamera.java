@@ -1,11 +1,22 @@
 package edu.cg.scene.camera;
 
-import edu.cg.UnimplementedMethodException;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 
 public class PinholeCamera {
-	// TODO Add your fields
+
+	private Point cameraPosition;
+	private Point plainCenter;
+	private Vec Vup;
+	private Vec Vright;
+	private Vec Vtowards;
+	private int Rx;
+	private int Ry;
+	private double imageWidth;
+	private double imageHeight;
+	private double pixelWidth;
+	private double viewAngle;
 
 	/**
 	 * Initializes a pinhole camera model with default resolution 200X200 (RxXRy)
@@ -20,7 +31,9 @@ public class PinholeCamera {
 	 * 
 	 */
 	public PinholeCamera(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
-		// TODO: Initialize your fields
+		this.initResolution(200, 200, 90);
+		this.initImageSpace(cameraPosition, towardsVec, upVec, distanceToPlain);
+		this.initImagePlain(distanceToPlain);
 	}
 
 	/**
@@ -31,7 +44,22 @@ public class PinholeCamera {
 	 * @param viewAngle - the view Angle.
 	 */
 	public void initResolution(int height, int width, double viewAngle) {
-		// TODO: init your fields
+		this.Rx = width;
+		this.Ry = height;
+		this.viewAngle = viewAngle;
+	}
+	private void initImageSpace(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
+		this.cameraPosition = cameraPosition;
+		this.Vtowards = towardsVec;
+		this.Vright = Ops.normalize(Ops.cross(upVec, towardsVec));
+		this.Vup = Ops.normalize(Ops.cross(this.Vright, this.Vtowards));
+	}
+
+	private void initImagePlain(double distanceToPlain) {
+		this.plainCenter = Ops.add(cameraPosition, Ops.mult(distanceToPlain, this.Vtowards));
+		this.imageWidth = distanceToPlain * Math.tan(this.viewAngle / 2) * 2;
+		this.imageHeight = this.pixelWidth * this.Ry;
+		this.pixelWidth = this.imageWidth / this.Rx;
 	}
 
 	/**
@@ -43,8 +71,9 @@ public class PinholeCamera {
 	 * @return the middle point of the pixel (x,y) in the model coordinates.
 	 */
 	public Point transform(int x, int y) {
-		// TODO: implement this method.
-		throw new UnimplementedMethodException("PinholeCamera.transform is not implemented.");
+		Vec deltaX = Ops.mult(x - Math.floor(this.Rx / 2), this.Vright);
+		Vec deltaY = Ops.mult(y - Math.floor(this.Ry / 2), Ops.neg(this.Vup));
+		return Ops.add(Ops.add(this.plainCenter, deltaX), deltaY);
 	}
 
 	/**
@@ -53,7 +82,6 @@ public class PinholeCamera {
 	 * @return a new point representing the camera position.
 	 */
 	public Point getCameraPosition() {
-		// TODO: implement this method.
-		throw new UnimplementedMethodException("PinholeCamera.getCameraPosition");
+		return this.cameraPosition;
 	}
 }

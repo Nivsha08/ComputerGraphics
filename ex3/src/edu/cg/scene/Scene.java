@@ -32,8 +32,8 @@ public class Scene {
 	private List<Surface> surfaces = new LinkedList<>();
 
 	// MARK: initializers
-	public Scene initCamera(Point eyePoistion, Vec towardsVec, Vec upVec, double distanceToPlain) {
-		this.camera = new PinholeCamera(eyePoistion, towardsVec, upVec, distanceToPlain);
+	public Scene initCamera(Point eyePosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
+		this.camera = new PinholeCamera(eyePosition, towardsVec, upVec, distanceToPlain);
 		return this;
 	}
 
