@@ -50,7 +50,6 @@ public class PointLight extends Light {
 		return this;
 	}
 
-
 	@Override
 	public Ray rayToLight(Point fromPoint) {
 		return new Ray(fromPoint, position);

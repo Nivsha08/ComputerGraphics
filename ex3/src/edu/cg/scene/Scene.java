@@ -176,33 +176,6 @@ public class Scene {
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
-		LinkedList<Hit> intersections = new LinkedList<>();
-		for (Surface s : this.surfaces) {
-			Hit hit = s.intersect(ray);
-			if (hit != null) {
-				intersections.add(hit);
-			}
-		}
-		if (intersections.size() > 0) {
-			Hit minHit = Collections.min(intersections);
-			Point hitPoint = ray.getHittingPoint(minHit);
-			return this.ambient;
-		}
-		return this.backgroundColor;
-//		throw new UnimplementedMethodException("calcColor");
+		throw new UnimplementedMethodException("calcColor");
 	}
-
-//	private Vec getSurfaceColor(Hit hitPoint, Ray ray) {
-//		Surface surface = hitPoint.getSurface();
-////		Vec ambientTerm = this.calcAmbientTerm(surface, hitPoint, ray);
-//		return this.ambient;
-//	}
-//
-//	private Vec calcAmbientTerm(Surface surface, Hit hitPoint, Ray ray) {
-//		Vec ambientTerm = new Vec(0);
-//		for (Light l : lightSources) {
-//			ambientTerm.add(surface.Ka().mult(l.intensity(ray.getHittingPoint(hitPoint), ray)));
-//		}
-//		return ambientTerm;
-//	}
 }

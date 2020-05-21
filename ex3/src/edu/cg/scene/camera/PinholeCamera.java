@@ -59,8 +59,8 @@ public class PinholeCamera {
 	private void initImagePlain(double distanceToPlain) {
 		this.plainCenter = cameraPosition.add(this.Vtowards.mult(distanceToPlain));
 		this.imageWidth = distanceToPlain * Math.tan(this.viewAngle / 2) * 2;
-		this.imageHeight = this.pixelWidth * this.Ry;
 		this.pixelWidth = this.imageWidth / this.Rx;
+		this.imageHeight = this.pixelWidth * this.Ry;
 	}
 
 	/**
