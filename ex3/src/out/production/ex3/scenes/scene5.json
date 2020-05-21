@@ -47,23 +47,7 @@
     "y": 0.5,
     "z": 1.0
   },
-  "lightSources": [
-    {
-      "CLASSNAME": "edu.cg.scene.lightSources.DirectionalLight",
-      "DATA": {
-        "direction": {
-          "x": -0.5773502691896258,
-          "y": -0.5773502691896258,
-          "z": -0.5773502691896258
-        },
-        "intensity": {
-          "x": 0.9,
-          "y": 0.9,
-          "z": 0.9
-        }
-      }
-    }
-  ],
+  "lightSources": [],
   "surfaces": [
     {
       "shape": {

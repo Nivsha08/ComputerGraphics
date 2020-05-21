@@ -13,10 +13,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 import edu.cg.scene.camera.PinholeCamera;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Surface;
@@ -176,6 +173,70 @@ public class Scene {
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
-		throw new UnimplementedMethodException("calcColor");
+		Hit minimalIntersection = this.findMinimalIntersection(ray);
+		if (minimalIntersection == null) {
+			return this.backgroundColor;
+		}
+		Vec surfaceColorAtHittingPoint = this.calcColorAtHittingPoint(ray, minimalIntersection);
+		return surfaceColorAtHittingPoint;
 	}
+
+	private Hit findMinimalIntersection(Ray ray) {
+		LinkedList<Hit> intersections = new LinkedList<>();
+		for (Surface s : this.surfaces) {
+			Hit surfaceIntersection = s.intersect(ray);
+			if (surfaceIntersection != null) intersections.add(surfaceIntersection);
+		}
+		return (intersections.size() == 0) ? null : Collections.min(intersections);
+	}
+
+	private Vec calcColorAtHittingPoint(Ray ray, Hit minimalIntersection) {
+		Surface intersectionSurface = minimalIntersection.getSurface();
+		Point hittingPoint = ray.getHittingPoint(minimalIntersection);
+		Vec color = new Vec(0);
+		color = color.add(this.calcAmbientTerm(intersectionSurface));
+		for (Light lightSource : this.lightSources) {
+			// calculate Si*IL*(Diffuse + Specular)
+			Ray rayToLight = lightSource.rayToLight(hittingPoint);
+			Vec lightIntensity = lightSource.intensity(hittingPoint, rayToLight);
+			if (!this.isShadowedFromLight(lightSource, rayToLight)) {
+				Vec diffuseTerm = this.calcDiffuseTerm(minimalIntersection, rayToLight);
+				Vec specularTerm = this.calcSpecularTerm(minimalIntersection, ray, rayToLight);
+				color = color.add(diffuseTerm.add(specularTerm).mult(lightIntensity));
+			}
+		}
+		//fixme: add calculations for reflection and refraction terms
+		return color;
+	}
+
+	private Vec calcAmbientTerm(Surface surface) {
+		Vec Ka = surface.Ka();
+		return Ka.mult(this.ambient);
+	}
+
+	private boolean isShadowedFromLight(Light lightSource, Ray rayToLight) {
+		for (Surface s : this.surfaces) {
+			if (lightSource.isOccludedBy(s, rayToLight)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Vec calcDiffuseTerm(Hit minimalIntersection, Ray rayToLight) {
+		Vec Kd = minimalIntersection.getSurface().Kd();
+		Vec N = minimalIntersection.getNormalToSurface();
+		Vec L = rayToLight.direction();
+		return Kd.mult(N.dot(L));
+	}
+
+	private Vec calcSpecularTerm(Hit minimalIntersection, Ray rayToViewer, Ray rayToLight) {
+		double n = minimalIntersection.getSurface().shininess();
+		Vec Ks = minimalIntersection.getSurface().Ks();
+		Vec V = rayToViewer.inverse().direction();
+		Vec N = minimalIntersection.getNormalToSurface();
+		Vec L_hat = Ops.reflect(rayToLight.inverse().direction(), N);
+		return Ks.mult(Math.pow(V.dot(L_hat), n));
+	}
+
 }

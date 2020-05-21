@@ -7,7 +7,7 @@ import edu.cg.algebra.Vec;
 import edu.cg.scene.objects.Surface;
 
 /**
- * TODO: This class represents a point light and is already implemented. Read
+ * This class represents a point light and is already implemented. Read
  * carefully the implementation because you will need it in order to implement
  * the CutoffSpotlight light source. Note: You may ignore our implementation and
  * implement the CutoffSpotlight class without using this implementation.
