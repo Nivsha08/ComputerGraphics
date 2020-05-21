@@ -2,7 +2,6 @@ package edu.cg.scene;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import edu.cg.Logger;
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 import edu.cg.scene.camera.PinholeCamera;
 import edu.cg.scene.lightSources.Light;
@@ -196,10 +194,9 @@ public class Scene {
 		Vec color = new Vec(0);
 		color = color.add(this.calcAmbientTerm(intersectionSurface));
 		for (Light lightSource : this.lightSources) {
-			// calculate Si*IL*(Diffuse + Specular)
 			Ray rayToLight = lightSource.rayToLight(hittingPoint);
 			Vec lightIntensity = lightSource.intensity(hittingPoint, rayToLight);
-			if (!this.isShadowedFromLight(lightSource, rayToLight)) {
+			if (!this.isOccludedFromLight(lightSource, rayToLight)) {
 				Vec diffuseTerm = this.calcDiffuseTerm(minimalIntersection, rayToLight);
 				Vec specularTerm = this.calcSpecularTerm(minimalIntersection, ray, rayToLight);
 				color = color.add(diffuseTerm.add(specularTerm).mult(lightIntensity));
@@ -214,7 +211,7 @@ public class Scene {
 		return Ka.mult(this.ambient);
 	}
 
-	private boolean isShadowedFromLight(Light lightSource, Ray rayToLight) {
+	private boolean isOccludedFromLight(Light lightSource, Ray rayToLight) {
 		for (Surface s : this.surfaces) {
 			if (lightSource.isOccludedBy(s, rayToLight)) {
 				return true;
@@ -230,12 +227,16 @@ public class Scene {
 		return Kd.mult(N.dot(L));
 	}
 
-	private Vec calcSpecularTerm(Hit minimalIntersection, Ray rayToViewer, Ray rayToLight) {
+	private Vec calcSpecularTerm(Hit minimalIntersection, Ray rayFromViewer, Ray rayToLight) {
 		double n = minimalIntersection.getSurface().shininess();
 		Vec Ks = minimalIntersection.getSurface().Ks();
-		Vec V = rayToViewer.inverse().direction();
-		Vec N = minimalIntersection.getNormalToSurface();
-		Vec L_hat = Ops.reflect(rayToLight.inverse().direction(), N);
+		Vec V = rayFromViewer.direction().neg();
+		Vec N = minimalIntersection.getNormalToSurface().normalize();
+		Vec L_hat = Ops.reflect(rayToLight.direction().normalize().neg(), N);
+//		if (V.dot(L_hat) < 0) {
+//			System.out.println("dot p: "+ V.dot(L_hat) + " N:" + N);
+//			return new Vec(0);
+//		}
 		return Ks.mult(Math.pow(V.dot(L_hat), n));
 	}
 

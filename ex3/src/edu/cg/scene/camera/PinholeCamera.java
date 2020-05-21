@@ -13,6 +13,7 @@ public class PinholeCamera {
 	private Vec Vtowards;
 	private int Rx;
 	private int Ry;
+	private double distanceToPlain;
 	private double imageWidth;
 	private double imageHeight;
 	private double pixelWidth;
@@ -31,9 +32,9 @@ public class PinholeCamera {
 	 * 
 	 */
 	public PinholeCamera(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
-		this.initResolution(200, 200, 90);
+		this.distanceToPlain = distanceToPlain;
 		this.initImageSpace(cameraPosition, towardsVec, upVec);
-		this.initImagePlain(distanceToPlain);
+		this.initResolution(200, 200, 90);
 	}
 
 	/**
@@ -47,20 +48,21 @@ public class PinholeCamera {
 		this.Rx = width;
 		this.Ry = height;
 		this.viewAngle = viewAngle;
+		this.initImagePlain();
 	}
 
 	private void initImageSpace(Point cameraPosition, Vec towardsVec, Vec upVec) {
 		this.cameraPosition = cameraPosition;
 		this.Vtowards = towardsVec.normalize();
-		this.Vright = upVec.normalize().cross(this.Vtowards).normalize();
-		this.Vup = this.Vright.cross(this.Vtowards).normalize();
+		this.Vright = Vtowards.cross(upVec).normalize();
+		this.Vup =  Vright.cross(Vtowards).normalize();
 	}
 
-	private void initImagePlain(double distanceToPlain) {
-		this.plainCenter = cameraPosition.add(this.Vtowards.mult(distanceToPlain));
-		this.imageWidth = distanceToPlain * Math.tan(this.viewAngle / 2) * 2;
-		this.pixelWidth = this.imageWidth / this.Rx;
-		this.imageHeight = this.pixelWidth * this.Ry;
+	private void initImagePlain() {
+		this.plainCenter = cameraPosition.add(Vtowards.mult(distanceToPlain));
+		this.imageWidth = distanceToPlain * Math.tan(Math.toRadians(viewAngle / 2)) * 2;
+		this.pixelWidth = imageWidth / Rx;
+		this.imageHeight = pixelWidth * Ry;
 	}
 
 	/**
@@ -72,9 +74,9 @@ public class PinholeCamera {
 	 * @return the middle point of the pixel (x,y) in the model coordinates.
 	 */
 	public Point transform(int x, int y) {
-		Vec deltaX = this.Vright.mult(x - Math.floor(this.Rx / 2));
-		Vec deltaY = this.Vup.mult(y - Math.floor(this.Ry / 2));
-		return this.plainCenter.add(deltaX).add(deltaY.neg());
+		Vec deltaX = Vright.mult(x - Math.floor(Rx / 2)).mult(pixelWidth);
+		Vec deltaY = Vup.neg().mult(y - Math.floor(Ry / 2)).mult(pixelWidth);
+		return plainCenter.add(deltaX).add(deltaY);
 	}
 
 	/**
