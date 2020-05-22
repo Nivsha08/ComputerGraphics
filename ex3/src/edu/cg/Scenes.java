@@ -207,4 +207,53 @@ public class Scenes {
 		return finalScene;
 	}
 
+	public static Scene scene7() {
+		// Define basic properties of the scene
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initCamera(/* Camera Position = */new Point(0.0, 2.0, 6.0),
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene7").initAntiAliasingFactor(1)
+				.initBackgroundColor(new Vec(0.1))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+		// Add Surfaces to the scene.
+
+		Shape plainShape = new Plain(new Vec(0.0,-4.3,0.0), new Point(0.0, -4.3, 0.0));
+		Material plainMat = Material.getMetalMaterial().initReflectionIntensity(0);
+		Surface plainSurface = new Surface(plainShape, plainMat);
+		finalScene.addSurface(plainSurface);
+
+		// (2) Add two domes to make it look like we split a sphere in half.
+		Shape domeShape = new Dome(new Point(0,0,-10), 5.0, new Vec(0.0, 1.0, 0.0));
+		Material domeMat = new Material().initKa(new Vec(0.8, 0.05, 0.05)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(3).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(0.3);
+		Surface domeSurface = new Surface(domeShape, domeMat);
+		finalScene.addSurface(domeSurface);
+
+		domeShape = new Dome(new Point(0,0,-10), 5.0, new Vec(0.0, -1.0, 0.0));
+		domeMat = new Material().initKa(new Vec(0.9)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(3).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(0.3);
+		domeSurface = new Surface(domeShape, domeMat);
+		finalScene.addSurface(domeSurface);
+
+		Shape outerSphere = new Sphere(new Point(0, 0, -5.6), 0.9);
+		Material outerSphereMat = new Material().initKa(new Vec(0, 0, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(3).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(0.3);
+		Surface otherSphereSurface = new Surface(outerSphere, outerSphereMat);
+		finalScene.addSurface(otherSphereSurface);
+
+		Shape innerSphere = new Sphere(new Point(0, 0, -4.9), 0.5);
+		Material innerSphereMat = new Material().initKa(new Vec(0.9)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(3).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(0.3);
+		Surface innerSphereSurface = new Surface(innerSphere, innerSphereMat);
+		finalScene.addSurface(innerSphereSurface);
+
+		// Add light sources:
+		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -0.5), new Vec(0.7));
+		finalScene.addLightSource(dirLight);
+
+		return finalScene;
+	}
+
 }
