@@ -77,7 +77,6 @@ public class Ops {
 	}
 
 	public static Point add(Point p, double t, Vec v) {
-		// returns p + tv;
 		return add(p, mult(t, v));
 	}
 
@@ -107,8 +106,16 @@ public class Ops {
 	 * @return
 	 */
 	public static Vec refract(Vec u, Vec normal, double n1, double n2) {
-		// TODO: Bonus implementation. 
-		// Snell's law: n1*sin(theta1) = n2*sin(theta2)
-		throw new UnimplementedMethodException("Ops.refract(Vec, Vec, double, double)");
+		double indexRatio = n1 / n2;
+		double theta1 = Math.acos(Math.toRadians(u.neg().normalize().dot(normal)));
+		double theta2 = Math.asin(Math.toRadians(indexRatio * Math.sin(Math.toRadians(theta1))));
+		if (theta2 >= 90) {
+			return null;
+		}
+		else {
+			double cosineTheta1 = Math.cos(Math.toRadians(theta1));
+			double cosineTheta2 = Math.cos(Math.toRadians(theta2));
+			return normal.mult(indexRatio * cosineTheta1 - cosineTheta2).add(u.mult(indexRatio));
+		}
 	}
 }
