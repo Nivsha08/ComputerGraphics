@@ -6,13 +6,13 @@
   "renderReflections": true,
   "camera": {
     "cameraPosition": {
-      "x": 0.0,
-      "y": 1.3,
+      "x": 0.75,
+      "y": 0.8,
       "z": 4.0
     },
     "plainCenter": {
-      "x": 0.0,
-      "y": 1.100992561958002,
+      "x": 0.75,
+      "y": 0.6009925619580022,
       "z": 2.0099256195800215
     },
     "Vup": {
@@ -97,9 +97,44 @@
       },
       "material": {
         "Ka": {
-          "x": 0.8,
+          "x": 0.1,
+          "y": 0.1,
+          "z": 0.1
+        },
+        "Kd": {
+          "x": 0.1,
+          "y": 0.1,
+          "z": 0.1
+        },
+        "Ks": {
+          "x": 0.1,
+          "y": 0.1,
+          "z": 0.1
+        },
+        "reflectionIntensity": 0.8,
+        "shininess": 10,
+        "isTransparent": true,
+        "refractionIntensity": 0.2,
+        "refractionIndex": 1.5
+      }
+    },
+    {
+      "shape": {
+        "CLASSNAME": "edu.cg.scene.objects.Sphere",
+        "DATA": {
+          "center": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "radius": 0.3
+        }
+      },
+      "material": {
+        "Ka": {
+          "x": 0.0,
           "y": 0.4,
-          "z": 0.0
+          "z": 1.0
         },
         "Kd": {
           "x": 0.0,
@@ -123,9 +158,9 @@
         "CLASSNAME": "edu.cg.scene.objects.Sphere",
         "DATA": {
           "center": {
-            "x": 1.5,
+            "x": 1.0,
             "y": 0.0,
-            "z": -2.0
+            "z": -2.5
           },
           "radius": 0.7
         }
@@ -158,9 +193,9 @@
         "CLASSNAME": "edu.cg.scene.objects.Sphere",
         "DATA": {
           "center": {
-            "x": -1.5,
+            "x": -1.0,
             "y": 0.0,
-            "z": -2.0
+            "z": -2.5
           },
           "radius": 0.7
         }

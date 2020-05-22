@@ -46,12 +46,8 @@ public class Sphere extends Shape {
 		if (delta > 0) {
 			double t1 = (-B - Math.sqrt(delta)) / (2 * A);
 			double t2 = (-B + Math.sqrt(delta)) / (2 * A);
-			if (isSingleSolution(t1, t2)) { //t1 == t2
-				solution = getSingleSolution(ray, t1);
-			}
-			else {
-				solution = getMinimalSolution(ray, t1, t2);
-			}
+			solution = (isSingleSolution(t1, t2)) ?
+					getSingleSolution(ray, t1) : getMinimalSolution(ray, t1, t2);
 		}
 		return solution;
 	}

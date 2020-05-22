@@ -176,7 +176,7 @@ public class Scene {
 			return this.backgroundColor;
 		Surface hitSurface = minimalIntersection.getSurface();
 		Vec color = calcColorAtHittingPoint(ray, minimalIntersection);
-		if (recursionLevel == maxRecursionLevel)
+		if (recursionLevel == maxRecursionLevel - 1)
 			return color;
 		if (renderReflections) {
 			double reflectionCoeff = hitSurface.reflectionIntensity();
