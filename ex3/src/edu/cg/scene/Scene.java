@@ -184,14 +184,14 @@ public class Scene {
 			Vec reflectionColor = calcColor(reflectedRay, recursionLevel + 1);
 			color = color.add(reflectionColor.mult(reflectionCoeff));
 		}
-//		if (renderRefractions) {
-//			double refractionCoeff = hitSurface.refractionIntensity();
-//			Ray refractedRay = getRefractedRay(ray, minimalIntersection);
-//			if (refractedRay != null) {
-//				Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
-//				color = color.add(refractionColor.mult(refractionCoeff));
-//			}
-//		}
+		if (renderRefractions) {
+			double refractionCoeff = hitSurface.refractionIntensity();
+			Ray refractedRay = getRefractedRay(ray, minimalIntersection);
+			if (refractedRay != null) {
+				Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
+				color = color.add(refractionColor.mult(refractionCoeff));
+			}
+		}
 		return color;
 	}
 
@@ -237,19 +237,19 @@ public class Scene {
 
 	private Vec calcDiffuseTerm(Hit minimalIntersection, Ray rayToLight) {
 		Vec Kd = minimalIntersection.getSurface().Kd();
-		Vec N = minimalIntersection.getNormalToSurface();
-		Vec L = rayToLight.direction();
+		Vec N = minimalIntersection.getNormalToSurface().normalize();
+		Vec L = rayToLight.direction().normalize();
 		return Kd.mult(N.dot(L));
 	}
 
 	private Vec calcSpecularTerm(Hit minimalIntersection, Ray rayFromViewer, Ray rayToLight) {
 		double n = minimalIntersection.getSurface().shininess();
 		Vec Ks = minimalIntersection.getSurface().Ks();
-		Vec V = rayFromViewer.direction().neg();
+		Vec V = rayFromViewer.direction().neg().normalize();
 		Vec N = minimalIntersection.getNormalToSurface().normalize();
-		Vec L_hat = Ops.reflect(rayToLight.direction().normalize().neg(), N);
+		Vec L_hat = Ops.reflect(rayToLight.direction().neg().normalize(), N);
 		double cosineAlpha = V.dot(L_hat);
-		return (cosineAlpha < 0) ? new Vec(0) : Ks.mult(Math.pow(cosineAlpha, n));
+		return (cosineAlpha < Ops.epsilon) ? new Vec(0) : Ks.mult(Math.pow(cosineAlpha, n));
 	}
 
 	private Ray getReflectedRay(Ray ray, Hit minimalIntersection) {

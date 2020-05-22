@@ -1,21 +1,23 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Dome extends Shape {
-	private Sphere sphere;
 	private Plain plain;
+	private Sphere sphere;
+	private Point sphereCenter;
+	private double sphereRadius;
 
 	public Dome() {
-		sphere = new Sphere().initCenter(new Point(0, -0.5, -6));
-		plain = new Plain(new Vec(-1, 0, -1), new Point(0, -0.5, -6));
+		sphereCenter = new Point(0, -0.5, -6);
+		sphere = new Sphere().initCenter(sphereCenter);
+		plain = new Plain(new Vec(-1, 0, -1), sphereCenter);
 	}
 
 	public Dome(Point center, double radius, Vec plainDirection) {
+		sphereCenter = center;
+		sphereRadius = radius;
 		sphere = new Sphere(center, radius);
 		plain = new Plain(plainDirection, center);
 	}
@@ -28,10 +30,40 @@ public class Dome extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		// sphere.intersect(ray)
-		// if intersection is above plain --> hit.setWithin
-		// else --> hit.setOutside
-		// TODO: implement this method (bonus only).
-		throw new UnimplementedMethodException("intersect(Ray)");
+		Hit solution = null;
+		Hit sphereHit = sphere.intersect(ray);
+		if (sphereHit != null) {
+			Hit plainHit = plain.intersect(ray);
+			solution = (singleSolution(ray, plainHit, sphereHit)) ?
+					getSingleSolution(ray, sphereHit) : getMinimalSolution(ray, plainHit, sphereHit);
+		}
+		return solution;
+	}
+
+	private boolean singleSolution(Ray ray, Hit planeHit, Hit sphereHit) {
+		return (planeHit == null) ||
+			(!isPlainIntersectionInsideDome(ray.getHittingPoint(planeHit))) ||
+			(planeHit.t() == sphereHit.t());
+	}
+
+	private Hit getSingleSolution(Ray ray, Hit sphereHit) {
+		Point intersectionPoint = ray.getHittingPoint(sphereHit);
+		return (intersectionAbovePlain(intersectionPoint)) ?
+			new Hit(sphereHit.t(), ray.add(sphereHit.t()).sub(sphereCenter).normalize()) : null;
+	}
+
+	private Hit getMinimalSolution(Ray ray, Hit planeHit, Hit sphereHit) {
+		return (sphereHit.t() < planeHit.t()) ?
+			new Hit(sphereHit.t(), ray.add(sphereHit.t()).sub(sphereCenter).normalize())
+			: new Hit(planeHit.t(), plain.normal().neg());
+	}
+
+	private boolean intersectionAbovePlain(Point intersectionPoint) {
+		return (plain.substitute(intersectionPoint) >= 0);
+	}
+
+	private boolean isPlainIntersectionInsideDome(Point plainIntersection) {
+		double distanceFromSphereCenter = Ops.dist(plainIntersection, sphereCenter);
+		return (distanceFromSphereCenter <= sphereRadius);
 	}
 }

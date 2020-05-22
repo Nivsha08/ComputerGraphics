@@ -1,9 +1,6 @@
 package edu.cg.scene.lightSources;
 
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 import edu.cg.scene.objects.Surface;
 
 /**
@@ -58,7 +55,7 @@ public class PointLight extends Light {
 	@Override
 	public boolean isOccludedBy(Surface surface, Ray rayToLight) {
 		Hit hit = surface.intersect(rayToLight);
-		if (hit == null)
+		if (hit == null || hit.t() <= Ops.epsilon)
 			return false;
 
 		Point source = rayToLight.source();

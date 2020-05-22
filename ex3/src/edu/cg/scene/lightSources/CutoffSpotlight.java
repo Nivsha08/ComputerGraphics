@@ -55,14 +55,13 @@ public class CutoffSpotlight extends PointLight {
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
 		Vec Vd = this.direction.normalize();
-		Vec directionToLight = rayToLight.direction().neg().normalize();
-		double cosineGamma = Vd.dot(directionToLight);
-		if (cosineGamma < Math.cos(Math.toRadians(this.cutoffAngle))) {
+		Vec lightToPoint = rayToLight.direction().neg().normalize();
+		double cosineGamma = Vd.dot(lightToPoint);
+		if (cosineGamma <= Ops.epsilon|| cosineGamma < Math.cos(Math.toRadians(this.cutoffAngle))) {
 			return new Vec(0);
 		}
 		else {
-			Vec Il = super.intensity(hittingPoint, rayToLight);
-			return Il.mult(cosineGamma);
+			return super.intensity(hittingPoint, rayToLight).mult(cosineGamma);
 		}
 	}
 }
