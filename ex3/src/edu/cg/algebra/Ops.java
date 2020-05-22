@@ -105,20 +105,10 @@ public class Ops {
 	 * @param n2     the refraction index of the second medium
 	 * @return
 	 */
+	// Snell's law: n1*sin(theta1) = n2*sin(theta2)
 	public static Vec refract(Vec u, Vec normal, double n1, double n2) {
 		Vec result = null;
 		double indexRatio = n1 / n2;
-		// Snell's law: n1*sin(theta1) = n2*sin(theta2)
-//		sin(theta2) = (n1/n2) * sin(theta1)
-//		theta2 = arcsin[ (n1/n2) * sin(theta1) ]
-	//fixme: mock
-//		const double n = n1 / n2;
-//    const double cosI = -dot(normal, incident);
-//    const double sinT2 = n * n * (1.0 - cosI * cosI);
-//    if(sinT2 > 1.0) return Vector::invalid; // TIR
-//    const double cosT = sqrt(1.0 - sinT2);
-//    return n * incident + (n * cosI - cosT) * normal;
-
 		double cosineTheta1 = normal.dot(u.neg());
 		double sinTheta2Square = indexRatio * indexRatio * (1 - cosineTheta1 * cosineTheta1);
 		if (sinTheta2Square <= 1) {
@@ -128,16 +118,6 @@ public class Ops {
 		else {
 			result = Ops.reflect(u, normal);
 		}
-
-//		double theta1 = Math.toDegrees(Math.acos(Math.toRadians(u.neg().normalize().dot(normal))));
-//		double theta2 = Math.toDegrees(Math.asin(indexRatio * Math.sin(Math.toRadians(theta1))));
-////		double theta2 = Math.toDegrees(Math.asin(Math.toRadians(indexRatio * Math.sin(Math.toRadians(theta1)))));
-//		System.out.println("theta1: "+theta1+" , theta2: "+theta2);
-//		if (theta2 < 90) {
-//			double cosineTheta1 = Math.cos(Math.toRadians(theta1));
-//			double cosineTheta2 = Math.cos(Math.toRadians(theta2));
-//			result = normal.mult(indexRatio * cosineTheta1 - cosineTheta2).add(u.mult(indexRatio));
-//		}
 		return result;
 	}
 }

@@ -184,14 +184,14 @@ public class Scene {
 			Vec reflectionColor = calcColor(reflectedRay, recursionLevel + 1);
 			color = color.add(reflectionColor.mult(reflectionCoeff));
 		}
-		if (renderRefractions) {
-			double refractionCoeff = hitSurface.refractionIntensity();
-			Ray refractedRay = getRefractedRay(ray, minimalIntersection);
-			if (refractedRay != null) {
-				Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
-				color = color.add(refractionColor.mult(refractionCoeff));
-			}
-		}
+//		if (renderRefractions) {
+//			double refractionCoeff = hitSurface.refractionIntensity();
+//			Ray refractedRay = getRefractedRay(ray, minimalIntersection);
+//			if (refractedRay != null) {
+//				Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
+//				color = color.add(refractionColor.mult(refractionCoeff));
+//			}
+//		}
 		return color;
 	}
 
