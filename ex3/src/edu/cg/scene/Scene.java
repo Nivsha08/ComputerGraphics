@@ -20,7 +20,7 @@ public class Scene {
 	private String name = "scene";
 	private int maxRecursionLevel = 1;
 	private int antiAliasingFactor = 1; // gets the values of 1, 2 and 3
-	private boolean renderRefarctions = false;
+	private boolean renderRefractions = false;
 	private boolean renderReflections = false;
 
 	private PinholeCamera camera;
@@ -71,7 +71,7 @@ public class Scene {
 	}
 
 	public Scene initRenderRefarctions(boolean renderRefarctions) {
-		this.renderRefarctions = renderRefarctions;
+		this.renderRefractions = renderRefarctions;
 		return this;
 	}
 
@@ -93,8 +93,8 @@ public class Scene {
 		return maxRecursionLevel;
 	}
 
-	public boolean getRenderRefarctions() {
-		return renderRefarctions;
+	public boolean getRenderRefractions() {
+		return renderRefractions;
 	}
 
 	public boolean getRenderReflections() {
@@ -175,8 +175,17 @@ public class Scene {
 		if (minimalIntersection == null) {
 			return this.backgroundColor;
 		}
-		Vec surfaceColorAtHittingPoint = this.calcColorAtHittingPoint(ray, minimalIntersection);
-		return surfaceColorAtHittingPoint;
+		Surface hitSurface = minimalIntersection.getSurface();
+		Vec color = this.calcColorAtHittingPoint(ray, minimalIntersection);
+		if (recursionLevel == maxRecursionLevel)
+			return color;
+		if (renderReflections) {
+			double reflectionCoeff = hitSurface.reflectionIntensity();
+			Ray reflectedRay = this.getReflectedRay(ray, minimalIntersection);
+			Vec reflectionColor = this.calcColor(reflectedRay, recursionLevel + 1);
+			color = color.add(reflectionColor.mult(reflectionCoeff));
+		}
+		return color;
 	}
 
 	private Hit findMinimalIntersection(Ray ray) {
@@ -202,7 +211,6 @@ public class Scene {
 				color = color.add(diffuseTerm.add(specularTerm).mult(lightIntensity));
 			}
 		}
-		//fixme: add calculations for reflection and refraction terms
 		return color;
 	}
 
@@ -235,6 +243,13 @@ public class Scene {
 		Vec L_hat = Ops.reflect(rayToLight.direction().normalize().neg(), N);
 		double cosineAlpha = V.dot(L_hat);
 		return (cosineAlpha < 0) ? new Vec(0) : Ks.mult(Math.pow(cosineAlpha, n));
+	}
+
+	private Ray getReflectedRay(Ray ray, Hit minimalIntersection) {
+		Point hittingPoint = ray.getHittingPoint(minimalIntersection);
+		Vec normalToSurface = minimalIntersection.getNormalToSurface().normalize();
+		Vec reflectDirection = Ops.reflect(ray.direction().normalize(), normalToSurface).normalize();
+		return new Ray(hittingPoint, reflectDirection);
 	}
 
 }

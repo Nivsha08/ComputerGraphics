@@ -150,5 +150,5 @@ public class Scenes {
 				.addSurface(plainSurface).initName("scene5").initAntiAliasingFactor(1)
 				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
 	}
-	
+
 }

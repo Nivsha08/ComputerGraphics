@@ -2,7 +2,7 @@
   "name": "scene1",
   "maxRecursionLevel": 3,
   "antiAliasingFactor": 1,
-  "renderRefarctions": true,
+  "renderRefractions": true,
   "renderReflections": true,
   "camera": {
     "cameraPosition": {
