@@ -140,15 +140,59 @@ public class Scenes {
 	}
 
 	public static Scene scene5() {
+		// Define basic properties of the scene
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initBackgroundColor(new Vec(0.0))
+				.initCamera(/* Camera Position = */new Point(0.0, 0.8, 4.0),
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene5").initAntiAliasingFactor(1)
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(6);
+		// Add Surfaces to the scene.
+		// (1) A plain that represents the ground floor.
 		Shape plainShape = new Plain(new Vec(0.0,1.0,0.0), new Point(0.0, -1.0, 0.0));
 		Material plainMat = Material.getMetalMaterial();
 		Surface plainSurface = new Surface(plainShape, plainMat);
-//		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -1.0), new Vec(0.9));
+		finalScene.addSurface(plainSurface);
 
-		return new Scene().initAmbient(new Vec(1.0))
-				.initCamera(new Point(4, 4, 1.5), new Vec(-1.0, -1.0, -0.3), new Vec(0, 0, 1), 3)
-				.addSurface(plainSurface).initName("scene5").initAntiAliasingFactor(1)
-				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+		Shape sphereShape1 = new Sphere(new Point(0.0), 1);
+		Material sphereMat1 = new Material().initKa(new Vec(0.8, 0.05, 0.05)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
+		Surface boxSurface1 = new Surface(sphereShape1, sphereMat1);
+		finalScene.addSurface(boxSurface1);
+
+		return finalScene;
+	}
+
+	public static Scene scene6() {
+		// Define basic properties of the scene
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initBackgroundColor(new Vec(0.0))
+				.initCamera(/* Camera Position = */new Point(0.0, 0.8, 4.0),
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene6").initAntiAliasingFactor(1)
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(6);
+
+		Shape plainShape = new Plain(new Vec(0.0,1.0,0.0), new Point(0.0, -1.0, 0.0));
+		Material plainMat = Material.getMetalMaterial();
+		Surface plainSurface = new Surface(plainShape, plainMat);
+		finalScene.addSurface(plainSurface);
+
+		Shape outerSphere = new Sphere(new Point(0.0), 1);
+		Material outerSphereMat = Material.getGlassMaterial(true);
+		Surface outerSphereSurface = new Surface(outerSphere, outerSphereMat);
+		finalScene.addSurface(outerSphereSurface);
+
+		Shape innerSphere = new Sphere(new Point(0.0), 0.7);
+		Material innerSphereMat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
+		Surface innerSphereSurface = new Surface(innerSphere, innerSphereMat);
+		finalScene.addSurface(innerSphereSurface);
+
+		return finalScene;
 	}
 
 }
