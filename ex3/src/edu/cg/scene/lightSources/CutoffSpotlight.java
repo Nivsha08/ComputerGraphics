@@ -57,7 +57,7 @@ public class CutoffSpotlight extends PointLight {
 		Vec Vd = this.direction.normalize();
 		Vec directionToLight = rayToLight.direction().neg().normalize();
 		double cosineGamma = Vd.dot(directionToLight);
-		if (cosineGamma < Math.cos(this.cutoffAngle)) {
+		if (cosineGamma < Math.cos(Math.toRadians(this.cutoffAngle))) {
 			return new Vec(0);
 		}
 		else {

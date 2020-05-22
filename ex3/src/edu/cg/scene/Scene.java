@@ -233,11 +233,8 @@ public class Scene {
 		Vec V = rayFromViewer.direction().neg();
 		Vec N = minimalIntersection.getNormalToSurface().normalize();
 		Vec L_hat = Ops.reflect(rayToLight.direction().normalize().neg(), N);
-//		if (V.dot(L_hat) < 0) {
-//			System.out.println("dot p: "+ V.dot(L_hat) + " N:" + N);
-//			return new Vec(0);
-//		}
-		return Ks.mult(Math.pow(V.dot(L_hat), n));
+		double cosineAlpha = V.dot(L_hat);
+		return (cosineAlpha < 0) ? new Vec(0) : Ks.mult(Math.pow(cosineAlpha, n));
 	}
 
 }
