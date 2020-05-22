@@ -3,6 +3,8 @@ package edu.cg.scene.objects;
 import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 
+import java.util.LinkedList;
+
 public class Sphere extends Shape {
 	private Point center;
 	private double radius;
@@ -36,7 +38,7 @@ public class Sphere extends Shape {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		double tSolution = -1;
+		Hit solution = null;
 		double A = ray.direction().lengthSqr();
 		double B = 2 * ray.direction().dot(ray.source().sub(center));
 		double C = ray.source().sub(center).lengthSqr() - (radius * radius);
@@ -44,17 +46,43 @@ public class Sphere extends Shape {
 		if (delta > 0) {
 			double t1 = (-B - Math.sqrt(delta)) / (2 * A);
 			double t2 = (-B + Math.sqrt(delta)) / (2 * A);
-			if (t2 < Ops.epsilon) {
-				return null;
-			}
-			else if (t1 > Ops.epsilon) {
-				tSolution = t1;
+			if (isSingleSolution(t1, t2)) { //t1 == t2
+				solution = getSingleSolution(ray, t1);
 			}
 			else {
-				tSolution = t2;
+				solution = getMinimalSolution(ray, t1, t2);
 			}
 		}
-		return (tSolution > Ops.epsilon) ?
-			new Hit(tSolution, ray.add(tSolution).sub(center).normalize()) : null;
+		return solution;
+	}
+
+	private boolean isSingleSolution(double t1, double t2) {
+		return (t1 == t2);
+	}
+
+	private Hit getSingleSolution(Ray ray, double t) {
+		if (t <= Ops.epsilon) {
+			// the solution is not positive
+			return null;
+		}
+		else {
+			Hit hit = new Hit(t, ray.add(t).sub(center).normalize()).setWithin();
+			return hit;
+		}
+	}
+
+	private Hit getMinimalSolution(Ray ray, double t1, double t2) {
+		Hit hit = null;
+		if (t2 > Ops.epsilon) {
+			if (t1 <= Ops.epsilon) {
+				// only t2 is positive
+				hit = new Hit(t2, ray.add(t2).sub(center).normalize()).setWithin();
+			}
+			else {
+				// both solutions is positive
+				hit = new Hit(t1, ray.add(t1).sub(center).normalize());
+			}
+		}
+		return hit;
 	}
 }

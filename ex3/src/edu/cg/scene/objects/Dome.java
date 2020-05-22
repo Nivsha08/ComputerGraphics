@@ -15,8 +15,8 @@ public class Dome extends Shape {
 		plain = new Plain(new Vec(-1, 0, -1), new Point(0, -0.5, -6));
 	}
 
-	public Dome(Point center, double radious, Vec plainDirection) {
-		sphere = new Sphere(center, radious);
+	public Dome(Point center, double radius, Vec plainDirection) {
+		sphere = new Sphere(center, radius);
 		plain = new Plain(plainDirection, center);
 	}
 
@@ -28,6 +28,9 @@ public class Dome extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
+		// sphere.intersect(ray)
+		// if intersection is above plain --> hit.setWithin
+		// else --> hit.setOutside
 		// TODO: implement this method (bonus only).
 		throw new UnimplementedMethodException("intersect(Ray)");
 	}

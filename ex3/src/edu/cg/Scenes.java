@@ -44,8 +44,8 @@ public class Scenes {
 		Material plainMat = Material.getMetalMaterial();
 		Surface plainSurface = new Surface(plainShape, plainMat);
 		finalScene.addSurface(plainSurface);
-		
-		// (2) We will also add spheres to form a triangle shape (similar to a pool game). 
+
+		// (2) We will also add spheres to form a triangle shape (similar to a pool game).
 		for (int depth = 0; depth < 4; depth++) {
 			for(int width=-1*depth; width<=depth; width++) {
 				Shape sphereShape = new Sphere(new Point((double)width, 0.0, -1.0*(double)depth), 0.5);
@@ -169,7 +169,7 @@ public class Scenes {
 		// Define basic properties of the scene
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
 				.initBackgroundColor(new Vec(0.0))
-				.initCamera(/* Camera Position = */new Point(0.0, 0.8, 4.0),
+				.initCamera(/* Camera Position = */new Point(0.0, 1.3, 4.0),
 						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
 						/* Up vector = */new Vec(0.0, 1.0, 0.0),
 						/*Distance to plain =*/ 2.0)
@@ -181,16 +181,23 @@ public class Scenes {
 		Surface plainSurface = new Surface(plainShape, plainMat);
 		finalScene.addSurface(plainSurface);
 
-		Shape outerSphere = new Sphere(new Point(0.0), 1);
-		Material outerSphereMat = Material.getGlassMaterial(true);
-		Surface outerSphereSurface = new Surface(outerSphere, outerSphereMat);
-		finalScene.addSurface(outerSphereSurface);
-
-		Shape innerSphere = new Sphere(new Point(0.0), 0.7);
-		Material innerSphereMat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+		Shape sphere1 = new Sphere(new Point(0.0), 0.7);
+		Material sphere1Mat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
 				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
-		Surface innerSphereSurface = new Surface(innerSphere, innerSphereMat);
-		finalScene.addSurface(innerSphereSurface);
+		Surface sphere1Surface = new Surface(sphere1, sphere1Mat);
+		finalScene.addSurface(sphere1Surface);
+
+		Shape sphere2 = new Sphere(new Point(1.5, 0.0, -2.0), 0.7);
+		Material sphere2Mat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
+		Surface sphere2Surface = new Surface(sphere2, sphere2Mat);
+		finalScene.addSurface(sphere2Surface);
+
+		Shape sphere3 = new Sphere(new Point(-1.5, 0.0, -2.0), 0.7);
+		Material sphere3Mat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
+				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
+		Surface sphere3Surface = new Surface(sphere3, sphere3Mat);
+		finalScene.addSurface(sphere3Surface);
 
 		return finalScene;
 	}

@@ -172,9 +172,8 @@ public class Scene {
 
 	private Vec calcColor(Ray ray, int recursionLevel) {
 		Hit minimalIntersection = findMinimalIntersection(ray);
-		if (minimalIntersection == null) {
+		if (minimalIntersection == null)
 			return this.backgroundColor;
-		}
 		Surface hitSurface = minimalIntersection.getSurface();
 		Vec color = calcColorAtHittingPoint(ray, minimalIntersection);
 		if (recursionLevel == maxRecursionLevel)
