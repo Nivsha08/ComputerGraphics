@@ -144,27 +144,41 @@ public class Scenes {
 	}
 
 	public static Scene scene5() {
-		// Define basic properties of the scene
+		Point cameraPosition = new Point(2, 1.5, 5.0);
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
-				.initBackgroundColor(new Vec(0.0))
-				.initCamera(/* Camera Position = */new Point(0.0, 0.8, 4.0),
-						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+				.initCamera(/* Camera Position = */cameraPosition,
+						/* Towards Vector = */ new Vec(0.5, -0.1 ,-1.0),
 						/* Up vector = */new Vec(0.0, 1.0, 0.0),
 						/*Distance to plain =*/ 2.0)
 				.initName("scene5").initAntiAliasingFactor(1)
-				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(6);
-		// Add Surfaces to the scene.
-		// (1) A plain that represents the ground floor.
+				.initBackgroundColor(new Vec(0.1,0.1,0.1))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(2);
+
 		Shape plainShape = new Plain(new Vec(0.0,1.0,0.0), new Point(0.0, -1.0, 0.0));
 		Material plainMat = Material.getMetalMaterial();
 		Surface plainSurface = new Surface(plainShape, plainMat);
 		finalScene.addSurface(plainSurface);
 
-		Shape sphereShape1 = new Sphere(new Point(0.0), 1);
-		Material sphereMat1 = new Material().initKa(new Vec(0.8, 0.05, 0.05)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
-				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
-		Surface boxSurface1 = new Surface(sphereShape1, sphereMat1);
-		finalScene.addSurface(boxSurface1);
+		CutoffSpotlight topSpotlight = new CutoffSpotlight(new Vec(0.0, -1.0, 0.0), 30.0);
+		topSpotlight.initPosition(new Point(0.0, 10.0, 0.0));
+		topSpotlight.initIntensity(new Vec(0.9,0.9,0.9));
+		finalScene.addLightSource(topSpotlight);
+
+		double marbleRadius = 0.25;
+
+		for (int i = -2; i < 2; i++) {
+			for (int j = -2; j < 2; j++) {
+				for (int k = -2; k < 2; k++) {
+					Sphere mirrorMarble = new Sphere(new Point(i, j, k).mult(0.5), 0.3);
+					Material mirrorMaterial = Material.getMetalMaterial().initKa(new Vec(0))
+							.initReflectionIntensity(1.0).initIsTransparent(false).initKs(new Vec(0));
+					Surface mirrorMarbleSurface = new Surface(mirrorMarble, mirrorMaterial);
+					finalScene.addSurface(mirrorMarbleSurface);
+				}
+			}
+		}
+
+		finalScene.addLightSource(topSpotlight);
 
 		return finalScene;
 	}
@@ -333,70 +347,6 @@ public class Scenes {
 		Vec sunDirection = cameraPosition.sub(sunPosition);
 		Light sunLight = new DirectionalLight(sunDirection, new Vec(0.95,0.84,0.03));
 		finalScene.addLightSource(sunLight);
-
-		return finalScene;
-	}
-
-	public static Scene scene10() {
-		Point cameraPosition = new Point(0, 1.0, 6.0);
-		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
-				.initCamera(/* Camera Position = */cameraPosition,
-						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
-						/* Up vector = */new Vec(0.0, 1.0, 0.0),
-						/*Distance to plain =*/ 2.0)
-				.initName("scene10").initAntiAliasingFactor(1)
-				.initBackgroundColor(new Vec(1,0.95,1))
-				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
-
-		Point sphereCenter = new Point(0, 0, -2.5);
-		double sphereRadius = 5;
-		Shape transparentSphere = new Sphere(sphereCenter, sphereRadius);
-		Material transparentSphereMat = Material.getGlassMaterial(true)
-				.initRefractionIntensity(0.8).initRefractionIndex(1).initReflectionIntensity(0);
-		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
-		finalScene.addSurface(transparentSphereSurface);
-
-		Point machineHeadPosition = new Point(0, sphereRadius - 1, -2);
-		Shape machineHead = new Dome(machineHeadPosition, 2, new Vec(0, 5, 0));
-		Material machineHeadMat = Material.getMetalMaterial().initIsTransparent(false).initKa(new Vec(0.76,0.17,0.04));
-		Surface machineHeadSurface = new Surface(machineHead, machineHeadMat);
-		finalScene.addSurface(machineHeadSurface);
-
-		List<Vec> gumColors = Arrays.asList(
-				new Vec(0.95, 0.95, 0.95),
-				new Vec(0.36,0.58,1),
-				new Vec(0.83,0.13,0.17),
-				new Vec(0.92,0.86,0.19),
-				new Vec(0.41,0.91,0.4),
-				new Vec(0.98,0.53,0.84)
-		);
-		double gumRadius = 0.5;
-		double numOfGumRows = 3;
-		double numOfGumsInARow = 1;
-		Shape gum;
-		for (int i = 0; i < numOfGumRows; i++) {
-			for (int j = 0; j < numOfGumsInARow; j++) {
-				Vec randomGumColor = gumColors.get((int)(gumColors.size() * Math.random()));
-				gum = new Sphere(new Point(sphereRadius - gumRadius - j * 2 * gumRadius,
-						sphereRadius - gumRadius + -i * 2 * gumRadius, sphereCenter.z), gumRadius);
-				Material gumMaterial = Material.getRandomMaterial().initKa(randomGumColor)
-						.initIsTransparent(false).initReflectionIntensity(0.3);
-				Surface gumSurface = new Surface(gum, gumMaterial);
-				finalScene.addSurface(gumSurface);
-				gum = new Sphere(new Point(-j * 2 * gumRadius, -i * 2 * gumRadius, sphereCenter.z), gumRadius);
-				gumMaterial = Material.getRandomMaterial().initKa(randomGumColor)
-						.initIsTransparent(false).initReflectionIntensity(0.3);
-				gumSurface = new Surface(gum, gumMaterial);
-				finalScene.addSurface(gumSurface);
-			}
-			numOfGumsInARow += 2;
-		}
-
-		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -1.0), new Vec(0.7));
-		finalScene.addLightSource(dirLight);
-
-		dirLight = new DirectionalLight(new Vec(3.0, 1.0, -1.0), new Vec(0.7));
-		finalScene.addLightSource(dirLight);
 
 		return finalScene;
 	}
