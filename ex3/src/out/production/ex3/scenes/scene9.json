@@ -127,11 +127,11 @@
           "y": 0.1,
           "z": 0.1
         },
-        "reflectionIntensity": 0.8,
-        "shininess": 3,
+        "reflectionIntensity": 0.4,
+        "shininess": 6,
         "isTransparent": true,
-        "refractionIntensity": 0.7,
-        "refractionIndex": 1.5
+        "refractionIntensity": 0.8,
+        "refractionIndex": 1.35
       }
     },
     {

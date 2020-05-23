@@ -13,6 +13,10 @@ import edu.cg.scene.objects.Shape;
 import edu.cg.scene.objects.Sphere;
 import edu.cg.scene.objects.Surface;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Scenes {
 	public static Scene scene1() {
 		Shape sphereShape1 = new Sphere(new Point(0.0), 1.0);
@@ -329,6 +333,70 @@ public class Scenes {
 		Vec sunDirection = cameraPosition.sub(sunPosition);
 		Light sunLight = new DirectionalLight(sunDirection, new Vec(0.95,0.84,0.03));
 		finalScene.addLightSource(sunLight);
+
+		return finalScene;
+	}
+
+	public static Scene scene10() {
+		Point cameraPosition = new Point(0, 1.0, 6.0);
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initCamera(/* Camera Position = */cameraPosition,
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene10").initAntiAliasingFactor(1)
+				.initBackgroundColor(new Vec(1,0.95,1))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+
+		Point sphereCenter = new Point(0, 0, -2.5);
+		double sphereRadius = 5;
+		Shape transparentSphere = new Sphere(sphereCenter, sphereRadius);
+		Material transparentSphereMat = Material.getGlassMaterial(true)
+				.initRefractionIntensity(0.8).initRefractionIndex(1).initReflectionIntensity(0);
+		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
+		finalScene.addSurface(transparentSphereSurface);
+
+		Point machineHeadPosition = new Point(0, sphereRadius - 1, -2);
+		Shape machineHead = new Dome(machineHeadPosition, 2, new Vec(0, 5, 0));
+		Material machineHeadMat = Material.getMetalMaterial().initIsTransparent(false).initKa(new Vec(0.76,0.17,0.04));
+		Surface machineHeadSurface = new Surface(machineHead, machineHeadMat);
+		finalScene.addSurface(machineHeadSurface);
+
+		List<Vec> gumColors = Arrays.asList(
+				new Vec(0.95, 0.95, 0.95),
+				new Vec(0.36,0.58,1),
+				new Vec(0.83,0.13,0.17),
+				new Vec(0.92,0.86,0.19),
+				new Vec(0.41,0.91,0.4),
+				new Vec(0.98,0.53,0.84)
+		);
+		double gumRadius = 0.5;
+		double numOfGumRows = 3;
+		double numOfGumsInARow = 1;
+		Shape gum;
+		for (int i = 0; i < numOfGumRows; i++) {
+			for (int j = 0; j < numOfGumsInARow; j++) {
+				Vec randomGumColor = gumColors.get((int)(gumColors.size() * Math.random()));
+				gum = new Sphere(new Point(sphereRadius - gumRadius - j * 2 * gumRadius,
+						sphereRadius - gumRadius + -i * 2 * gumRadius, sphereCenter.z), gumRadius);
+				Material gumMaterial = Material.getRandomMaterial().initKa(randomGumColor)
+						.initIsTransparent(false).initReflectionIntensity(0.3);
+				Surface gumSurface = new Surface(gum, gumMaterial);
+				finalScene.addSurface(gumSurface);
+				gum = new Sphere(new Point(-j * 2 * gumRadius, -i * 2 * gumRadius, sphereCenter.z), gumRadius);
+				gumMaterial = Material.getRandomMaterial().initKa(randomGumColor)
+						.initIsTransparent(false).initReflectionIntensity(0.3);
+				gumSurface = new Surface(gum, gumMaterial);
+				finalScene.addSurface(gumSurface);
+			}
+			numOfGumsInARow += 2;
+		}
+
+		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -1.0), new Vec(0.7));
+		finalScene.addLightSource(dirLight);
+
+		dirLight = new DirectionalLight(new Vec(3.0, 1.0, -1.0), new Vec(0.7));
+		finalScene.addLightSource(dirLight);
 
 		return finalScene;
 	}
