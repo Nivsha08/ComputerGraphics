@@ -269,7 +269,7 @@ public class Scenes {
 		// Add Surfaces to the scene.
 
 		Shape plainShape = new Plain(new Vec(0.0,-4.3,0.0), new Point(0.0, -4.3, 0.0));
-		Material plainMat = Material.getMetalMaterial().initReflectionIntensity(0);
+		Material plainMat = Material.getMetalMaterial().initKa(new Vec(0.35,0.2,0)).initReflectionIntensity(0.1);
 		Surface plainSurface = new Surface(plainShape, plainMat);
 		finalScene.addSurface(plainSurface);
 
@@ -279,10 +279,15 @@ public class Scenes {
 		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
 		finalScene.addSurface(transparentSphereSurface);
 
-		Shape distantSphere = new Sphere(new Point(0, 0, -15), 4);
-		Material distantSphereMat = Material.getMetalMaterial().initKa(new Vec(0.05, 0.8, 0.7));
-		Surface distantSphereSurface = new Surface(distantSphere, distantSphereMat);
-		finalScene.addSurface(distantSphereSurface);
+		Shape distantSphere1 = new Sphere(new Point(-5, 0, -25), 4);
+		Material distantSphere1Mat = Material.getMetalMaterial().initKa(new Vec(0.05, 0.8, 0.7));
+		Surface distantSphere1Surface = new Surface(distantSphere1, distantSphere1Mat);
+		finalScene.addSurface(distantSphere1Surface);
+
+		Shape distantSphere2 = new Sphere(new Point(5, 0, -25), 4);
+		Material distantSphere2Mat = Material.getMetalMaterial().initKa(new Vec(0.85, 0.2, 0.5));
+		Surface distantSphere2Surface = new Surface(distantSphere2, distantSphere2Mat);
+		finalScene.addSurface(distantSphere2Surface);
 
 		// Add light sources:
 		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -0.5), new Vec(0.7));

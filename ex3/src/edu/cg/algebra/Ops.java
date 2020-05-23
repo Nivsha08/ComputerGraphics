@@ -105,20 +105,14 @@ public class Ops {
 	 * @param n2     the refraction index of the second medium
 	 * @return
 	 */
-	// Snell's law: n1*sin(theta1) = n2*sin(theta2)
 	public static Vec refract(Vec u, Vec normal, double n1, double n2) {
-		if (n1 == n2) return u;
-		Vec result = null;
-		double indexRatio = n1 / n2;
-		double cosineTheta1 = normal.dot(u.neg());
-		double sinTheta2Square = indexRatio * indexRatio * (1 - cosineTheta1 * cosineTheta1);
-		if (sinTheta2Square <= 1) {
-			double cosineTheta2 = Math.sqrt(1 - sinTheta2Square);
-			result = u.mult(indexRatio).add(normal.mult(indexRatio * cosineTheta1 - cosineTheta2));
+		Vec refractedVector = u;
+		if (n1 != n2) {
+			double ratio = n1 / n2;
+			double cosineTheta1 = u.neg().dot(normal);
+			double cosineTheta2 = Math.sqrt(1 - Math.pow(ratio, 2) * (1 - Math.pow(cosineTheta1, 2)));
+			refractedVector = normal.mult((ratio * cosineTheta1) - cosineTheta2).add(u.mult(ratio));
 		}
-		else {
-			result = Ops.reflect(u, normal);
-		}
-		return result;
+		return refractedVector;
 	}
 }

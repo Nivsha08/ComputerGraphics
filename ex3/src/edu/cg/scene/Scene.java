@@ -200,13 +200,11 @@ public class Scene {
 			Vec reflectionColor = calcColor(reflectedRay, recursionLevel + 1);
 			color = color.add(reflectionColor.mult(reflectionCoeff));
 		}
-		if (renderRefractions) {
+		if (renderRefractions && hitSurface.isTransparent()) {
 			double refractionCoeff = hitSurface.refractionIntensity();
 			Ray refractedRay = getRefractedRay(ray, minimalIntersection);
-			if (refractedRay != null) {
-				Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
-				color = color.add(refractionColor.mult(refractionCoeff));
-			}
+			Vec refractionColor = calcColor(refractedRay, recursionLevel + 1);
+			color = color.add(refractionColor.mult(refractionCoeff));
 		}
 		return color;
 	}
@@ -276,14 +274,13 @@ public class Scene {
 	}
 
 	private Ray getRefractedRay(Ray ray, Hit minimalIntersection) {
-		if (!minimalIntersection.getSurface().isTransparent())
-			return null;
 		Point hittingPoint = ray.getHittingPoint(minimalIntersection);
 		Vec normalToSurface = minimalIntersection.getNormalToSurface().normalize();
+		Vec N = minimalIntersection.isWithinTheSurface() ? normalToSurface.neg() : normalToSurface;
 		double n1 = minimalIntersection.getSurface().n1(minimalIntersection);
 		double n2 = minimalIntersection.getSurface().n2(minimalIntersection);
-		Vec refractDirection = Ops.refract(ray.direction().normalize(), normalToSurface, n1, n2).normalize();
-		return (refractDirection != null) ? new Ray(hittingPoint, refractDirection) : null;
+		Vec refractDirection = Ops.refract(ray.direction().normalize(), N, n1, n2).normalize();
+		return new Ray(hittingPoint, refractDirection);
 	}
 
 }
