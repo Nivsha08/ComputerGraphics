@@ -107,6 +107,7 @@ public class Ops {
 	 */
 	// Snell's law: n1*sin(theta1) = n2*sin(theta2)
 	public static Vec refract(Vec u, Vec normal, double n1, double n2) {
+		if (n1 == n2) return u;
 		Vec result = null;
 		double indexRatio = n1 / n2;
 		double cosineTheta1 = normal.dot(u.neg());

@@ -256,4 +256,39 @@ public class Scenes {
 		return finalScene;
 	}
 
+	public static Scene scene8() {
+		// Define basic properties of the scene
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initCamera(/* Camera Position = */new Point(0.0, 2.0, 6.0),
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene8").initAntiAliasingFactor(1)
+				.initBackgroundColor(new Vec(0.05, 0.05, 0.7))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+		// Add Surfaces to the scene.
+
+		Shape plainShape = new Plain(new Vec(0.0,-4.3,0.0), new Point(0.0, -4.3, 0.0));
+		Material plainMat = Material.getMetalMaterial().initReflectionIntensity(0);
+		Surface plainSurface = new Surface(plainShape, plainMat);
+		finalScene.addSurface(plainSurface);
+
+		Shape transparentSphere = new Sphere(new Point(0, 0, -5), 4);
+		Material transparentSphereMat = Material.getGlassMaterial(true)
+				.initRefractionIntensity(0.7).initRefractionIndex(1).initReflectionIntensity(0.1);
+		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
+		finalScene.addSurface(transparentSphereSurface);
+
+		Shape distantSphere = new Sphere(new Point(0, 0, -15), 4);
+		Material distantSphereMat = Material.getMetalMaterial().initKa(new Vec(0.05, 0.8, 0.7));
+		Surface distantSphereSurface = new Surface(distantSphere, distantSphereMat);
+		finalScene.addSurface(distantSphereSurface);
+
+		// Add light sources:
+		Light dirLight = new DirectionalLight(new Vec(-1.0, -1.0, -0.5), new Vec(0.7));
+		finalScene.addLightSource(dirLight);
+
+		return finalScene;
+	}
+
 }

@@ -1,19 +1,19 @@
 {
-  "name": "scene6",
-  "maxRecursionLevel": 6,
+  "name": "scene8",
+  "maxRecursionLevel": 3,
   "antiAliasingFactor": 1,
   "renderRefractions": true,
   "renderReflections": true,
   "camera": {
     "cameraPosition": {
-      "x": 0.75,
-      "y": 0.8,
-      "z": 4.0
+      "x": 0.0,
+      "y": 2.0,
+      "z": 6.0
     },
     "plainCenter": {
-      "x": 0.75,
-      "y": 0.6009925619580022,
-      "z": 2.0099256195800215
+      "x": 0.0,
+      "y": 1.800992561958002,
+      "z": 4.009925619580022
     },
     "Vup": {
       "x": 0.0,
@@ -44,20 +44,36 @@
     "z": 1.0
   },
   "backgroundColor": {
-    "x": 0.0,
-    "y": 0.0,
-    "z": 0.0
+    "x": 0.05,
+    "y": 0.05,
+    "z": 0.7
   },
-  "lightSources": [],
+  "lightSources": [
+    {
+      "CLASSNAME": "edu.cg.scene.lightSources.DirectionalLight",
+      "DATA": {
+        "direction": {
+          "x": -0.6666666666666666,
+          "y": -0.6666666666666666,
+          "z": -0.3333333333333333
+        },
+        "intensity": {
+          "x": 0.7,
+          "y": 0.7,
+          "z": 0.7
+        }
+      }
+    }
+  ],
   "surfaces": [
     {
       "shape": {
         "CLASSNAME": "edu.cg.scene.objects.Plain",
         "DATA": {
           "a": 0.0,
-          "b": 1.0,
+          "b": -4.3,
           "c": 0.0,
-          "d": 1.0
+          "d": -18.49
         }
       },
       "material": {
@@ -76,7 +92,7 @@
           "y": 0.4,
           "z": 0.4
         },
-        "reflectionIntensity": 0.2,
+        "reflectionIntensity": 0.0,
         "shininess": 10,
         "isTransparent": false,
         "refractionIntensity": 0.3,
@@ -90,9 +106,9 @@
           "center": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.0
+            "z": -5.0
           },
-          "radius": 0.7
+          "radius": 4.0
         }
       },
       "material": {
@@ -111,11 +127,11 @@
           "y": 0.1,
           "z": 0.1
         },
-        "reflectionIntensity": 0.8,
-        "shininess": 8,
+        "reflectionIntensity": 0.1,
+        "shininess": 5,
         "isTransparent": true,
-        "refractionIntensity": 0.2,
-        "refractionIndex": 1.5
+        "refractionIntensity": 0.7,
+        "refractionIndex": 1.0
       }
     },
     {
@@ -125,101 +141,31 @@
           "center": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.0
+            "z": -15.0
           },
-          "radius": 0.3
+          "radius": 4.0
         }
       },
       "material": {
         "Ka": {
-          "x": 0.0,
-          "y": 0.4,
-          "z": 1.0
+          "x": 0.05,
+          "y": 0.8,
+          "z": 0.7
         },
         "Kd": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "Ks": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "reflectionIntensity": 1.0,
-        "shininess": 10,
-        "isTransparent": false,
-        "refractionIntensity": 0.0,
-        "refractionIndex": 1.5
-      }
-    },
-    {
-      "shape": {
-        "CLASSNAME": "edu.cg.scene.objects.Sphere",
-        "DATA": {
-          "center": {
-            "x": 1.0,
-            "y": 0.0,
-            "z": -2.5
-          },
-          "radius": 0.7
-        }
-      },
-      "material": {
-        "Ka": {
-          "x": 0.8,
+          "x": 0.4,
           "y": 0.4,
-          "z": 0.0
-        },
-        "Kd": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
+          "z": 0.4
         },
         "Ks": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "reflectionIntensity": 1.0,
-        "shininess": 10,
-        "isTransparent": false,
-        "refractionIntensity": 0.0,
-        "refractionIndex": 1.5
-      }
-    },
-    {
-      "shape": {
-        "CLASSNAME": "edu.cg.scene.objects.Sphere",
-        "DATA": {
-          "center": {
-            "x": -1.0,
-            "y": 0.0,
-            "z": -2.5
-          },
-          "radius": 0.7
-        }
-      },
-      "material": {
-        "Ka": {
-          "x": 0.8,
+          "x": 0.4,
           "y": 0.4,
-          "z": 0.0
+          "z": 0.4
         },
-        "Kd": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "Ks": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "reflectionIntensity": 1.0,
+        "reflectionIntensity": 0.2,
         "shininess": 10,
         "isTransparent": false,
-        "refractionIntensity": 0.0,
+        "refractionIntensity": 0.3,
         "refractionIndex": 1.5
       }
     }
