@@ -1,7 +1,7 @@
 {
   "name": "scene6",
   "maxRecursionLevel": 6,
-  "antiAliasingFactor": 1,
+  "antiAliasingFactor": 2,
   "renderRefractions": true,
   "renderReflections": true,
   "camera": {
@@ -112,7 +112,7 @@
           "z": 0.1
         },
         "reflectionIntensity": 0.8,
-        "shininess": 9,
+        "shininess": 4,
         "isTransparent": true,
         "refractionIntensity": 0.2,
         "refractionIndex": 1.5

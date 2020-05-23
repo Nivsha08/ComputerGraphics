@@ -2,9 +2,7 @@ package edu.cg.scene;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -114,7 +112,6 @@ public class Scene {
 
 	private void initSomeFields(int imgWidth, int imgHeight, Logger logger) {
 		this.logger = logger;
-		// TODO: initialize your additional field here.
 	}
 
 	public BufferedImage render(int imgWidth, int imgHeight, double viewAngle, Logger logger)
@@ -160,14 +157,33 @@ public class Scene {
 
 	private Future<Color> calcColor(int x, int y) {
 		return executor.submit(() -> {
-			// TODO: You need to re-implement this method if you want to handle
-			// super-sampling. You're also free to change the given implementation if you
-			// want.
-			Point centerPoint = camera.transform(x, y);
-			Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
-			Vec color = calcColor(ray, 0);
-			return color.toColor();
+			Point cameraPosition = camera.getCameraPosition();
+			List<Point> samplingPoints = getPixelSamplingPoints(x, y);
+			Vec accumulatedColor = new Vec(0);
+			for (Point p : samplingPoints) {
+				Ray ray = new Ray(cameraPosition, p);
+				accumulatedColor = accumulatedColor.add(calcColor(ray, 0));
+			}
+			Vec averageColor = accumulatedColor.mult(1.0 / (antiAliasingFactor * antiAliasingFactor));
+			return averageColor.toColor();
 		});
+	}
+
+	private List<Point> getPixelSamplingPoints(int centerX, int centerY) {
+		List<Point> points = new LinkedList<>();
+		if (antiAliasingFactor == 1) {
+			points.add(camera.transform(centerX, centerY));
+		}
+		else if (antiAliasingFactor > 1) {
+			for (double i = 0; i < antiAliasingFactor; i++) {
+				for (double j = 0; j < antiAliasingFactor; j++) {
+					double rightOffset = i / antiAliasingFactor;
+					double upOffset = j / antiAliasingFactor;
+					points.add(camera.transform(centerX, centerY, rightOffset, upOffset));
+				}
+			}
+		}
+		return points;
 	}
 
 	private Vec calcColor(Ray ray, int recursionLevel) {

@@ -1,7 +1,7 @@
 {
   "name": "scene7",
   "maxRecursionLevel": 3,
-  "antiAliasingFactor": 1,
+  "antiAliasingFactor": 2,
   "renderRefractions": true,
   "renderReflections": true,
   "camera": {

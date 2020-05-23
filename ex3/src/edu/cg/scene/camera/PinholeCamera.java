@@ -79,6 +79,12 @@ public class PinholeCamera {
 		return plainCenter.add(deltaX).add(deltaY);
 	}
 
+	public Point transform(int x, int y, double rightOffset, double upOffset) {
+		Vec deltaX = Vright.mult(x - Math.floor(Rx / 2) + rightOffset).mult(pixelWidth);
+		Vec deltaY = Vup.neg().mult(y - Math.floor(Ry / 2) + upOffset).mult(pixelWidth);
+		return plainCenter.add(deltaX).add(deltaY);
+	}
+
 	/**
 	 * Returns the camera position
 	 * 
