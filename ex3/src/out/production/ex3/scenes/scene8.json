@@ -78,9 +78,9 @@
       },
       "material": {
         "Ka": {
-          "x": 0.2,
+          "x": 0.35,
           "y": 0.2,
-          "z": 0.2
+          "z": 0.0
         },
         "Kd": {
           "x": 0.4,
@@ -92,7 +92,7 @@
           "y": 0.4,
           "z": 0.4
         },
-        "reflectionIntensity": 0.0,
+        "reflectionIntensity": 0.1,
         "shininess": 10,
         "isTransparent": false,
         "refractionIntensity": 0.3,
@@ -128,10 +128,10 @@
           "z": 0.1
         },
         "reflectionIntensity": 0.1,
-        "shininess": 11,
+        "shininess": 2,
         "isTransparent": true,
         "refractionIntensity": 0.7,
-        "refractionIndex": 1.5
+        "refractionIndex": 1.0
       }
     },
     {

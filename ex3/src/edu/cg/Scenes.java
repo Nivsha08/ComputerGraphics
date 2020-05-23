@@ -296,4 +296,41 @@ public class Scenes {
 		return finalScene;
 	}
 
+	public static Scene scene9() {
+		Point cameraPosition = new Point(-3.0, 1.0, 6.0);
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initCamera(/* Camera Position = */cameraPosition,
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 2.0)
+				.initName("scene9").initAntiAliasingFactor(1)
+//				.initBackgroundColor(new Vec(0.05, 0.05, 0.7))
+				.initBackgroundColor(new Vec(0.01,0.19,0.22))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+
+		Shape plainShape = new Plain(new Vec(0.0,-4.3,0.0), new Point(0.0, -4.3, 0.0));
+		Material plainMat = Material.getMetalMaterial()
+				.initKa(new Vec(0.11,0.09,0.02)).initReflectionIntensity(0.1);
+		Surface plainSurface = new Surface(plainShape, plainMat);
+		finalScene.addSurface(plainSurface);
+
+		Shape transparentSphere = new Sphere(new Point(1.5, 0, -3.5), 4);
+		Material transparentSphereMat = Material.getGlassMaterial(true)
+				.initRefractionIntensity(0.8).initRefractionIndex(1.35).initReflectionIntensity(0.4);
+		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
+		finalScene.addSurface(transparentSphereSurface);
+
+		Point sunPosition = new Point(0, 3, -45);
+		Shape sunDome = new Dome(sunPosition, 8, new Vec(0, 1, 0));
+		Material sunDomeMat = Material.getMetalMaterial().initKa(new Vec(0.95,0.84,0.03));
+		Surface sunDomeSurface = new Surface(sunDome, sunDomeMat);
+		finalScene.addSurface(sunDomeSurface);
+
+		Vec sunDirection = cameraPosition.sub(sunPosition);
+		Light sunLight = new DirectionalLight(sunDirection, new Vec(0.95,0.84,0.03));
+		finalScene.addLightSource(sunLight);
+
+		return finalScene;
+	}
+
 }
