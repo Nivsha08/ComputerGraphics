@@ -1,0 +1,36 @@
+*************************
+Computer Graphics - Ex.3
+
+Anat Balzam - 205387954
+Niv Shani - 311361661
+*************************
+
+
+Bonus documentation:
+*******************************
+	We've implemented every bonus functionality offered in the exercise PDF, as follows:
+
+    * Refractions:
+        1. Implemeted Snell's law of refracted ray, using trigonometric identities.
+
+        2. Using the Hit object field indicating whether the hit is inside (within) a scene object, or outside, to determine whether the refracted ray refractes from the inside out, or the other way. This is crucial in order to be able to use the correct direction of the normal to the surface at the hitting point.
+
+        3. Using a surface refractionIntensity to construct Kr and calculate refracted color.
+
+        Examples for refrafctions can be seen in scene6 and scene7.
+
+
+    * Super-sampling:
+        1. We overloaded the existing transform function with a similar function, which receives an extra two parameters, defining the offset (offsetX and offsetY) from the center of the 2D pixel.
+
+        2. With that functionality, we could implement the functionality for x2 and x3 anti-aliasing factor, by creating 4 (2x2) and 9 (3x3) "sub-pixels" inside each pixel, calculating the colors of the rays originating from them, then average the results.
+
+    * Domes
+        1. Implemented the instersect functionality by handling the different possible cases of a ray instersection with a dome. We used the existing Plain intersection and Sphere intersection function to decide what's the correct case (no intersection, single instersection point or two points).
+
+        Examples for refrafctions can be seen in scene5 and scene7.
+
+
+
+
+

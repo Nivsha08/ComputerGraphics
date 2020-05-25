@@ -143,96 +143,15 @@ public class Scenes {
 		return finalScene;
 	}
 
+	/** Pokeball scene **/
 	public static Scene scene5() {
-		Point cameraPosition = new Point(2, 1.5, 5.0);
-		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
-				.initCamera(/* Camera Position = */cameraPosition,
-						/* Towards Vector = */ new Vec(0.5, -0.1 ,-1.0),
-						/* Up vector = */new Vec(0.0, 1.0, 0.0),
-						/*Distance to plain =*/ 2.0)
-				.initName("scene5").initAntiAliasingFactor(1)
-				.initBackgroundColor(new Vec(0.1,0.1,0.1))
-				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(2);
-
-		Shape plainShape = new Plain(new Vec(0.0,1.0,0.0), new Point(0.0, -1.0, 0.0));
-		Material plainMat = Material.getMetalMaterial();
-		Surface plainSurface = new Surface(plainShape, plainMat);
-		finalScene.addSurface(plainSurface);
-
-		CutoffSpotlight topSpotlight = new CutoffSpotlight(new Vec(0.0, -1.0, 0.0), 30.0);
-		topSpotlight.initPosition(new Point(0.0, 10.0, 0.0));
-		topSpotlight.initIntensity(new Vec(0.9,0.9,0.9));
-		finalScene.addLightSource(topSpotlight);
-
-		double marbleRadius = 0.25;
-
-		for (int i = -2; i < 2; i++) {
-			for (int j = -2; j < 2; j++) {
-				for (int k = -2; k < 2; k++) {
-					Sphere mirrorMarble = new Sphere(new Point(i, j, k).mult(0.5), 0.3);
-					Material mirrorMaterial = Material.getMetalMaterial().initKa(new Vec(0))
-							.initReflectionIntensity(1.0).initIsTransparent(false).initKs(new Vec(0));
-					Surface mirrorMarbleSurface = new Surface(mirrorMarble, mirrorMaterial);
-					finalScene.addSurface(mirrorMarbleSurface);
-				}
-			}
-		}
-
-		finalScene.addLightSource(topSpotlight);
-
-		return finalScene;
-	}
-
-	public static Scene scene6() {
-		// Define basic properties of the scene
-		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
-				.initBackgroundColor(new Vec(0.0))
-				.initCamera(/* Camera Position = */new Point(0.75, 0.8, 4.0),
-						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
-						/* Up vector = */new Vec(0.0, 1.0, 0.0),
-						/*Distance to plain =*/ 2.0)
-				.initName("scene6").initAntiAliasingFactor(1)
-				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(6);
-
-		Shape plainShape = new Plain(new Vec(0.0,1.0,0.0), new Point(0.0, -1.0, 0.0));
-		Material plainMat = Material.getMetalMaterial();
-		Surface plainSurface = new Surface(plainShape, plainMat);
-		finalScene.addSurface(plainSurface);
-
-		Shape sphere1 = new Sphere(new Point(0.0), 0.7);
-		Material sphere1Mat = Material.getGlassMaterial(true);
-		Surface sphere1Surface = new Surface(sphere1, sphere1Mat);
-		finalScene.addSurface(sphere1Surface);
-
-		Shape innerSphere = new Sphere(new Point(0.0), 0.3);
-		Material innerSphereMat = new Material().initKa(new Vec(0, 0.4, 1)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
-				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
-		Surface innerSphereSurface = new Surface(innerSphere, innerSphereMat);
-		finalScene.addSurface(innerSphereSurface);
-
-		Shape sphere2 = new Sphere(new Point(1.0, 0.0, -2.5), 0.7);
-		Material sphere2Mat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
-				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
-		Surface sphere2Surface = new Surface(sphere2, sphere2Mat);
-		finalScene.addSurface(sphere2Surface);
-
-		Shape sphere3 = new Sphere(new Point(-1.0, 0.0, -2.5), 0.7);
-		Material sphere3Mat = new Material().initKa(new Vec(0.8, 0.4, 0)).initKd(new Vec(0.0)).initKs(new Vec(1.0))
-				.initShininess(10).initIsTransparent(false).initRefractionIntensity(0.0).initReflectionIntensity(1.0);
-		Surface sphere3Surface = new Surface(sphere3, sphere3Mat);
-		finalScene.addSurface(sphere3Surface);
-
-		return finalScene;
-	}
-
-	public static Scene scene7() {
 		// Define basic properties of the scene
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
 				.initCamera(/* Camera Position = */new Point(0.0, 2.0, 6.0),
 						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
 						/* Up vector = */new Vec(0.0, 1.0, 0.0),
 						/*Distance to plain =*/ 2.0)
-				.initName("scene7").initAntiAliasingFactor(1)
+				.initName("scene5").initAntiAliasingFactor(1)
 				.initBackgroundColor(new Vec(0.1))
 				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
 		// Add Surfaces to the scene.
@@ -274,14 +193,15 @@ public class Scenes {
 		return finalScene;
 	}
 
-	public static Scene scene8() {
+	/** Simple transparent sphere **/
+	public static Scene scene6() {
 		// Define basic properties of the scene
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
 				.initCamera(/* Camera Position = */new Point(0.0, 2.0, 6.0),
 						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
 						/* Up vector = */new Vec(0.0, 1.0, 0.0),
 						/*Distance to plain =*/ 2.0)
-				.initName("scene8").initAntiAliasingFactor(1)
+				.initName("scene6").initAntiAliasingFactor(1)
 				.initBackgroundColor(new Vec(0.05, 0.05, 0.7))
 				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
 		// Add Surfaces to the scene.
@@ -314,15 +234,15 @@ public class Scenes {
 		return finalScene;
 	}
 
-	public static Scene scene9() {
+	/** Glass ball and subset scene **/
+	public static Scene scene7() {
 		Point cameraPosition = new Point(-3.0, 1.0, 6.0);
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
 				.initCamera(/* Camera Position = */cameraPosition,
 						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
 						/* Up vector = */new Vec(0.0, 1.0, 0.0),
 						/*Distance to plain =*/ 2.0)
-				.initName("scene9").initAntiAliasingFactor(1)
-//				.initBackgroundColor(new Vec(0.05, 0.05, 0.7))
+				.initName("scene7").initAntiAliasingFactor(1)
 				.initBackgroundColor(new Vec(0.01,0.19,0.22))
 				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
 
