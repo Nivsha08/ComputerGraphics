@@ -234,7 +234,7 @@ public class Scenes {
 		return finalScene;
 	}
 
-	/** Glass ball and subset scene **/
+	/** Glass ball and sunset scene **/
 	public static Scene scene7() {
 		Point cameraPosition = new Point(-3.0, 1.0, 6.0);
 		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
@@ -267,6 +267,52 @@ public class Scenes {
 		Vec sunDirection = cameraPosition.sub(sunPosition);
 		Light sunLight = new DirectionalLight(sunDirection, new Vec(0.95,0.84,0.03));
 		finalScene.addLightSource(sunLight);
+
+		return finalScene;
+	}
+
+	/** Levitating mirror sphere scene **/
+	public static Scene scene8() {
+		// Define basic properties of the scene
+		Scene finalScene = new Scene().initAmbient(new Vec(1.0))
+				.initCamera(/* Camera Position = */new Point(0.0, 2.0, 6.0),
+						/* Towards Vector = */ new Vec(0.0, -0.1 ,-1.0),
+						/* Up vector = */new Vec(0.0, 1.0, 0.0),
+						/*Distance to plain =*/ 1.5)
+				.initName("scene8").initAntiAliasingFactor(1)
+				.initBackgroundColor(new Vec(0.81,0.93,1))
+				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
+		// Add Surfaces to the scene.
+
+		Shape plainShape = new Plain(new Vec(0.0,-1,0.0), new Point(0.0, -1, 0.0));
+		Material plainMat = Material.getMetalMaterial().initKa(new Vec(0.2)).initReflectionIntensity(0.1);
+		Surface plainSurface = new Surface(plainShape, plainMat);
+		finalScene.addSurface(plainSurface);
+
+		Shape transparentSphere = new Sphere(new Point(0, 10, -25), 10);
+		Material transparentSphereMat = Material.getGlassMaterial(false)
+				.initRefractionIndex(0).initReflectionIntensity(0.4).initKs(new Vec(1.0)).initKd(new Vec(0));
+		Surface transparentSphereSurface = new Surface(transparentSphere, transparentSphereMat);
+		finalScene.addSurface(transparentSphereSurface);
+
+		double[] radiuses = new double[] { 0.3, 0.8, 1, 1.5, 2, 1.4, 0.2, 0.9, 1.2, 2.1 };
+
+		for (int i = -10; i < 10; i+=3) {
+			int sphereCenterZ = -5 + (int)(Math.random() * 3);
+			int radiusIndex = (int)(Math.random() * 10);
+			double radius = radiuses[radiusIndex];
+			Shape distantSphere1 = new Sphere(new Point(i, radiuses[radiusIndex] - 1, sphereCenterZ), radius);
+			Material distantSphere1Mat = Material.getRandomMaterial();
+			Surface distantSphere1Surface = new Surface(distantSphere1, distantSphere1Mat);
+			finalScene.addSurface(distantSphere1Surface);
+		}
+
+		// Add light sources:
+		Light dirLight = new DirectionalLight(new Vec(-4.0, -1.0, -2.5), new Vec(0.3));
+		finalScene.addLightSource(dirLight);
+
+		dirLight = new DirectionalLight(new Vec(-4.0, -1.0, -2.5), new Vec(0.3));
+		finalScene.addLightSource(dirLight);
 
 		return finalScene;
 	}
