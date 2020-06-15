@@ -18,15 +18,15 @@ public class Spolier implements IRenderable {
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 0.0, Specification.S_ROD_RADIUS+Specification.S_RODS_DISTANCE/2.0);
 		gl.glRotated(-90.0, 1.0, 0.0, 0.0);
-		glu.gluCylinder(quad, Specification.S_ROD_RADIUS, Specification.S_ROD_RADIUS, Specification.S_ROD_HIEGHT, 20, 2);
+		glu.gluCylinder(quad, Specification.S_ROD_RADIUS, Specification.S_ROD_RADIUS, Specification.S_ROD_HEIGHT, 20, 2);
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 0.0, -Specification.S_ROD_RADIUS-Specification.S_RODS_DISTANCE/2.0);
 		gl.glRotated(-90.0, 1.0, 0.0, 0.0);
-		glu.gluCylinder(quad, Specification.S_ROD_RADIUS, Specification.S_ROD_RADIUS, Specification.S_ROD_HIEGHT, 20, 2);
+		glu.gluCylinder(quad, Specification.S_ROD_RADIUS, Specification.S_ROD_RADIUS, Specification.S_ROD_HEIGHT, 20, 2);
 		gl.glPopMatrix();
 		gl.glPushMatrix();
-		gl.glTranslated(0.0, Specification.S_ROD_HIEGHT, 0.0);
+		gl.glTranslated(0.0, Specification.S_ROD_HEIGHT, 0.0);
 		Materials.SetDarkRedMetalMaterial(gl);
 		spoilerBase.render(gl);
 		gl.glPushMatrix();

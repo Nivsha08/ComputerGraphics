@@ -9,14 +9,12 @@ import edu.cg.models.IIntersectable;
 import edu.cg.models.IRenderable;
 
 public class Front implements IRenderable, IIntersectable {
-	// TODO: Add necessary fields (e.g. the bumper).
 	private FrontHood hood = new FrontHood();
 	private PairOfWheels wheels = new PairOfWheels();
+	private FrontBumper bumper = new FrontBumper();
 
 	@Override
 	public void render(GL2 gl) {
-		// TODO: Render the BUMPER. Look at how we place the front and the wheels of
-		// the car.
 		gl.glPushMatrix();
 		// Render hood - Use Red Material.
 		gl.glTranslated(-Specification.F_LENGTH / 2.0 + Specification.F_HOOD_LENGTH / 2.0, 0.0, 0.0);
@@ -25,6 +23,10 @@ public class Front implements IRenderable, IIntersectable {
 		gl.glTranslated(Specification.F_HOOD_LENGTH / 2.0 - 1.25 * Specification.TIRE_RADIUS,
 				0.5 * Specification.TIRE_RADIUS, 0.0);
 		wheels.render(gl);
+		// Render the bumper
+		gl.glTranslated(Specification.F_BUMPER_LENGTH + 0.25 * Specification.TIRE_RADIUS,
+				-0.5 * Specification.F_HEIGHT + Specification.F_BUMPER_HEIGHT_1, 0.0);
+		bumper.render(gl);
 		gl.glPopMatrix();
 	}
 

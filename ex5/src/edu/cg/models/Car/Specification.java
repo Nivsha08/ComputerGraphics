@@ -34,7 +34,7 @@ public class Specification {
 	
 	// Center Body Specification:
 	public static final double C_LENGTH  = 0.25;
-	public static final double C_HIEGHT= 1.75*F_HOOD_HEIGHT_1;
+	public static final double C_HEIGHT = 1.75*F_HOOD_HEIGHT_1;
 	public static final double C_DEPTH = F_HOOD_DEPTH_1;
 
 	// --> Base
@@ -74,7 +74,7 @@ public class Specification {
 	public static final double S_RODS_SIZE = 0.5*0.5*(B_DEPTH_1 + B_DEPTH_2);
 	public static final double S_RODS_DISTANCE = 0.4*S_RODS_SIZE;
 	public static final double S_ROD_RADIUS = 0.25*(S_RODS_SIZE-S_RODS_DISTANCE);
-	public static final double S_ROD_HIEGHT = 0.05;
+	public static final double S_ROD_HEIGHT = 0.05;
 	// --> Wings
 	public static final double S_DEPTH = 2.*0.5 * (B_DEPTH_1 + B_DEPTH_2);
 	public static final double S_BASE_DEPTH = 0.9*S_DEPTH;
@@ -83,6 +83,6 @@ public class Specification {
 	public static final double S_BASE_HEIGHT = 0.015;
 	public static final double S_LENGTH = 0.15;
 	public static final double B_DEPTH = S_DEPTH;
-	public static final double B_HEIGHT = S_WINGS_HEIGHT + B_HEIGHT_2+S_ROD_HIEGHT;
+	public static final double B_HEIGHT = S_WINGS_HEIGHT + B_HEIGHT_2+ S_ROD_HEIGHT;
 	
 }
