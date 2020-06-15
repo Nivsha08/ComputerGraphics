@@ -2,9 +2,12 @@ package edu.cg.models;
 
 import com.jogamp.opengl.GL2;
 
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
+import edu.cg.models.Car.Materials;
 
 public class BoundingSphere implements IRenderable {
 	private double radius = 0.0;
@@ -39,8 +42,11 @@ public class BoundingSphere implements IRenderable {
 
 	@Override
 	public void render(GL2 gl) {
-		// TODO: Render a sphere with the given radius and center.
-		// NOTE : Use the specified color when rendering.
+		GLU glu = new GLU();
+		GLUquadric q = glu.gluNewQuadric();
+		gl.glColor3d(this.color[0], this.color[1], this.color[2]);
+		gl.glTranslated(this.center.x, this.center.y, this.center.z);
+		glu.gluSphere(q, this.radius, 360, 360);
 	}
 
 	@Override
