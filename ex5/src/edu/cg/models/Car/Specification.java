@@ -31,7 +31,8 @@ public class Specification {
 	public static final double F_BUMPER_WINGS_DEPTH = 0.8*0.5*(F_HOOD_DEPTH_1-F_BUMPER_DEPTH);
 	public static final double F_BUMPER_WINGS_HEIGHT_1 = 0.75*F_HOOD_HEIGHT_1;
 	public static final double F_BUMPER_WINGS_HEIGHT_2 = F_BUMPER_HEIGHT_2;
-	
+	public static final double F_BUMPER_HEADLIGHT_RADIUS = 0.4*TIRE_RADIUS;
+
 	// Center Body Specification:
 	public static final double C_LENGTH  = 0.25;
 	public static final double C_HEIGHT = 1.75*F_HOOD_HEIGHT_1;

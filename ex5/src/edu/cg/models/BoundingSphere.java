@@ -2,7 +2,9 @@ package edu.cg.models;
 
 import com.jogamp.opengl.GL2;
 
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Vec;
 
 public class BoundingSphere implements IRenderable {
 	private double radius = 0.0;
@@ -15,7 +17,7 @@ public class BoundingSphere implements IRenderable {
 		this.setCenter(new Point(center.x, center.y, center.z));
 	}
 
-	public void setSphereColore3d(double r, double g, double b) {
+	public void setSphereColor3d(double r, double g, double b) {
 		this.color[0] = r;
 		this.color[1] = g;
 		this.color[2] = b;
@@ -27,12 +29,12 @@ public class BoundingSphere implements IRenderable {
 	 * @return true if the spheres intersects, and false otherwise
 	 */
 	public boolean checkIntersection(BoundingSphere s) {
-		// TODO: Check if two spheres intersect.
-		return false;
+		double distance = Ops.dist(this.center, s.getCenter());
+		return (distance >= this.radius + s.getRadius());
 	}
 
 	public void translateCenter(double dx, double dy, double dz) {
-		// TODO: Translate the sphere center by (dx,dy,dz).
+		this.center = this.center.add(new Vec(dx, dy, dz));
 	}
 
 	@Override
