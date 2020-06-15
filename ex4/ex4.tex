@@ -126,8 +126,80 @@
                 0&0&-\sfrac{1}{2}&1
             \end{pmatrix}\proofend
         $$
+    \item \textsl{Rotate by $60\degree$ clockwise around the line $x=y=z$, and then translate by $2$ in all directions.}\\\\
+    \boxed{Affine} transformation.\\\\
+    We'll first need to align the rotation axis $x=y=z$ with the main axes. We'll find an orthonormal basis containing the vector $\vec{v_1} = \left(\frac{1}{\sqrt{3}}, \frac{1}{\sqrt{3}}, \frac{1}{\sqrt{3}} \right),\ \norm{v_1} = 1$.\\
+    An orthogonal vector to $v_1$ can be for example $\vec{v_2} = \left(0, -\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}\right),\ \norm{v_2} = 1$.\\
+    We can choose a third orthogonal vector to $\vec{v_1}$ and $\vec{v_2}$ to be $\vec{v_3} = \vec{v_1}\times\vec{v_2} = \left(\sqrt{\frac{2}{3}},-\frac{1}{\sqrt{6}}, -\frac{1}{\sqrt{6}}\right),\ \norm{v_3} = 1$.\\\\
+    Therefore the change of basis matrix from $(x,y,z)-$coordinates to the orthonormal basis $\left(\vec{v_1}, \vec{v_2},\vec{v_3}\right)$ is, similarly to section (2):
+    $$
+        \begingroup
+        \renewcommand*{\arraystretch}{1.5}
+            M = \begin{pmatrix}
+                \frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&0\\
+                0&-\frac{1}{\sqrt{2}}&\frac{1}{\sqrt{2}}&0\\
+                \sqrt{\frac{2}{3}}&-\frac{1}{\sqrt{6}}&-\frac{1}{\sqrt{6}}&0\\
+                0&0&0&1
+            \end{pmatrix}
+        \endgroup
+    $$
+    This rotation matrix aligns the line $x=y=z$ with the $x$-axis. We'll need to rotate around the $x$-axis, apply the reverse operation, and translate.\\
+    A $60\degree$-clockwise rotation about the $x$-axis is given by:
+    $$
+        R = \begin{pmatrix}
+            cos(-60)&-sin(-60)&0&0\\
+            sin(-60)&cos(-60)&0&0\\
+            0&0&1&0\\
+            0&0&0&1
+        \end{pmatrix} = \begin{pmatrix}
+            cos60&sin60&0&0\\
+            -sin60&cos60&0&0\\
+            0&0&1&0\\
+            0&0&0&1
+        \end{pmatrix}
+    $$
+    And finally, a translation of 2 in all directions is given by:
+    $$
+        T = \begin{pmatrix}
+            1&0&0&2\\
+            0&1&0&2\\
+            0&0&1&2\\
+            0&0&0&1
+        \end{pmatrix}
+    $$
+    Thus overall, the transformation is given by:
+    $$T \cdot M^{-1} \cdot R \cdot M$$
+    $$
+    \underset{\textsl{translation in all directions}}{\begin{pmatrix}
+        1&0&0&2\\
+        0&1&0&2\\
+        0&0&1&2\\
+        0&0&0&1
+    \end{pmatrix}}
+    \cdot
+    \underset{\textsl{reverse alignment}}{\begin{pmatrix}
+        \frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&0\\
+        0&-\frac{1}{\sqrt{2}}&\frac{1}{\sqrt{2}}&0\\
+        \sqrt{\frac{2}{3}}&-\frac{1}{\sqrt{6}}&-\frac{1}{\sqrt{6}}&0\\
+        0&0&0&1
+    \end{pmatrix}^{-1}}
+    \cdot
+    \underset{\textsl{rotation about the x-axis}}{\begin{pmatrix}
+            cos60&sin60&0&0\\
+            -sin60&cos60&0&0\\
+            0&0&1&0\\
+            0&0&0&1
+        \end{pmatrix}}
+        \cdot
+        \underset{\textsl{rotation axis alignment}}{\begin{pmatrix}
+            \frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&\frac{1}{\sqrt{3}}&0\\
+            0&-\frac{1}{\sqrt{2}}&\frac{1}{\sqrt{2}}&0\\
+            \sqrt{\frac{2}{3}}&-\frac{1}{\sqrt{6}}&-\frac{1}{\sqrt{6}}&0\\
+            0&0&0&1
+        \end{pmatrix}}\proofend
+    $$
     \end{enumerate}
-    \vspace{1cm}
+    \newpage
     \question{2}
     \begin{enumerate}
         \item \textsl{
