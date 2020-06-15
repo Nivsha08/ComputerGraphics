@@ -8,6 +8,7 @@ import edu.cg.models.IRenderable;
 import edu.cg.models.SkewedBox;
 
 public class FrontBumper implements IRenderable {
+	private final int SPHERE_SLICES = 20;
 	private SkewedBox base = new SkewedBox(Specification.F_BUMPER_LENGTH, Specification.F_BUMPER_HEIGHT_1,
 			Specification.F_BUMPER_HEIGHT_2, Specification.F_BUMPER_DEPTH, Specification.F_BUMPER_DEPTH);
 	private SkewedBox wing = new SkewedBox(Specification.F_BUMPER_LENGTH, Specification.F_BUMPER_WINGS_HEIGHT_1,
@@ -28,9 +29,9 @@ public class FrontBumper implements IRenderable {
 		Materials.SetRedMetalMaterial(gl);
 		gl.glTranslated(0.0, 0.4*Specification.F_BUMPER_WINGS_HEIGHT_1,
 				0.5 * Specification.F_BUMPER_DEPTH + 0.5 * Specification.F_BUMPER_WINGS_DEPTH);
-		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, 360, 360);
+		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, SPHERE_SLICES, SPHERE_SLICES);
 		gl.glTranslated(0.0, 0.0, -Specification.F_BUMPER_DEPTH + -Specification.F_BUMPER_WINGS_DEPTH);
-		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, 360, 360);
+		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, SPHERE_SLICES, SPHERE_SLICES);
 
 	}
 

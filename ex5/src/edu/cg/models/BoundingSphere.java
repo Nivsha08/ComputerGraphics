@@ -10,6 +10,7 @@ import edu.cg.algebra.Vec;
 import edu.cg.models.Car.Materials;
 
 public class BoundingSphere implements IRenderable {
+	private final int SPHERE_SLICES = 10;
 	private double radius = 0.0;
 	private Point center;
 	private double color[];
@@ -46,7 +47,7 @@ public class BoundingSphere implements IRenderable {
 		GLUquadric q = glu.gluNewQuadric();
 		gl.glColor3d(this.color[0], this.color[1], this.color[2]);
 		gl.glTranslated(this.center.x, this.center.y, this.center.z);
-		glu.gluSphere(q, this.radius, 360, 360);
+		glu.gluSphere(q, this.radius, SPHERE_SLICES, SPHERE_SLICES);
 	}
 
 	@Override
