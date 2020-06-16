@@ -37,18 +37,22 @@ public class Front implements IRenderable, IIntersectable {
 
 	@Override
 	public List<BoundingSphere> getBoundingSpheres() {
-		LinkedList<BoundingSphere> res = new LinkedList<BoundingSphere>();
-		Point center = this.getBoundingSphereCenter();
-		double radius = this.getBoundingSphereRadius();
-		BoundingSphere frontBoundingSphere = new BoundingSphere(radius, center);
-		frontBoundingSphere.setSphereColor3d(1.0, 0.0, 0.0);
-		res.add(frontBoundingSphere);
+		LinkedList<BoundingSphere> res = new LinkedList<>();
+		res.add(this.createBoundingSphere());
 		return res;
 	}
 
 	@Override
 	public String toString() {
 		return "CarFront";
+	}
+
+	private BoundingSphere createBoundingSphere() {
+		Point center = this.getBoundingSphereCenter();
+		double radius = this.getBoundingSphereRadius();
+		BoundingSphere frontSphere = new BoundingSphere(radius, center);
+		frontSphere.setSphereColor3d(1.0, 0.0, 0.0);
+		return frontSphere;
 	}
 
 	private Point getBoundingSphereCenter() {

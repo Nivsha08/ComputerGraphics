@@ -48,21 +48,25 @@ public class F1Car implements IRenderable, IIntersectable {
 
 	@Override
 	public List<BoundingSphere> getBoundingSpheres() {
+		LinkedList<BoundingSphere> res = new LinkedList<>();
 		Point backRelativeCenter = new Point(-Specification.C_LENGTH / 2.0 -Specification.B_LENGTH / 2.0, Specification.B_HEIGHT / 2.0, 0.0);
 		Point centerRelativeCenter = new Point(0.0, Specification.C_HEIGHT / 2.0, 0.0);
 		Point frontRelativeCenter = new Point(Specification.C_LENGTH / 2.0 + Specification.F_LENGTH / 2.0, Specification.F_HEIGHT / 2.0, 0.0);
-		LinkedList<BoundingSphere> res = new LinkedList<BoundingSphere>();
 		BoundingSphere centerSphere = carCenter.getBoundingSpheres().get(0);
 		centerSphere.setCenter(centerRelativeCenter);
 		BoundingSphere backSphere = carBack.getBoundingSpheres().get(0);
 		backSphere.setCenter(backRelativeCenter);
 		BoundingSphere frontSphere = carFront.getBoundingSpheres().get(0);
 		frontSphere.setCenter(frontRelativeCenter);
-		Point carSphereCenter = this.getBoundingSphereCenter();
-		double carSphereRadius = this.getBoundingSphereRadius();
-		BoundingSphere carSphere = new BoundingSphere(carSphereRadius, carSphereCenter);
-		res.addAll(Arrays.asList(carSphere, frontSphere, centerSphere, backSphere));
+		res.addAll(Arrays.asList(this.createBoundingSphere(), frontSphere, centerSphere, backSphere));
 		return res;
+	}
+
+	private BoundingSphere createBoundingSphere() {
+		Point center = this.getBoundingSphereCenter();
+		double radius = this.getBoundingSphereRadius();
+		BoundingSphere carSphere = new BoundingSphere(radius, center);
+		return carSphere;
 	}
 
 	private Point getBoundingSphereCenter() {

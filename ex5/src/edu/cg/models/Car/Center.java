@@ -66,13 +66,17 @@ public class Center implements IRenderable, IIntersectable {
 
 	@Override
 	public List<BoundingSphere> getBoundingSpheres() {
-		LinkedList<BoundingSphere> res = new LinkedList<BoundingSphere>();
+		LinkedList<BoundingSphere> res = new LinkedList<>();
+		res.add(this.createBoundingSphere());
+		return res;
+	}
+
+	private BoundingSphere createBoundingSphere() {
 		Point center = this.getBoundingSphereCenter();
 		double radius = this.getBoundingSphereRadius();
-		BoundingSphere centerBoundingSphere = new BoundingSphere(radius, center);
-		centerBoundingSphere.setSphereColor3d(0.0, 1.0, 0.0);
-		res.add(centerBoundingSphere);
-		return res;
+		BoundingSphere centerSphere = new BoundingSphere(radius, center);
+		centerSphere.setSphereColor3d(0.0, 1.0, 0.0);
+		return centerSphere;
 	}
 
 	private Point getBoundingSphereCenter() {

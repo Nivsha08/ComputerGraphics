@@ -48,13 +48,17 @@ public class Back implements IRenderable, IIntersectable {
 
 	@Override
 	public List<BoundingSphere> getBoundingSpheres() {
-		LinkedList<BoundingSphere> res = new LinkedList<BoundingSphere>();
+		LinkedList<BoundingSphere> res = new LinkedList<>();
+		res.add(this.createBoundingSphere());
+		return res;
+	}
+
+	private BoundingSphere createBoundingSphere() {
 		Point center = this.getBoundingSphereCenter();
 		double radius = this.getBoundingSphereRadius();
-		BoundingSphere backBoundingSphere = new BoundingSphere(radius, center);
-		backBoundingSphere.setSphereColor3d(0.0, 0.0, 1.0);
-		res.add(backBoundingSphere);
-		return res;
+		BoundingSphere backSphere = new BoundingSphere(radius, center);
+		backSphere.setSphereColor3d(0.0, 0.0, 1.0);
+		return backSphere;
 	}
 
 	private Point getBoundingSphereCenter() {
