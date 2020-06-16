@@ -45,9 +45,11 @@ public class BoundingSphere implements IRenderable {
 	public void render(GL2 gl) {
 		GLU glu = new GLU();
 		GLUquadric q = glu.gluNewQuadric();
+		gl.glPushMatrix();
 		gl.glColor3d(this.color[0], this.color[1], this.color[2]);
 		gl.glTranslated(this.center.x, this.center.y, this.center.z);
 		glu.gluSphere(q, this.radius, SPHERE_SLICES, SPHERE_SLICES);
+		gl.glPopMatrix();
 	}
 
 	@Override

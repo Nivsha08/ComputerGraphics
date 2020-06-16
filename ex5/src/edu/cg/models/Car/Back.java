@@ -49,15 +49,20 @@ public class Back implements IRenderable, IIntersectable {
 	@Override
 	public List<BoundingSphere> getBoundingSpheres() {
 		LinkedList<BoundingSphere> res = new LinkedList<BoundingSphere>();
+		Point center = this.getBoundingSphereCenter();
 		double radius = this.getBoundingSphereRadius();
-		BoundingSphere backBoundingSphere = new BoundingSphere(radius, new Point(0.0, 0.0, 0.0));
+		BoundingSphere backBoundingSphere = new BoundingSphere(radius, center);
 		backBoundingSphere.setSphereColor3d(0.0, 0.0, 1.0);
 		res.add(backBoundingSphere);
 		return res;
 	}
 
+	private Point getBoundingSphereCenter() {
+		return new Point(0.0, Specification.B_HEIGHT / 2.0, 0.0);
+	}
+
 	private double getBoundingSphereRadius() {
-		return 0.5;
+		return 0.35;
 	}
 
 }
