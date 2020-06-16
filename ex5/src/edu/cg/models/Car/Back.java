@@ -1,5 +1,6 @@
 package edu.cg.models.Car;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Back implements IRenderable, IIntersectable {
 		Materials.SetBlackMetalMaterial(gl);
 		gl.glTranslated(Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0, 0.0, 0.0);
 		baseBox.render(gl);
-		Materials.SetRedMetalMaterial(gl);
+		Materials.SetMetalMaterial(gl, new float[] {0.9f, 0.9f, 0.9f} );
 		gl.glTranslated(-1.0 * (Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0),
 				Specification.B_BASE_HEIGHT, 0.0);
 		backBox.render(gl);

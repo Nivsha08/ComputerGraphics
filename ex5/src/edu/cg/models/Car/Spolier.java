@@ -27,15 +27,16 @@ public class Spolier implements IRenderable {
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, Specification.S_ROD_HEIGHT, 0.0);
-		Materials.SetDarkRedMetalMaterial(gl);
+		Materials.SetBlackMetalMaterial(gl);
 		spoilerBase.render(gl);
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 3.0*Specification.S_BASE_HEIGHT, 0.0);
+		Materials.SetDarkGreyMetalMaterial(gl);
 		spoilerBase.render(gl);
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 0.0, 0.5*Specification.S_BASE_DEPTH + 0.5*Specification.S_WINGS_DEPTH);
-		Materials.SetRedMetalMaterial(gl);
+		Materials.SetMetalMaterial(gl, new float[] {0.9f, 0.9f, 0.9f});
 		spoilerWings.render(gl);
 		gl.glPopMatrix();
 		gl.glTranslated(0.0, 0.0, -0.5*Specification.S_BASE_DEPTH - 0.5*Specification.S_WINGS_DEPTH);
