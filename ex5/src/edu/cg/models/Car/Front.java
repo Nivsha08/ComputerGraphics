@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.models.BoundingSphere;
 import edu.cg.models.IIntersectable;
@@ -60,7 +63,11 @@ public class Front implements IRenderable, IIntersectable {
 	}
 
 	private double getBoundingSphereRadius() {
-		return 0.35;
+		// back edge of FrontHood
+		Point edge = new Point(-Specification.F_HOOD_LENGTH_1 - 0.5 * Specification.TIRE_RADIUS,
+				Specification.F_HOOD_HEIGHT_1,
+				Specification.F_HOOD_DEPTH_1 / 2.0);
+		return Ops.dist(edge, this.getBoundingSphereCenter());
 	}
 
 }

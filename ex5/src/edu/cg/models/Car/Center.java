@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.jogamp.opengl.GL2;
 
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.models.BoundingSphere;
 import edu.cg.models.IIntersectable;
@@ -84,7 +87,10 @@ public class Center implements IRenderable, IIntersectable {
 	}
 
 	private double getBoundingSphereRadius() {
-		return 0.3;
+		Point edge = new Point(-Specification.C_LENGTH / 2.0,
+				0,
+				Specification.C_DEPTH / 2.0);
+		return Ops.dist(edge, this.getBoundingSphereCenter());
 	}
 
 }

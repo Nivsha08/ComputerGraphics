@@ -6,6 +6,9 @@ import java.util.List;
 
 import com.jogamp.opengl.*;
 
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.models.BoundingSphere;
 import edu.cg.models.IIntersectable;
@@ -74,6 +77,9 @@ public class F1Car implements IRenderable, IIntersectable {
 	}
 
 	private double getBoundingSphereRadius() {
-		return 0.8;
+		Point edge = new Point(Specification.C_LENGTH / 2.0 + Specification.F_LENGTH,
+				0,
+				Specification.F_BUMPER_DEPTH / 2.0 + Specification.F_BUMPER_WINGS_DEPTH);
+		return Ops.dist(edge, this.getBoundingSphereCenter());
 	}
 }

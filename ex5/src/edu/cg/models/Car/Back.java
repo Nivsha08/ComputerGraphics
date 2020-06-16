@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.models.BoundingSphere;
 import edu.cg.models.IIntersectable;
@@ -67,7 +70,11 @@ public class Back implements IRenderable, IIntersectable {
 	}
 
 	private double getBoundingSphereRadius() {
-		return 0.35;
+		// top point of the spoiler wing
+		Point edge = new Point(-Specification.B_LENGTH / 2.0,
+				Specification.B_HEIGHT,
+				Specification.S_BASE_DEPTH / 2.0 + Specification.S_WINGS_DEPTH);
+		return Ops.dist(edge, this.getBoundingSphereCenter());
 	}
 
 }
