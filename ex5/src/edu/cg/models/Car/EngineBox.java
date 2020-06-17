@@ -14,7 +14,7 @@ public class EngineBox implements IRenderable {
     @Override
     public void render(GL2 gl) {
         GLU glu = new GLU();
-        GLUquadric rod = glu.gluNewQuadric();
+        GLUquadric quad = glu.gluNewQuadric();
         gl.glPushMatrix();
         Materials.SetBlackMetalMaterial(gl);
         engineBox.render(gl);
@@ -24,16 +24,16 @@ public class EngineBox implements IRenderable {
                 -Specification.ENGINE_ROD_DEPTH / 2.0);
         for (double i = 1; i < 2.8; i += 0.4) {
             double depth = i * Specification.ENGINE_ROD_DEPTH;
-            glu.gluCylinder(rod, Specification.ENGINE_ROD_RADIUS, Specification.ENGINE_ROD_RADIUS, depth, 100, 2);
+            glu.gluCylinder(quad, Specification.ENGINE_ROD_RADIUS, Specification.ENGINE_ROD_RADIUS, depth, 100, 2);
             gl.glRotated(180.0, 0, 1, 0);
-            glu.gluDisk(rod, 0, Specification.ENGINE_ROD_RADIUS, 20, 1);
+            glu.gluDisk(quad, 0, Specification.ENGINE_ROD_RADIUS, 20, 1);
             gl.glRotated(-180.0, 0, 1, 0);
             gl.glTranslated(0.0, 0.0, depth);
-            glu.gluDisk(rod, 0, Specification.ENGINE_ROD_RADIUS, 20, 1);
+            glu.gluDisk(quad, 0, Specification.ENGINE_ROD_RADIUS, 20, 1);
             gl.glTranslated(Specification.ENGINE_RODS_DISTANCE, 0.0, -(i + 0.2)*Specification.ENGINE_ROD_DEPTH);
         }
         gl.glPopMatrix();
-        glu.gluDeleteQuadric(rod);
+        glu.gluDeleteQuadric(quad);
     }
 
     @Override

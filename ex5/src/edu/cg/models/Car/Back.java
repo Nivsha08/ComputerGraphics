@@ -19,6 +19,7 @@ public class Back implements IRenderable, IIntersectable {
 	private PairOfWheels wheels = new PairOfWheels();
 	private Spolier spoiler = new Spolier();
 	private EngineBox engineBox = new EngineBox();
+	private Exhaust exhaust = new Exhaust();
 
 	@Override
 	public void render(GL2 gl) {
@@ -46,6 +47,14 @@ public class Back implements IRenderable, IIntersectable {
 				Specification.ENGINE_BOX_HEIGHT / 2.0, 0.0);
 		gl.glRotated(4, 0, 0, 1);
 		engineBox.render(gl);
+		gl.glPopMatrix();
+		gl.glPushMatrix();
+		gl.glTranslated(-Specification.B_LENGTH / 2.0,
+				Specification.B_BASE_HEIGHT + Specification.B_HEIGHT_1 / 2.0 - 0.01,
+				-1.5*Specification.EXHAUST_RADIUS_1);
+		exhaust.render(gl);
+		gl.glTranslated(0.0, 0.0, 3*Specification.EXHAUST_RADIUS_1);
+		exhaust.render(gl);
 		gl.glPopMatrix();
 	}
 
