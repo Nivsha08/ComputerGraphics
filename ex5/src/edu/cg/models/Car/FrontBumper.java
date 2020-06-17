@@ -22,11 +22,12 @@ public class FrontBumper implements IRenderable {
 		Materials.SetBlackMetalMaterial(gl);
 		base.render(gl);
 		gl.glTranslated(0.0, 0.0, 0.5 * Specification.F_BUMPER_DEPTH + 0.5 * Specification.F_BUMPER_WINGS_DEPTH);
+		Materials.SetDarkGreyMetalMaterial(gl);
 		wing.render(gl);
 		gl.glTranslated(0.0, 0.0, -Specification.F_BUMPER_DEPTH - Specification.F_BUMPER_WINGS_DEPTH);
 		wing.render(gl);
 		gl.glPopMatrix();
-		Materials.SetMetalMaterial(gl, new float[] {0.98f, 0.92f, 0.6f});
+		Materials.SetMetalMaterial(gl, Specification.HEADLIGHTS_COLOR);
 		gl.glTranslated(0.0, 0.4*Specification.F_BUMPER_WINGS_HEIGHT_1,
 				0.5 * Specification.F_BUMPER_DEPTH + 0.5 * Specification.F_BUMPER_WINGS_DEPTH);
 		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, SPHERE_SLICES, SPHERE_SLICES);

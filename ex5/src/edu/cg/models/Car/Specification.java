@@ -2,6 +2,21 @@ package edu.cg.models.Car;
 
 
 public class Specification {
+	// Car colors
+	public static final float[] CAR_MAIN_COLOR = new float[] { 0.9f, 0.9f, 0.9f };
+	public static final float[] CAR_SECONDARY_COLOR = new float[] { 0.3f, 0.3f, 0.3f };
+	public static final float[] CAR_YELLOW_COLOR = new float[] { 0.85f, 0.89f, 0.23f };
+	public static final float[] HEADLIGHTS_COLOR = new float[] {0.98f, 0.92f, 0.6f};
+
+	// Engine specification:
+	public static final double ENGINE_BOX_LENGTH = 0.2;
+	public static final double ENGINE_BOX_HEIGHT = 0.015;
+	public static final double ENGINE_BOX_DEPTH_1 = 0.9 * Specification.B_DEPTH_1;
+	public static final double ENGINE_BOX_DEPTH_2 = 0.5 * Specification.B_DEPTH_2;
+	public static final double ENGINE_ROD_RADIUS = 0.005;
+	public static final double ENGINE_ROD_DEPTH = 0.6 * ENGINE_BOX_DEPTH_1;
+	public static final double ENGINE_RODS_DISTANCE = 6 * ENGINE_ROD_RADIUS;
+
 	// WheelS specification:
 	public static final double TIRE_DEPTH = 0.1;
 	public static final double TIRE_RADIUS = .075;

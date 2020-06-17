@@ -18,16 +18,17 @@ public class Wheel implements IRenderable {
 		gl.glTranslated(0, 0, -1.0 * Specification.TIRE_DEPTH / 2.0);
 		glu.gluCylinder(quad, Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, Specification.TIRE_DEPTH, 20, 1);
 		gl.glRotated(180.0, 1.0, 0.0, 0.0);
-		glu.gluDisk(quad, 0.8 * Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, 20, 1);
+		glu.gluDisk(quad, 0.4 * Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, 20, 1);
 		gl.glRotated(180.0, 1.0, 0.0, 0.0);
 		gl.glTranslated(0, 0, Specification.TIRE_DEPTH);
-		glu.gluDisk(quad, 0.8 * Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, 20, 1);
+		glu.gluDisk(quad, 0.4 * Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, 20, 1);
 		// Render Rims:
-		Materials.setMaterialRims(gl);
-		glu.gluDisk(quad, 0.0, 0.8 * Specification.TIRE_RADIUS, 20, 1);
+//		Materials.setMaterialRims(gl);
+		Materials.SetMetalMaterial(gl, Specification.CAR_YELLOW_COLOR);
+		glu.gluDisk(quad, 0.0, 0.4 * Specification.TIRE_RADIUS, 20, 1);
 		gl.glTranslated(0.0,0.0, -1*Specification.TIRE_DEPTH);
 		gl.glRotated(180.0, 1.0, 0.0, 0.0);
-		glu.gluDisk(quad, 0.0, 0.8 * Specification.TIRE_RADIUS, 20, 1);
+		glu.gluDisk(quad, 0.0, 0.4 * Specification.TIRE_RADIUS, 20, 1);
 		
 		gl.glPopMatrix();
 		glu.gluDeleteQuadric(quad);

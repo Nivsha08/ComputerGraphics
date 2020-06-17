@@ -16,7 +16,7 @@ public class FrontHood implements IRenderable {
 		gl.glPushMatrix();
 		double hoodLength = Specification.F_HOOD_LENGTH_1 + Specification.F_HOOD_LENGTH_2;
 		// Render hood - Use Red Material.
-		Materials.SetMetalMaterial(gl, new float[] {0.9f, 0.9f, 0.9f});
+		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
 		gl.glTranslated(-hoodLength / 2.0 + Specification.F_HOOD_LENGTH_1 / 2.0, 0.0, 0.0);
 		hoodBox1.render(gl);
 		gl.glTranslated(Specification.F_HOOD_LENGTH_1 / 2.0 + Specification.F_HOOD_LENGTH_2 / 2.0, 0.0, 0.0);

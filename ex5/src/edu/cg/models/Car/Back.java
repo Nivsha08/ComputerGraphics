@@ -21,6 +21,7 @@ public class Back implements IRenderable, IIntersectable {
 			Specification.B_HEIGHT_2, Specification.B_DEPTH_1, Specification.B_DEPTH_2);
 	private PairOfWheels wheels = new PairOfWheels();
 	private Spolier spoiler = new Spolier();
+	private EngineTop engineTop = new EngineTop();
 
 	@Override
 	public void render(GL2 gl) {
@@ -28,7 +29,7 @@ public class Back implements IRenderable, IIntersectable {
 		Materials.SetBlackMetalMaterial(gl);
 		gl.glTranslated(Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0, 0.0, 0.0);
 		baseBox.render(gl);
-		Materials.SetMetalMaterial(gl, new float[] {0.9f, 0.9f, 0.9f} );
+		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
 		gl.glTranslated(-1.0 * (Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0),
 				Specification.B_BASE_HEIGHT, 0.0);
 		backBox.render(gl);
@@ -42,6 +43,12 @@ public class Back implements IRenderable, IIntersectable {
 		gl.glTranslated(-Specification.B_LENGTH / 2.0 + 0.5 * Specification.S_LENGTH,
 				0.5 * (Specification.B_HEIGHT_1 + Specification.B_HEIGHT_2), 0.0);
 		spoiler.render(gl);
+		gl.glPopMatrix();
+		gl.glPushMatrix();
+		gl.glTranslated(0.05, Specification.B_BASE_HEIGHT + Specification.B_HEIGHT_1 +
+				Specification.ENGINE_BOX_HEIGHT / 2.0, 0.0);
+		gl.glRotated(4, 0, 0, 1);
+		engineTop.render(gl);
 		gl.glPopMatrix();
 	}
 
