@@ -10,7 +10,7 @@ import edu.cg.algebra.Vec;
 import edu.cg.models.Car.Materials;
 
 public class BoundingSphere implements IRenderable {
-	private final int SPHERE_SLICES = 10;
+	private final int SPHERE_SLICES = 50;
 	private double radius = 0.0;
 	private Point center;
 	private double color[];

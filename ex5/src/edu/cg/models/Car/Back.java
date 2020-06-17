@@ -1,12 +1,9 @@
 package edu.cg.models.Car;
 
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
 import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
 import edu.cg.models.BoundingSphere;
@@ -21,7 +18,7 @@ public class Back implements IRenderable, IIntersectable {
 			Specification.B_HEIGHT_2, Specification.B_DEPTH_1, Specification.B_DEPTH_2);
 	private PairOfWheels wheels = new PairOfWheels();
 	private Spolier spoiler = new Spolier();
-	private EngineTop engineTop = new EngineTop();
+	private EngineBox engineBox = new EngineBox();
 
 	@Override
 	public void render(GL2 gl) {
@@ -48,7 +45,7 @@ public class Back implements IRenderable, IIntersectable {
 		gl.glTranslated(0.05, Specification.B_BASE_HEIGHT + Specification.B_HEIGHT_1 +
 				Specification.ENGINE_BOX_HEIGHT / 2.0, 0.0);
 		gl.glRotated(4, 0, 0, 1);
-		engineTop.render(gl);
+		engineBox.render(gl);
 		gl.glPopMatrix();
 	}
 

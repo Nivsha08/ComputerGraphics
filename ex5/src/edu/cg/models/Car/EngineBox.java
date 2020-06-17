@@ -6,7 +6,7 @@ import com.jogamp.opengl.glu.GLUquadric;
 import edu.cg.models.IRenderable;
 import edu.cg.models.SkewedBox;
 
-public class EngineTop implements IRenderable {
+public class EngineBox implements IRenderable {
 
     private SkewedBox engineBox = new SkewedBox(Specification.ENGINE_BOX_LENGTH, Specification.ENGINE_BOX_HEIGHT,
             Specification.ENGINE_BOX_HEIGHT, Specification.ENGINE_BOX_DEPTH_1, Specification.ENGINE_BOX_DEPTH_2);
@@ -30,7 +30,7 @@ public class EngineTop implements IRenderable {
             gl.glRotated(-180.0, 0, 1, 0);
             gl.glTranslated(0.0, 0.0, depth);
             glu.gluDisk(rod, 0, Specification.ENGINE_ROD_RADIUS, 20, 1);
-            gl.glTranslated(Specification.ENGINE_RODS_DISTANCE, 0.0, -1.1*depth);
+            gl.glTranslated(Specification.ENGINE_RODS_DISTANCE, 0.0, -(i + 0.2)*Specification.ENGINE_ROD_DEPTH);
         }
         gl.glPopMatrix();
         glu.gluDeleteQuadric(rod);
