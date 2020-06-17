@@ -21,7 +21,7 @@ public class Exhaust implements IRenderable {
         gl.glRotated(-180.0, 0, 1, 0);
         gl.glTranslated(0.0, 0.0, Specification.EXHAUST_LENGTH);
         glu.gluDisk(quad, 0, Specification.EXHAUST_RADIUS_2, 20, 1);
-        Materials.SetDarkGreyMetalMaterial(gl);
+        Materials.SetBlackMetalMaterial(gl);
         gl.glTranslated(0.0, 0.0, 0.001);
         glu.gluDisk(quad, 0, 0.8 * Specification.EXHAUST_RADIUS_2, 20, 1);
         gl.glPopMatrix();

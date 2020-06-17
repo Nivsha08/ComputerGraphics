@@ -9,6 +9,7 @@ public class Specification {
 	public static final float[] CAR_YELLOW_COLOR = new float[] { 0.85f, 0.89f, 0.23f };
 	public static final float[] HEADLIGHTS_COLOR = new float[] {0.98f, 0.92f, 0.6f};
 	public static final float[] EXHAUST_COLOR = new float[] {0.7f, 0.7f, 0.7f};
+	public static final float[] BACK_LIGHT_COLOR = new float[] {0.87f, 0.27f, 0.2f};
 
 	// Engine specification:
 	public static final double ENGINE_BOX_LENGTH = 0.2;
@@ -23,6 +24,12 @@ public class Specification {
 	public static final double EXHAUST_LENGTH = 0.013;
 	public static final double EXHAUST_RADIUS_1 = 0.015;
 	public static final double EXHAUST_RADIUS_2 = 0.02;
+
+	// Back light specification:
+	public static final double BACK_LIGHT_PANEL_LENGTH = 0.001;
+	public static final double BACK_LIGHT_PANEL_HEIGHT = 0.35 * Specification.B_HEIGHT_1;
+	public static final double BACK_LIGHT_PANEL_DEPTH = 1.3 * BACK_LIGHT_PANEL_HEIGHT;
+	public static final double BACK_LIGHT_RADIUS = 0.004;
 
 	// Wheels specification:
 	public static final double TIRE_DEPTH = 0.1;
