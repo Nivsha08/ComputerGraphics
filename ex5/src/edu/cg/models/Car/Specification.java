@@ -4,10 +4,10 @@ package edu.cg.models.Car;
 public class Specification {
 
 	// Car colors
-	public static final float[] CAR_MAIN_COLOR = new float[] { 0.9f, 0.9f, 0.9f };
-	public static final float[] CAR_ACCENT_COLOR = new float[] { 1.0f, 0.85f, 0.34f };
-	public static final float[] CAR_YELLOW_COLOR = new float[] { 0.85f, 0.89f, 0.23f };
+	public static final float[] CAR_MAIN_COLOR = new float[] { 0.17f, 0.17f, 0.17f };
+	public static final float[] CAR_ACCENT_COLOR = new float[] { 0.047f, 0.47f, 0.52f };
 	public static final float[] HEADLIGHTS_COLOR = new float[] {0.98f, 0.92f, 0.6f};
+	public static final float[] WHITE_COLOR = new float[] { 0.95f, 0.95f, 0.95f };
 	public static final float[] EXHAUST_COLOR = new float[] {0.7f, 0.7f, 0.7f};
 	public static final float[] BACK_LIGHT_COLOR = new float[] {0.87f, 0.27f, 0.2f};
 
@@ -24,6 +24,11 @@ public class Specification {
 	public static final double EXHAUST_LENGTH = 0.013;
 	public static final double EXHAUST_RADIUS_1 = 0.015;
 	public static final double EXHAUST_RADIUS_2 = 0.02;
+
+	// Strip specification:
+	public static final double STRIP_HEIGHT = 0.005;
+	public static final double NARROW_STRIP_DEPTH = 0.03;
+	public static final double WIDE_STRIP_DEPTH = 1.6 * NARROW_STRIP_DEPTH;
 
 	// Back light specification:
 	public static final double BACK_LIGHT_PANEL_LENGTH = 0.001;

@@ -19,8 +19,6 @@ import edu.cg.models.IRenderable;
  *
  */
 public class F1Car implements IRenderable, IIntersectable {
-	// TODO : Add new design features to the car.
-	// Remember to include a ReadMe file specifying what you implemented.
 	Center carCenter = new Center();
 	Back carBack = new Back();
 	Front carFront = new Front();

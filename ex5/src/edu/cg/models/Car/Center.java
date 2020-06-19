@@ -53,7 +53,7 @@ public class Center implements IRenderable, IIntersectable {
 		gl.glRotated(-90, 0.0, 1.0, 0.0);
 		sideBox.render(gl);
 		gl.glPopMatrix();
-		Materials.SetDarkGreyMetalMaterial(gl);
+		Materials.SetBlackMetalMaterial(gl);
 		gl.glPushMatrix();
 		gl.glTranslated(
 				-Specification.C_BASE_LENGTH / 2.0 + Specification.C_FRONT_LENGTH + Specification.C_BACK_LENGTH / 2.0,

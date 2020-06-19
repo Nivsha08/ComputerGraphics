@@ -21,6 +21,10 @@ public class Back implements IRenderable, IIntersectable {
 	private EngineBox engineBox = new EngineBox();
 	private Exhaust exhaust = new Exhaust();
 	private BackLight backlight = new BackLight();
+	private SkewedBox narrowStrip = new SkewedBox(Specification.B_LENGTH, Specification.STRIP_HEIGHT,
+			Specification.STRIP_HEIGHT, Specification.NARROW_STRIP_DEPTH, Specification.NARROW_STRIP_DEPTH);
+	private SkewedBox wideStrip = new SkewedBox(Specification.B_LENGTH, Specification.STRIP_HEIGHT,
+			Specification.STRIP_HEIGHT, Specification.WIDE_STRIP_DEPTH, Specification.WIDE_STRIP_DEPTH);
 
 	@Override
 	public void render(GL2 gl) {
@@ -32,6 +36,13 @@ public class Back implements IRenderable, IIntersectable {
 		gl.glTranslated(-1.0 * (Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0),
 				Specification.B_BASE_HEIGHT, 0.0);
 		backBox.render(gl);
+		Materials.SetMetalMaterial(gl, Specification.WHITE_COLOR);
+		gl.glTranslated(0.0, Specification.B_HEIGHT_1 + Specification.STRIP_HEIGHT, 0.0);
+		gl.glRotated(2.0, 0.0, 0.0, 1.0);
+		wideStrip.render(gl);
+		gl.glTranslated(0.0, Specification.STRIP_HEIGHT / 2.0, 0.0);
+		Materials.SetMetalMaterial(gl, Specification.CAR_ACCENT_COLOR);
+		narrowStrip.render(gl);
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(-Specification.B_LENGTH / 2.0 + Specification.TIRE_RADIUS, 0.5 * Specification.TIRE_RADIUS,
@@ -45,7 +56,7 @@ public class Back implements IRenderable, IIntersectable {
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.05, Specification.B_BASE_HEIGHT + Specification.B_HEIGHT_1 +
-				Specification.ENGINE_BOX_HEIGHT / 2.0, 0.0);
+				Specification.ENGINE_BOX_HEIGHT / 2.0 + 0.01, 0.0);
 		gl.glRotated(4, 0, 0, 1);
 		engineBox.render(gl);
 		gl.glPopMatrix();
