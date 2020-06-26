@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
 
+import edu.cg.models.Colors;
 import edu.cg.models.IRenderable;
 import edu.cg.models.SkewedBox;
 
@@ -36,7 +37,7 @@ public class Spolier implements IRenderable {
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 0.0, 0.5*Specification.S_BASE_DEPTH + 0.5*Specification.S_WINGS_DEPTH);
-		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
 		spoilerWings.render(gl);
 		gl.glPopMatrix();
 		gl.glTranslated(0.0, 0.0, -0.5*Specification.S_BASE_DEPTH - 0.5*Specification.S_WINGS_DEPTH);

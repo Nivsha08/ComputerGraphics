@@ -3,6 +3,7 @@ package edu.cg.models.Car;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.models.Colors;
 import edu.cg.models.IRenderable;
 
 public class Exhaust implements IRenderable {
@@ -11,7 +12,7 @@ public class Exhaust implements IRenderable {
     public void render(GL2 gl) {
         GLU glu = new GLU();
         GLUquadric quad = glu.gluNewQuadric();
-        Materials.SetMetalMaterial(gl, Specification.EXHAUST_COLOR);
+        Materials.SetMetalMaterial(gl, Colors.EXHAUST_COLOR);
         gl.glPushMatrix();
         gl.glRotated(-90, 0.0, 1.0, 0.0);
         glu.gluCylinder(quad, Specification.EXHAUST_RADIUS_1, Specification.EXHAUST_RADIUS_2,

@@ -1,6 +1,7 @@
 package edu.cg;
 
 import java.awt.Component;
+import java.util.Set;
 
 import com.jogamp.opengl.glu.GLU;
 import edu.cg.algebra.Point;
@@ -35,8 +36,6 @@ public class NeedForSpeed implements GLEventListener {
 	private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
 											// looking towards the car direction.
 
-	Vec accumulatedCarTranslation = new Vec(0.0);
-
 	public NeedForSpeed(Component glPanel) {
 		this.glPanel = glPanel;
 		gameState = new GameState();
@@ -64,6 +63,7 @@ public class NeedForSpeed implements GLEventListener {
 		// applied on the car, camera and light sources.
 		updateCarCameraTranslation(gl);
 		// Step (2) Position the camera and setup its orientation
+		reshape(drawable, glPanel.getX(), glPanel.getY(), glPanel.getWidth(), glPanel.getHeight());
 		setupCamera(gl);
 		// Step (3) setup the lights.
 		setupLights(gl);
@@ -108,6 +108,18 @@ public class NeedForSpeed implements GLEventListener {
 	private void setupCamera(GL2 gl) {
 	   	GLU glu = new GLU();
 		if (isBirdseyeView) {
+			// TODO Setup camera for bird's eye view
+//			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT_POS.x,
+//					Settings.BIRDS_EYE_CAM_INIT_POS.y,
+//					Settings.BIRDS_EYE_CAM_INIT_POS.z,
+//					Settings.BIRDS_EYE_CAM_INIT_POS.x,
+//					Settings.BIRDS_EYE_CAM_INIT_POS.y + Settings.,
+//					Settings.BIRDS_EYE_CAM_INIT_POS.z,
+//					Settings.BIRDS_EYE_V_UP.x,
+//					Settings.BIRDS_EYE_V_UP.y,
+//					Settings.BIRDS_EYE_V_UP.z
+//			);
+		} else {
 			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT_POS.x,
 					Settings.THIRD_PERSON_CAM_INIT_POS.y,
 					Settings.THIRD_PERSON_CAM_INIT_POS.z,
@@ -117,11 +129,8 @@ public class NeedForSpeed implements GLEventListener {
 					Settings.THIRD_PERSON_V_UP.x,
 					Settings.THIRD_PERSON_V_UP.y,
 					Settings.THIRD_PERSON_V_UP.z
-				);
-		} else {
-			// TODO Setup camera for Third-person view
+			);
 		}
-
 	}
 
 	private void setupLights(GL2 gl) {
@@ -145,15 +154,12 @@ public class NeedForSpeed implements GLEventListener {
 	}
 
 	private void renderCar(GL2 gl) {
-		Vec totalTranslation = Settings.CAR_INIT_POS.add(accumulatedCarTranslation).toVec();
+		Vec totalTranslation = Settings.CAR_INIT_POS.add(carCameraTranslation).toVec();
 		gl.glPushMatrix();
 		gl.glTranslated(totalTranslation.x, totalTranslation.y, totalTranslation.z);
+		gl.glRotated(-90, 0.0, 1.0, 0.0);
 		car.render(gl);
 		gl.glPopMatrix();
-		// * Remember: the car position should be the initial position + the accumulated translation.
-		//             This will simulate the car movement.
-		// * Remember: the car was modeled locally, you may need to rotate/scale and translate the car appropriately.
-		// * Recommendation: it is recommended to define fields (such as car initial position) that can be used during rendering.
 	}
 
 	public GameState getGameState() {
@@ -193,7 +199,14 @@ public class NeedForSpeed implements GLEventListener {
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		// TODO Setup the projection matrix here.
+		GLU glu = new GLU();
+		double aspectRatio = (double)width / height;
+		glu.gluPerspective(
+				Settings.CAMERA_VIEWING_ANGEL_DEGREES,
+				aspectRatio,
+				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM,
+				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM + Settings.TRACK_LENGTH
+		);
 	}
 
 	/**

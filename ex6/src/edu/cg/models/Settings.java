@@ -4,6 +4,8 @@ import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 import edu.cg.models.Car.Specification;
 
+import java.util.Set;
+
 public class Settings {
 
     // Unit is METER
@@ -12,7 +14,7 @@ public class Settings {
     public static final double CAMERA_VIEWING_ANGEL_DEGREES = 60.0;
     public static final double PROJECTION_PLANE_DISTANCE_FROM_CAM = 2.0;
 
-    public static final Point THIRD_PERSON_CAM_INIT_POS = new Point(0.0, 2.0, 0.0);
+    public static final Point THIRD_PERSON_CAM_INIT_POS = new Point(0.0, 1.0, 0.0);
     public static final Vec THIRD_PERSON_V_UP = new Vec(0.0, 1.0, 0.0);
     public static final Vec THIRD_PERSON_V_TOWARDS = new Vec(0.0, 0.0, -1.0);
 
@@ -29,7 +31,8 @@ public class Settings {
     public final static double BOX_LENGTH = 1.5;
 
     // Car settings
-    public static final Point CAR_INIT_POS = new Point(0.0, 0.0, 4.0);
+    public static final Point CAR_INIT_POS = new Point(0.0, 0.0,
+            (Specification.F_LENGTH + Specification.C_LENGTH + Specification.B_LENGTH) / 2.0 + 4.0);
 
 
 }

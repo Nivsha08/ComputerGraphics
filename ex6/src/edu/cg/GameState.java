@@ -21,7 +21,7 @@ public class GameState {
 	}
 
 	private SteeringState steeringState;
-	private AccelarationState accelearationState;
+	private AccelarationState accelerationState;
 	private double carVelocity;
 	private Vec nextTranslation;
 	private Timer timer;
@@ -29,21 +29,20 @@ public class GameState {
 	private final double MAX_ROTATION = 20.0;
 	private final double MAX_TRANSLATION_X = 5;
 	private final double MAX_VELOCITY = 80.0; // m / sec
-	private final double CAR_ACCELRATION = 20.0; // m / sec^2
+	private final double CAR_ACCELERATION = 20.0; // m / sec^2
 
 	public GameState() {
 		steeringState = SteeringState.STRAIGHT;
-		accelearationState = AccelarationState.CRUISE;
+		accelerationState = AccelarationState.CRUISE;
 		carVelocity = 0.0;
 		nextTranslation = new Vec(0.0, 0.0, 0.0);
 		timer = new Timer();
 		timer.schedule(new UpdateTranslation(), 0, TIMER_INTERVAL_MS);
-
 	}
 	
 	public synchronized void resetGameState() {
 		steeringState = SteeringState.STRAIGHT;
-		accelearationState = AccelarationState.CRUISE;
+		accelerationState = AccelarationState.CRUISE;
 		carVelocity = 0.0;
 		nextTranslation = new Vec(0.0, 0.0, 0.0);
 	}
@@ -57,14 +56,14 @@ public class GameState {
 		carVelocity = Math.min(MAX_VELOCITY, carVelocity);
 	}
 
-	private synchronized double getCarAccelaration() {
-		switch (accelearationState) {
+	private synchronized double getCarAcceleration() {
+		switch (accelerationState) {
 		case GAS:
-			return CAR_ACCELRATION;
+			return CAR_ACCELERATION;
 		case CRUISE:
-			return -2.0 * CAR_ACCELRATION;
+			return -2.0 * CAR_ACCELERATION;
 		case BREAKS:
-			return -5.0 * CAR_ACCELRATION;
+			return -5.0 * CAR_ACCELERATION;
 		}
 		return 0.0;
 	}
@@ -92,7 +91,7 @@ public class GameState {
 	}
 
 	public synchronized void updateAccelaration(AccelarationState newState) {
-		this.accelearationState = newState;
+		this.accelerationState = newState;
 	}
 
 	private synchronized void updateNextTranslation(Vec deltaTranslation) {
@@ -126,13 +125,13 @@ public class GameState {
 			double cosTheta = Math.cos(theta);
 			double sinTheta = Math.sin(theta);
 			double currentCarVelocity = getCarVelocity();
-			double currentCarAccelaration = getCarAccelaration();
-			currentCarAccelaration += -.1 * Math.abs(sinTheta) * CAR_ACCELRATION;
+			double currentCarAcceleration = getCarAcceleration();
+			currentCarAcceleration += -.1 * Math.abs(sinTheta) * CAR_ACCELERATION;
 			double dt = (double) TIMER_INTERVAL_MS / 1000.0; // move from msec -> sec
-			double dr = (currentCarVelocity * dt + currentCarAccelaration * dt * dt);
+			double dr = (currentCarVelocity * dt + currentCarAcceleration * dt * dt);
 			double dz = Math.min(0.0, -cosTheta * dr);
 			double dx = sinTheta * dr;
-			double newVelocity = Math.min(MAX_VELOCITY, currentCarVelocity + cosTheta * currentCarAccelaration * dt);
+			double newVelocity = Math.min(MAX_VELOCITY, currentCarVelocity + cosTheta * currentCarAcceleration * dt);
 			updateCarVelocity(newVelocity);
 			updateNextTranslation(new Vec(dx, 0.0, dz));
 		}

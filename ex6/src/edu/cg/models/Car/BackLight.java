@@ -3,6 +3,7 @@ package edu.cg.models.Car;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.models.Colors;
 import edu.cg.models.IRenderable;
 import edu.cg.models.SkewedBox;
 
@@ -19,7 +20,7 @@ public class BackLight implements IRenderable {
         gl.glPushMatrix();
         Materials.SetBlackMetalMaterial(gl);
         backLightPanel.render(gl);
-        Materials.SetMetalMaterial(gl, Specification.BACK_LIGHT_COLOR);
+        Materials.SetMetalMaterial(gl, Colors.BACK_LIGHT_COLOR);
         gl.glTranslated(-Specification.BACK_LIGHT_PANEL_LENGTH / 2.0 - 0.001,
                 Specification.BACK_LIGHT_PANEL_HEIGHT - 2*Specification.BACK_LIGHT_RADIUS,
                 -Specification.BACK_LIGHT_PANEL_DEPTH / 2.0 + 2*Specification.BACK_LIGHT_RADIUS);

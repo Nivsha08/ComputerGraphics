@@ -3,14 +3,6 @@ package edu.cg.models.Car;
 
 public class Specification {
 
-	// Car colors
-	public static final float[] CAR_MAIN_COLOR = new float[] { 0.17f, 0.17f, 0.17f };
-	public static final float[] CAR_ACCENT_COLOR = new float[] { 0.047f, 0.47f, 0.52f };
-	public static final float[] HEADLIGHTS_COLOR = new float[] {0.98f, 0.92f, 0.6f};
-	public static final float[] WHITE_COLOR = new float[] { 0.95f, 0.95f, 0.95f };
-	public static final float[] EXHAUST_COLOR = new float[] {0.7f, 0.7f, 0.7f};
-	public static final float[] BACK_LIGHT_COLOR = new float[] {0.87f, 0.27f, 0.2f};
-
 	// Engine specification:
 	public static final double ENGINE_BOX_LENGTH = 0.2;
 	public static final double ENGINE_BOX_HEIGHT = 0.015;

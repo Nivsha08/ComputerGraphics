@@ -6,10 +6,7 @@ import java.util.List;
 import com.jogamp.opengl.GL2;
 import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
-import edu.cg.models.BoundingSphere;
-import edu.cg.models.IIntersectable;
-import edu.cg.models.IRenderable;
-import edu.cg.models.SkewedBox;
+import edu.cg.models.*;
 
 public class Back implements IRenderable, IIntersectable {
 	private SkewedBox baseBox = new SkewedBox(Specification.B_BASE_LENGTH, Specification.B_BASE_HEIGHT,
@@ -32,16 +29,16 @@ public class Back implements IRenderable, IIntersectable {
 		Materials.SetBlackMetalMaterial(gl);
 		gl.glTranslated(Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0, 0.0, 0.0);
 		baseBox.render(gl);
-		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
 		gl.glTranslated(-1.0 * (Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0),
 				Specification.B_BASE_HEIGHT, 0.0);
 		backBox.render(gl);
-		Materials.SetMetalMaterial(gl, Specification.WHITE_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
 		gl.glTranslated(0.0, Specification.B_HEIGHT_1 + Specification.STRIP_HEIGHT, 0.0);
 		gl.glRotated(2.0, 0.0, 0.0, 1.0);
 		wideStrip.render(gl);
 		gl.glTranslated(0.0, Specification.STRIP_HEIGHT / 2.0, 0.0);
-		Materials.SetMetalMaterial(gl, Specification.CAR_ACCENT_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_ACCENT_COLOR);
 		narrowStrip.render(gl);
 		gl.glPopMatrix();
 		gl.glPushMatrix();

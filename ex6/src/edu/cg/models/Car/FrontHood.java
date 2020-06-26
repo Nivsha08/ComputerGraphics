@@ -2,6 +2,7 @@ package edu.cg.models.Car;
 
 import com.jogamp.opengl.GL2;
 
+import edu.cg.models.Colors;
 import edu.cg.models.IRenderable;
 import edu.cg.models.SkewedBox;
 
@@ -24,28 +25,28 @@ public class FrontHood implements IRenderable {
 		gl.glPushMatrix();
 		double hoodLength = Specification.F_HOOD_LENGTH_1 + Specification.F_HOOD_LENGTH_2;
 		// Render hood - Use Red Material.
-		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
 		gl.glTranslated(-hoodLength / 2.0 + Specification.F_HOOD_LENGTH_1 / 2.0, 0.0, 0.0);
 		hoodBox1.render(gl);
 		gl.glTranslated(0.0, 0.9*Specification.F_HOOD_HEIGHT_1, 0.0);
 		gl.glRotated(-4.3, 0.0,0.0, 1.0);
-		Materials.SetMetalMaterial(gl, Specification.WHITE_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
 		wideStrip1.render(gl);
 		gl.glTranslated(0.0, Specification.STRIP_HEIGHT / 2.0, 0.0);
-		Materials.SetMetalMaterial(gl, Specification.CAR_ACCENT_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_ACCENT_COLOR);
 		narrowStrip1.render(gl);
 		gl.glTranslated(0.0, -Specification.STRIP_HEIGHT / 2.0, 0.0);
 		gl.glRotated(4.3, 0.0,0.0, 1.0);
 		gl.glTranslated(0.0, -0.9*Specification.F_HOOD_HEIGHT_1, 0.0);
-		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
 		gl.glTranslated(Specification.F_HOOD_LENGTH_1 / 2.0 + Specification.F_HOOD_LENGTH_2 / 2.0, 0.0, 0.0);
 		hoodBox2.render(gl);
 		gl.glTranslated(0.0 , Specification.F_HOOD_HEIGHT_2 / 2.0 + 2*Specification.STRIP_HEIGHT, 0.0);
 		gl.glRotated(-24.0 , 0.0, 0.0,1.0);
-		Materials.SetMetalMaterial(gl, Specification.WHITE_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
 		wideStrip2.render(gl);
 		gl.glTranslated(0.0 , Specification.STRIP_HEIGHT / 2.0, 0.0);
-		Materials.SetMetalMaterial(gl, Specification.CAR_ACCENT_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_ACCENT_COLOR);
 		narrowStrip2.render(gl);
 		gl.glPopMatrix();
 	}

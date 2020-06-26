@@ -5,14 +5,9 @@ import java.util.List;
 
 import com.jogamp.opengl.GL2;
 
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
 import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
-import edu.cg.models.BoundingSphere;
-import edu.cg.models.IIntersectable;
-import edu.cg.models.IRenderable;
-import edu.cg.models.SkewedBox;
+import edu.cg.models.*;
 
 public class Center implements IRenderable, IIntersectable {
 
@@ -30,7 +25,7 @@ public class Center implements IRenderable, IIntersectable {
 		gl.glPushMatrix();
 		Materials.SetBlackMetalMaterial(gl);
 		bodyBase.render(gl);
-		Materials.SetMetalMaterial(gl, Specification.CAR_MAIN_COLOR);
+		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
 		gl.glTranslated(Specification.C_BASE_LENGTH / 2.0 - Specification.C_FRONT_LENGTH / 2.0,
 				Specification.C_BASE_HEIGHT, 0.0);
 		frontBox.render(gl);
