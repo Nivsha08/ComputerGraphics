@@ -14,13 +14,6 @@ import edu.cg.algebra.Point;
 import edu.cg.models.Car.Materials;
 
 public class TrackSegment implements IRenderable, IIntersectable {
-	// TODO: Some constants you can use
-	public final static double ASPHALT_TEXTURE_WIDTH = 20.0;
-	public final static double ASPHALT_TEXTURE_DEPTH = 10.0;
-	public final static double GRASS_TEXTURE_WIDTH = 10.0;
-	public final static double GRASS_TEXTURE_DEPTH = 10.0;
-	public final static double TRACK_LENGTH = 500.0;
-	public final static double BOX_LENGTH = 1.5;
 	private LinkedList<Point> boxesLocations; // Stores the boxes centroids (center points).
 	private SkewedBox box = null; // Used to represent a wooden box.
 	private Texture texRoad, texGrass;
@@ -43,14 +36,14 @@ public class TrackSegment implements IRenderable, IIntersectable {
 			deltaZ = 50.0;
 		}
 		boxesLocations = new LinkedList<Point>();
-		for (double dz = deltaZ; dz < TRACK_LENGTH - BOX_LENGTH / 2.0; dz += deltaZ) {
+		for (double dz = deltaZ; dz < Settings.TRACK_LENGTH - Settings.BOX_LENGTH / 2.0; dz += deltaZ) {
 			int cnt = 0; // Number of boxes sampled at each row.
 			boolean flag = false;
 			for (int i = 0; i < 12; i++) {
-				double dx = -((double) numberOfLanes / 2.0) * ((ASPHALT_TEXTURE_WIDTH - 2.0) / numberOfLanes) + BOX_LENGTH / 2.0
-						+ i * BOX_LENGTH;
+				double dx = -((double) numberOfLanes / 2.0) * ((Settings.ASPHALT_TEXTURE_WIDTH - 2.0) / numberOfLanes) + Settings.BOX_LENGTH / 2.0
+						+ i * Settings.BOX_LENGTH;
 				if (Math.random() < difficulty) {
-					boxesLocations.add(new Point(dx, BOX_LENGTH / 2.0, -dz));
+					boxesLocations.add(new Point(dx, Settings.BOX_LENGTH / 2.0, -dz));
 					cnt += 1;
 				} else if (!flag) {// The first time we don't sample a box then we also don't sample the box next to. We want enough space for the car to pass through. 
 					i += 1;
@@ -64,7 +57,7 @@ public class TrackSegment implements IRenderable, IIntersectable {
 	}
 
 	public TrackSegment(double difficulty) {
-		box = new SkewedBox(BOX_LENGTH, true);
+		box = new SkewedBox(Settings.BOX_LENGTH, true);
 		setDifficulty(difficulty);
 	}
 
@@ -90,18 +83,18 @@ public class TrackSegment implements IRenderable, IIntersectable {
 	private void renderAsphalt(GL2 gl) {
 		Materials.setAsphaltMaterial(gl);
 		gl.glPushMatrix();
-		renderQuadraticTexture(gl, texRoad, ASPHALT_TEXTURE_WIDTH, ASPHALT_TEXTURE_DEPTH, 20, TRACK_LENGTH);
+		renderQuadraticTexture(gl, texRoad, Settings.ASPHALT_TEXTURE_WIDTH, Settings.ASPHALT_TEXTURE_DEPTH, 20, Settings.TRACK_LENGTH);
 		gl.glPopMatrix();
 	}
 
 	private void renderGrass(GL2 gl) {
 		gl.glPushMatrix();
 		Materials.setGreenMaterial(gl);
-		double dx = ASPHALT_TEXTURE_WIDTH / 2.0 + GRASS_TEXTURE_WIDTH / 2.0;
+		double dx = Settings.ASPHALT_TEXTURE_WIDTH / 2.0 + Settings.GRASS_TEXTURE_WIDTH / 2.0;
 		gl.glTranslated(dx, 0.0, 0.0);
-		renderQuadraticTexture(gl, texGrass, GRASS_TEXTURE_WIDTH, GRASS_TEXTURE_WIDTH, 2, TRACK_LENGTH);
+		renderQuadraticTexture(gl, texGrass, Settings.GRASS_TEXTURE_WIDTH, Settings.GRASS_TEXTURE_WIDTH, 2, Settings.TRACK_LENGTH);
 		gl.glTranslated(-2.0 * dx, 0.0, 0.0);
-		renderQuadraticTexture(gl, texGrass, GRASS_TEXTURE_WIDTH, GRASS_TEXTURE_WIDTH, 2, TRACK_LENGTH);
+		renderQuadraticTexture(gl, texGrass, Settings.GRASS_TEXTURE_WIDTH, Settings.GRASS_TEXTURE_WIDTH, 2, Settings.TRACK_LENGTH);
 		gl.glPopMatrix();
 	}
 
@@ -165,7 +158,7 @@ public class TrackSegment implements IRenderable, IIntersectable {
 		// Return bounding spheres of the wooden boxes.
 		List<BoundingSphere> res = new LinkedList<BoundingSphere>();
 		for (Point p : boxesLocations) {
-			res.add(new BoundingSphere(BOX_LENGTH/2.0,new Point(p.x,BOX_LENGTH/2.0,p.z)));
+			res.add(new BoundingSphere(Settings.BOX_LENGTH/2.0,new Point(p.x, Settings.BOX_LENGTH/2.0,p.z)));
 		}
 		return res;
 	}

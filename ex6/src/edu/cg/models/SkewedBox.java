@@ -11,7 +11,7 @@ import edu.cg.algebra.Vec;
 public class SkewedBox implements IRenderable {
 	private double length, height1, height2, depth1, depth2;
 	private Texture texBox = null;
-	private boolean useTexture = true;
+	private boolean useTexture = false;
 
 	public SkewedBox() {
 		length = .8;

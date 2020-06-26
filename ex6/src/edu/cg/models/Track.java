@@ -22,7 +22,7 @@ public class Track implements IRenderable, IIntersectable {
 		// Render the track by rendering the current and next segment.
 		gl.glPushMatrix();
 		currentTrackSegment.render(gl);
-		gl.glTranslated(0.0, 0.0, -TrackSegment.TRACK_LENGTH);
+		gl.glTranslated(0.0, 0.0, -Settings.TRACK_LENGTH);
 		nextTrackSegment.render(gl);
 		gl.glPopMatrix();
 	}

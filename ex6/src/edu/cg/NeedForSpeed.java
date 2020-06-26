@@ -1,22 +1,22 @@
 package edu.cg;
 
 import java.awt.Component;
-import java.util.List;
+
+import com.jogamp.opengl.glu.GLU;
+import edu.cg.algebra.Point;
+import edu.cg.models.Colors;
 
 import javax.swing.JOptionPane;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import edu.cg.algebra.Vec;
-import edu.cg.models.BoundingSphere;
+import edu.cg.models.Settings;
 import edu.cg.models.Track;
-import edu.cg.models.TrackSegment;
 import edu.cg.models.Car.F1Car;
-import edu.cg.models.Car.Specification;
 
 /**
  * An OpenGL 3D Game.
@@ -33,15 +33,10 @@ public class NeedForSpeed implements GLEventListener {
 	private boolean isModelInitialized = false; // Whether model.init() was called.
 	private boolean isDayMode = true; // Indicates whether the lighting mode is day/night.
 	private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
-											// looking
-	// towards the car direction.
-	// TODO: add fields as you want. For example:
-	// - Car initial position (should be fixed).
-	// - Camera initial position (should be fixed)
-	// - Different camera settings
-	// - Light colors
-	// Or in short anything reusable - this make it easier for your to keep track of your implementation.
-	
+											// looking towards the car direction.
+
+	Vec accumulatedCarTranslation = new Vec(0.0);
+
 	public NeedForSpeed(Component glPanel) {
 		this.glPanel = glPanel;
 		gameState = new GameState();
@@ -57,10 +52,9 @@ public class NeedForSpeed implements GLEventListener {
 			initModel(gl);
 		}
 		if (isDayMode) {
-			// TODO: Setup background when day mode is on
-			// use gl.glClearColor() function.
+			gl.glClearColor(Colors.DAY_BG[0], Colors.DAY_BG[1], Colors.DAY_BG[2], Colors.DAY_BG[3]);
 		} else {
-			// TODO: Setup background when night mode is on
+			gl.glClearColor(Colors.NIGHT_BG[0], Colors.NIGHT_BG[1], Colors.NIGHT_BG[2], Colors.NIGHT_BG[3]);
 		}
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -103,20 +97,27 @@ public class NeedForSpeed implements GLEventListener {
 		// - Change the track segments here.
 		Vec ret = gameState.getNextTranslation();
 		carCameraTranslation = carCameraTranslation.add(ret);
-		double dx = Math.max(carCameraTranslation.x, -TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 - 2);
-		carCameraTranslation.x = (float) Math.min(dx, TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 + 2);
-		if (Math.abs(carCameraTranslation.z) >= TrackSegment.TRACK_LENGTH + 10.0) {
-			carCameraTranslation.z = -(float) (Math.abs(carCameraTranslation.z) % TrackSegment.TRACK_LENGTH);
+		double dx = Math.max(carCameraTranslation.x, -Settings.ASPHALT_TEXTURE_DEPTH / 2.0 - 2);
+		carCameraTranslation.x = (float) Math.min(dx, Settings.ASPHALT_TEXTURE_DEPTH / 2.0 + 2);
+		if (Math.abs(carCameraTranslation.z) >= Settings.TRACK_LENGTH + 10.0) {
+			carCameraTranslation.z = -(float) (Math.abs(carCameraTranslation.z) % Settings.TRACK_LENGTH);
 			gameTrack.changeTrack(gl);
 		}
 	}
 
 	private void setupCamera(GL2 gl) {
-		// TODO: You are advised to use :
-		//       GLU glu = new GLU();
-		//       glu.gluLookAt();
+	   	GLU glu = new GLU();
 		if (isBirdseyeView) {
-			// TODO Setup camera for Birds-eye view
+			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT_POS.x,
+					Settings.THIRD_PERSON_CAM_INIT_POS.y,
+					Settings.THIRD_PERSON_CAM_INIT_POS.z,
+					Settings.THIRD_PERSON_CAM_INIT_POS.x,
+					Settings.THIRD_PERSON_CAM_INIT_POS.y,
+					Settings.THIRD_PERSON_CAM_INIT_POS.z + Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM,
+					Settings.THIRD_PERSON_V_UP.x,
+					Settings.THIRD_PERSON_V_UP.y,
+					Settings.THIRD_PERSON_V_UP.z
+				);
 		} else {
 			// TODO Setup camera for Third-person view
 		}
@@ -144,7 +145,11 @@ public class NeedForSpeed implements GLEventListener {
 	}
 
 	private void renderCar(GL2 gl) {
-		// TODO: Render the car.
+		Vec totalTranslation = Settings.CAR_INIT_POS.add(accumulatedCarTranslation).toVec();
+		gl.glPushMatrix();
+		gl.glTranslated(totalTranslation.x, totalTranslation.y, totalTranslation.z);
+		car.render(gl);
+		gl.glPopMatrix();
 		// * Remember: the car position should be the initial position + the accumulated translation.
 		//             This will simulate the car movement.
 		// * Remember: the car was modeled locally, you may need to rotate/scale and translate the car appropriately.
