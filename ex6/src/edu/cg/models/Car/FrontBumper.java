@@ -28,7 +28,7 @@ public class FrontBumper implements IRenderable {
 		gl.glTranslated(0.0, 0.0, -Specification.F_BUMPER_DEPTH - Specification.F_BUMPER_WINGS_DEPTH);
 		wing.render(gl);
 		gl.glPopMatrix();
-		Materials.SetMetalMaterial(gl, Colors.HEADLIGHTS_COLOR);
+		Materials.SetRedMetalMaterial(gl);
 		gl.glTranslated(0.0, 0.4*Specification.F_BUMPER_WINGS_HEIGHT_1,
 				0.5 * Specification.F_BUMPER_DEPTH + 0.5 * Specification.F_BUMPER_WINGS_DEPTH);
 		glu.gluSphere(q, Specification.F_BUMPER_HEADLIGHT_RADIUS, SPHERE_SLICES, SPHERE_SLICES);

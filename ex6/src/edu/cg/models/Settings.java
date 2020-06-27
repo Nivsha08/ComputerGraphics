@@ -40,7 +40,7 @@ public class Settings {
     // Lights settings
     public static final float[] SUN_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
     public static final float[] DIRECTION_TO_SUN = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
-    public static final float[] MOON_INTENSITY = new float[] { 0.5f, 0.5f, 0.5f, 0.5f };
+    public static final float[] MOON_INTENSITY = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
     public static final float[] DIRECTION_TO_MOON = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
 
 }

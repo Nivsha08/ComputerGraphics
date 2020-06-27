@@ -19,7 +19,7 @@ public class EngineBox implements IRenderable {
         gl.glPushMatrix();
         Materials.SetBlackMetalMaterial(gl);
         engineBox.render(gl);
-        Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
+        Materials.SetDarkRedMetalMaterial(gl);
         gl.glTranslated(-2 * Specification.ENGINE_RODS_DISTANCE,
                 0.5 * Specification.ENGINE_BOX_HEIGHT + Specification.ENGINE_ROD_RADIUS,
                 -Specification.ENGINE_ROD_DEPTH / 2.0);

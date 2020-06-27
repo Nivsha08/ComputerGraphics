@@ -25,7 +25,7 @@ public class Center implements IRenderable, IIntersectable {
 		gl.glPushMatrix();
 		Materials.SetBlackMetalMaterial(gl);
 		bodyBase.render(gl);
-		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
+		Materials.SetRedMetalMaterial(gl);
 		gl.glTranslated(Specification.C_BASE_LENGTH / 2.0 - Specification.C_FRONT_LENGTH / 2.0,
 				Specification.C_BASE_HEIGHT, 0.0);
 		frontBox.render(gl);

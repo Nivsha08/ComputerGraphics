@@ -37,7 +37,7 @@ public class Spolier implements IRenderable {
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 0.0, 0.5*Specification.S_BASE_DEPTH + 0.5*Specification.S_WINGS_DEPTH);
-		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
+		Materials.SetRedMetalMaterial(gl);
 		spoilerWings.render(gl);
 		gl.glPopMatrix();
 		gl.glTranslated(0.0, 0.0, -0.5*Specification.S_BASE_DEPTH - 0.5*Specification.S_WINGS_DEPTH);

@@ -12,7 +12,7 @@ public class Exhaust implements IRenderable {
     public void render(GL2 gl) {
         GLU glu = new GLU();
         GLUquadric quad = glu.gluNewQuadric();
-        Materials.SetMetalMaterial(gl, Colors.EXHAUST_COLOR);
+        Materials.SetBlackMetalMaterial(gl);
         gl.glPushMatrix();
         gl.glRotated(-90, 0.0, 1.0, 0.0);
         glu.gluCylinder(quad, Specification.EXHAUST_RADIUS_1, Specification.EXHAUST_RADIUS_2,

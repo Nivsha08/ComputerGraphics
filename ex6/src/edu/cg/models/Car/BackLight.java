@@ -20,7 +20,7 @@ public class BackLight implements IRenderable {
         gl.glPushMatrix();
         Materials.SetBlackMetalMaterial(gl);
         backLightPanel.render(gl);
-        Materials.SetMetalMaterial(gl, Colors.BACK_LIGHT_COLOR);
+        Materials.SetRedMetalMaterial(gl);
         gl.glTranslated(-Specification.BACK_LIGHT_PANEL_LENGTH / 2.0 - 0.001,
                 Specification.BACK_LIGHT_PANEL_HEIGHT - 2*Specification.BACK_LIGHT_RADIUS,
                 -Specification.BACK_LIGHT_PANEL_DEPTH / 2.0 + 2*Specification.BACK_LIGHT_RADIUS);

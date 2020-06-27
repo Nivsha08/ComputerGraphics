@@ -24,7 +24,7 @@ public class Wheel implements IRenderable {
 		gl.glTranslated(0, 0, Specification.TIRE_DEPTH);
 		glu.gluDisk(quad, 0.4 * Specification.TIRE_RADIUS, Specification.TIRE_RADIUS, 20, 1);
 		// Render Rims:
-		Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
+		Materials.setMaterialRims(gl);
 		glu.gluDisk(quad, 0.0, 0.4 * Specification.TIRE_RADIUS, 20, 1);
 		gl.glTranslated(0.0,0.0, -1*Specification.TIRE_DEPTH);
 		gl.glRotated(180.0, 1.0, 0.0, 0.0);

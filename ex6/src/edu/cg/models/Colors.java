@@ -6,7 +6,7 @@ public class Colors {
     public static final float[] NIGHT_BG = new float[] { 0.0f, 0.07f, 0.09f, 1.0f };
 
     // Car colors
-    public static final float[] CAR_MAIN_COLOR = new float[] { 0.9f, 0.9f, 0.9f };
+    public static final float[] CAR_MAIN_COLOR = new float[] { 1.0f, 1.0f, 1.0f };
     public static final float[] CAR_ACCENT_COLOR = new float[] { 0.047f, 0.47f, 0.52f };
     public static final float[] HEADLIGHTS_COLOR = new float[] {0.98f, 0.92f, 0.6f};
     public static final float[] WHITE_COLOR = new float[] { 0.95f, 0.95f, 0.95f };

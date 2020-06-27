@@ -29,16 +29,16 @@ public class Back implements IRenderable, IIntersectable {
 		Materials.SetBlackMetalMaterial(gl);
 		gl.glTranslated(Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0, 0.0, 0.0);
 		baseBox.render(gl);
-		Materials.SetMetalMaterial(gl, Colors.CAR_MAIN_COLOR);
+		Materials.SetRedMetalMaterial(gl);
 		gl.glTranslated(-1.0 * (Specification.B_LENGTH / 2.0 - Specification.B_BASE_LENGTH / 2.0),
 				Specification.B_BASE_HEIGHT, 0.0);
 		backBox.render(gl);
-		Materials.SetMetalMaterial(gl, Colors.WHITE_COLOR);
+		Materials.SetDarkRedMetalMaterial(gl);
 		gl.glTranslated(0.0, Specification.B_HEIGHT_1 + Specification.STRIP_HEIGHT, 0.0);
 		gl.glRotated(2.0, 0.0, 0.0, 1.0);
 		wideStrip.render(gl);
 		gl.glTranslated(0.0, Specification.STRIP_HEIGHT / 2.0, 0.0);
-		Materials.SetMetalMaterial(gl, Colors.CAR_ACCENT_COLOR);
+		Materials.SetDarkRedMetalMaterial(gl);
 		narrowStrip.render(gl);
 		gl.glPopMatrix();
 		gl.glPushMatrix();
