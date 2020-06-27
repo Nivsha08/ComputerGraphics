@@ -108,24 +108,23 @@ public class NeedForSpeed implements GLEventListener {
 	private void setupCamera(GL2 gl) {
 	   	GLU glu = new GLU();
 		if (isBirdseyeView) {
-			// TODO Setup camera for bird's eye view
-//			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT_POS.x,
-//					Settings.BIRDS_EYE_CAM_INIT_POS.y,
-//					Settings.BIRDS_EYE_CAM_INIT_POS.z,
-//					Settings.BIRDS_EYE_CAM_INIT_POS.x,
-//					Settings.BIRDS_EYE_CAM_INIT_POS.y + Settings.,
-//					Settings.BIRDS_EYE_CAM_INIT_POS.z,
-//					Settings.BIRDS_EYE_V_UP.x,
-//					Settings.BIRDS_EYE_V_UP.y,
-//					Settings.BIRDS_EYE_V_UP.z
-//			);
+			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT_POS.x,
+					Settings.BIRDS_EYE_CAM_INIT_POS.y,
+					Settings.BIRDS_EYE_CAM_INIT_POS.z,
+					Settings.BIRDS_EYE_CAM_INIT_POS.x,
+					Settings.BIRDS_EYE_CAM_INIT_POS.y - 1,
+					Settings.BIRDS_EYE_CAM_INIT_POS.z,
+					Settings.BIRDS_EYE_V_UP.x,
+					Settings.BIRDS_EYE_V_UP.y,
+					Settings.BIRDS_EYE_V_UP.z
+			);
 		} else {
 			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT_POS.x,
 					Settings.THIRD_PERSON_CAM_INIT_POS.y,
 					Settings.THIRD_PERSON_CAM_INIT_POS.z,
 					Settings.THIRD_PERSON_CAM_INIT_POS.x,
 					Settings.THIRD_PERSON_CAM_INIT_POS.y,
-					Settings.THIRD_PERSON_CAM_INIT_POS.z + Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM,
+					Settings.THIRD_PERSON_CAM_INIT_POS.z - 1,
 					Settings.THIRD_PERSON_V_UP.x,
 					Settings.THIRD_PERSON_V_UP.y,
 					Settings.THIRD_PERSON_V_UP.z
@@ -157,7 +156,8 @@ public class NeedForSpeed implements GLEventListener {
 		Vec totalTranslation = Settings.CAR_INIT_POS.add(carCameraTranslation).toVec();
 		gl.glPushMatrix();
 		gl.glTranslated(totalTranslation.x, totalTranslation.y, totalTranslation.z);
-		gl.glRotated(-90, 0.0, 1.0, 0.0);
+		gl.glRotated(90, 0.0, 1.0, 0.0);
+		gl.glScaled(Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR);
 		car.render(gl);
 		gl.glPopMatrix();
 	}
