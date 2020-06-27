@@ -40,8 +40,9 @@ public class Settings {
     // Lights settings
     public static final float[] SUN_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
     public static final float[] DIRECTION_TO_SUN = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
-    public static final float[] MOON_INTENSITY = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
+    public static final float[] MOON_INTENSITY = new float[] { 0.15f, 0.15f, 0.15f, 1.0f };
     public static final float[] DIRECTION_TO_MOON = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
     public static final float[] SPOTLIGHT_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f };
-    public static final float SPOTLIGHT_CUTOFF_ANGLE = 40.0f;
+    public static final float SPOTLIGHT_CUTOFF_ANGLE = 35;
+    public static final float SPOTLIGHT_EXPONENT = 1;
 }

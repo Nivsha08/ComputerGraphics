@@ -13,7 +13,7 @@ public class Spolier implements IRenderable {
 	private static final SkewedBox spoilerWings = new SkewedBox(Specification.S_LENGTH, Specification.S_WINGS_HEIGHT, 4.0*Specification.S_BASE_HEIGHT, Specification.S_WINGS_DEPTH, Specification.S_WINGS_DEPTH);
 	@Override
 	public void render(GL2 gl) {
-		Materials.SetDarkGreyMetalMaterial(gl);
+		Materials.SetDarkRedMetalMaterial(gl);
 		GLU glu = new GLU();
 		GLUquadric quad = glu.gluNewQuadric();
 		gl.glPushMatrix();
@@ -28,11 +28,9 @@ public class Spolier implements IRenderable {
 		gl.glPopMatrix();
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, Specification.S_ROD_HEIGHT, 0.0);
-		Materials.SetBlackMetalMaterial(gl);
 		spoilerBase.render(gl);
 		gl.glPushMatrix();
 		gl.glTranslated(0.0, 3.0*Specification.S_BASE_HEIGHT, 0.0);
-		Materials.SetDarkGreyMetalMaterial(gl);
 		spoilerBase.render(gl);
 		gl.glPopMatrix();
 		gl.glPushMatrix();

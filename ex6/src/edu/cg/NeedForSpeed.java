@@ -1,12 +1,8 @@
 package edu.cg;
 
 import java.awt.Component;
-import java.util.Set;
 
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.glu.GLUquadric;
-import edu.cg.models.Car.Materials;
-import edu.cg.models.Car.Specification;
 import edu.cg.models.Colors;
 
 import javax.swing.JOptionPane;
@@ -34,8 +30,8 @@ public class NeedForSpeed implements GLEventListener {
 	private FPSAnimator ani; // This object is responsible to redraw the model with a constant FPS
 	private Component glPanel; // The canvas we draw on.
 	private boolean isModelInitialized = false; // Whether model.init() was called.
-	private boolean isDayMode = true; // Indicates whether the lighting mode is day/night.
-	private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
+	private boolean isDayMode = false; // Indicates whether the lighting mode is day/night.
+	private boolean isBirdseyeView = true; // Indicates whether the camera is looking from above on the scene or
 											// looking towards the car direction.
 
 	private int dayLight = GL2.GL_LIGHT0;
@@ -65,7 +61,6 @@ public class NeedForSpeed implements GLEventListener {
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		// TODO: This is the flow in which we render the scene.
 		// Step (1) Update the accumulated translation that needs to be
 		// applied on the car, camera and light sources.
 		updateCarCameraTranslation(gl);
@@ -112,71 +107,86 @@ public class NeedForSpeed implements GLEventListener {
 		}
 	}
 
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+		GLU glu = new GLU();
+		double aspectRatio = (double)width / height;
+		glu.gluPerspective(
+				Settings.CAMERA_VIEWING_ANGEL_DEGREES,
+				aspectRatio,
+				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM,
+				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM + Settings.TRACK_LENGTH
+		);
+	}
+
+
 	private void setupCamera(GL2 gl) {
 	   	GLU glu = new GLU();
 		if (isBirdseyeView) {
+			double cameraNewXPosition = carCameraTranslation.x + Settings.BIRDS_EYE_CAM_INIT.x;
+			double cameraNewYPosition = carCameraTranslation.y + Settings.BIRDS_EYE_CAM_INIT.y;
 			double cameraNewZPosition = carCameraTranslation.z + Settings.BIRDS_EYE_CAM_INIT.z;
-			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT.x, Settings.BIRDS_EYE_CAM_INIT.y, cameraNewZPosition,
-					Settings.BIRDS_EYE_CAM_INIT.x, Settings.BIRDS_EYE_CAM_INIT.y - 1, cameraNewZPosition,
+			glu.gluLookAt(cameraNewXPosition, cameraNewYPosition, cameraNewZPosition,
+					cameraNewXPosition, cameraNewYPosition - 1, cameraNewZPosition,
 					Settings.BIRDS_EYE_V_UP.x, Settings.BIRDS_EYE_V_UP.y, Settings.BIRDS_EYE_V_UP.z
 			);
 		} else {
+			double cameraNewXPosition = carCameraTranslation.x + Settings.THIRD_PERSON_CAM_INIT.x;
+			double cameraNewYPosition = carCameraTranslation.y + Settings.THIRD_PERSON_CAM_INIT.y;
 			double cameraNewZPosition = carCameraTranslation.z + Settings.THIRD_PERSON_CAM_INIT.z;
-			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT.x, Settings.THIRD_PERSON_CAM_INIT.y, cameraNewZPosition,
-					Settings.THIRD_PERSON_CAM_INIT.x, Settings.THIRD_PERSON_CAM_INIT.y, cameraNewZPosition - 1,
+			glu.gluLookAt(cameraNewXPosition, cameraNewYPosition, cameraNewZPosition,
+					cameraNewXPosition, cameraNewYPosition, cameraNewZPosition - 1,
 					Settings.THIRD_PERSON_V_UP.x, Settings.THIRD_PERSON_V_UP.y, Settings.THIRD_PERSON_V_UP.z
 			);
 		}
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
 	}
 
 	private void setupLights(GL2 gl) {
 		if (isDayMode) {
 			disableNightLightning(gl);
-			gl.glLightfv(dayLight, GL2.GL_POSITION, Settings.DIRECTION_TO_SUN, 0);
-			gl.glLightfv(dayLight, GL2.GL_SPECULAR, Settings.SUN_INTENSITY, 0);
-			gl.glLightfv(dayLight, GL2.GL_DIFFUSE, Settings.SUN_INTENSITY, 0);
+			gl.glLightfv(dayLight, gl.GL_POSITION, Settings.DIRECTION_TO_SUN, 0);
+			gl.glLightfv(dayLight, gl.GL_SPECULAR, Settings.SUN_INTENSITY, 0);
+			gl.glLightfv(dayLight, gl.GL_DIFFUSE, Settings.SUN_INTENSITY, 0);
 			gl.glEnable(dayLight);
 		} else {
 			disableDayLightning(gl);
-			setupCarSpotlights(gl);
-			gl.glEnable(carRightSpotlight);
-			gl.glEnable(carLeftSpotlight);
-			// TODO Setup night lighting.
-			// * Remember: switch-off any light sources that are used in day mode
-			// * Remember: spotlight sources also move with the camera.
-			// * You may simulate moon-light using ambient light.
+			gl.glLightfv(moonLight, gl.GL_POSITION, Settings.DIRECTION_TO_MOON, 0);
+			gl.glLightfv(moonLight, gl.GL_SPECULAR, Settings.MOON_INTENSITY, 0);
+			gl.glLightfv(moonLight, gl.GL_DIFFUSE, Settings.MOON_INTENSITY, 0);
+			gl.glEnable(moonLight);
+			setSpotlight(gl, carRightSpotlight);
+			setSpotlight(gl, carLeftSpotlight);
 		}
 
 	}
 
-	private void setupCarSpotlights(GL2 gl) {
-		gl.glLightfv(carRightSpotlight, GL2.GL_POSITION, getSpotlightPosition(true), 0);
-		gl.glLightf(carRightSpotlight, GL2.GL_SPOT_CUTOFF, Settings.SPOTLIGHT_CUTOFF_ANGLE);
-		gl.glLightfv(carRightSpotlight, GL2.GL_AMBIENT, Settings.SPOTLIGHT_INTENSITY, 0);
-		gl.glLightfv(carRightSpotlight, GL2.GL_SPOT_DIRECTION, new float[] { 0.0f, 0.0f, -1.0f }, 0);
-		gl.glLightf(carRightSpotlight, GL2.GL_SPOT_EXPONENT, 50);
-		gl.glLightf(carRightSpotlight, GL2.GL_LINEAR_ATTENUATION, 0.3f);
-
-		gl.glLightfv(carLeftSpotlight, GL2.GL_POSITION, getSpotlightPosition(false), 0);
-		gl.glLightf(carLeftSpotlight, GL2.GL_SPOT_CUTOFF, Settings.SPOTLIGHT_CUTOFF_ANGLE);
-		gl.glLightfv(carLeftSpotlight, GL2.GL_AMBIENT, Settings.SPOTLIGHT_INTENSITY, 0);
-		gl.glLightfv(carLeftSpotlight, GL2.GL_SPOT_DIRECTION, new float[] { 0.0f, 0.0f, -1.0f }, 0);
-		gl.glLightf(carLeftSpotlight, GL2.GL_SPOT_EXPONENT, 5);
-		gl.glLightf(carLeftSpotlight, GL2.GL_LINEAR_ATTENUATION, 1.0f);
+	private void setSpotlight(GL2 gl, int lightNumber)  {
+		updateSpotlight(gl, lightNumber);
+		gl.glLightf(lightNumber, gl.GL_SPOT_CUTOFF, Settings.SPOTLIGHT_CUTOFF_ANGLE);
+		gl.glLightf(lightNumber, gl.GL_SPOT_EXPONENT, Settings.SPOTLIGHT_EXPONENT);
+		gl.glLightfv(lightNumber, gl.GL_AMBIENT, Settings.SPOTLIGHT_INTENSITY, 0);
+		gl.glLightfv(lightNumber, gl.GL_SPECULAR, Settings.SPOTLIGHT_INTENSITY, 0);
+		gl.glLightfv(lightNumber, gl.GL_DIFFUSE, Settings.SPOTLIGHT_INTENSITY, 0);
+		gl.glLightf(lightNumber, gl.GL_LINEAR_ATTENUATION, 0.1f);
+		gl.glLightf(lightNumber, gl.GL_CONSTANT_ATTENUATION, 0.9f);
+		gl.glEnable(lightNumber);
 	}
 
-	private float[] getSpotlightPosition(boolean right) {
-		double rSpotX = Settings.CAR_SCALE_FACTOR * (Specification.F_BUMPER_DEPTH / 2.0 + Specification.F_BUMPER_WINGS_DEPTH / 2.0);
-		double rSpotY = Settings.CAR_INIT_POS.y + Settings.CAR_SCALE_FACTOR * Specification.F_BUMPER_WINGS_HEIGHT_1 / 2.0;
-		double rSpotZ = Settings.CAR_INIT_POS.z + carCameraTranslation.z -
-				Settings.CAR_LENGTH / 2.0 + Settings.CAR_SCALE_FACTOR * Specification.F_BUMPER_LENGTH / 3.0;
-		return new float[] {
-				right ? (float)rSpotX : -(float)rSpotX,
-				(float)rSpotY,
-				(float)rSpotZ,
-				1.0f
-		};
-	};
+	private void updateSpotlight(GL2 gl, int lightNumber) {
+		float directionX = (float)(gameState.getCarRotation()) / 100;
+		float positionX = (lightNumber == carRightSpotlight) ?
+				carCameraTranslation.x + 0.5f : carCameraTranslation.x - 0.5f;
+		float positionY = carCameraTranslation.y + 1f;
+		float positionZ = (float)(Settings.CAR_INIT_POS.z + carCameraTranslation.z - Settings.CAR_LENGTH / 2.0);
+		float[] position = new float[] { positionX, positionY, positionZ, 1.0f };
+		gl.glLightfv(lightNumber, gl.GL_POSITION, position, 0);
+		gl.glLightfv(lightNumber, gl.GL_SPOT_DIRECTION, new float[] { directionX, 0.0f, -1.0f }, 0);
+	}
 
 	private void disableDayLightning(GL2 gl) {
 		gl.glDisable(dayLight);
@@ -205,6 +215,8 @@ public class NeedForSpeed implements GLEventListener {
 		gl.glScaled(Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR);
 		car.render(gl);
 		gl.glPopMatrix();
+		updateSpotlight(gl, carRightSpotlight);
+		updateSpotlight(gl, carLeftSpotlight);
 	}
 
 	public GameState getGameState() {
@@ -240,22 +252,6 @@ public class NeedForSpeed implements GLEventListener {
 		car.init(gl);
 		gameTrack.init(gl);
 		isModelInitialized = true;
-	}
-
-	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		GL2 gl = drawable.getGL().getGL2();
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-
-		GLU glu = new GLU();
-		double aspectRatio = (double)width / height;
-		glu.gluPerspective(
-				Settings.CAMERA_VIEWING_ANGEL_DEGREES,
-				aspectRatio,
-				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM,
-				Settings.PROJECTION_PLANE_DISTANCE_FROM_CAM + Settings.TRACK_LENGTH
-		);
 	}
 
 	/**
