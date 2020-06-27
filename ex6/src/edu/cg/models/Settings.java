@@ -19,10 +19,10 @@ public class Settings {
     public final static double BOX_LENGTH = 1.5;
 
     // Car settings
-    public static final double CAR_SCALE_FACTOR = 4.2;
+    public static final double CAR_SCALE_FACTOR = 4.1;
     public static final double CAR_LENGTH =
             CAR_SCALE_FACTOR * (Specification.F_LENGTH + Specification.C_LENGTH + Specification.B_LENGTH);
-    public static final Point CAR_INIT_POS = new Point(0.0, 0.0, -CAR_LENGTH / 2.0 - 1.2);
+    public static final Point CAR_INIT_POS = new Point(0.0, 0.3, -CAR_LENGTH / 2.0 - 1.5);
 
     // Scene settings
     public static final double CAMERA_VIEWING_ANGEL_DEGREES = 60.0;
@@ -40,5 +40,7 @@ public class Settings {
     // Lights settings
     public static final float[] SUN_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
     public static final float[] DIRECTION_TO_SUN = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
+    public static final float[] MOON_INTENSITY = new float[] { 0.5f, 0.5f, 0.5f, 0.5f };
+    public static final float[] DIRECTION_TO_MOON = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
 
 }

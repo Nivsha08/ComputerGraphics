@@ -146,6 +146,9 @@ public class NeedForSpeed implements GLEventListener {
 			gl.glEnable(dayLight);
 		} else {
 			disableDayLightning(gl);
+			gl.glLightfv(moonLight, GL2.GL_POSITION, Settings.DIRECTION_TO_MOON, 0);
+			gl.glLightfv(moonLight, GL2.GL_AMBIENT, Settings.MOON_INTENSITY, 0);
+			gl.glEnable(moonLight);
 			// TODO Setup night lighting.
 			// * Remember: switch-off any light sources that are used in day mode
 			// * Remember: spotlight sources also move with the camera.
