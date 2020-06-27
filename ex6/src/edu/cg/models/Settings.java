@@ -37,4 +37,7 @@ public class Settings {
     public static final Vec BIRDS_EYE_V_UP = new Vec(0.0, 0.0, -1.0);
     public static final Vec BIRDS_EYE_V_TOWARDS = new Vec(0.0, -1.0, 0.0);
 
+    // Lights settings
+    public static final float[] SUN_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+
 }

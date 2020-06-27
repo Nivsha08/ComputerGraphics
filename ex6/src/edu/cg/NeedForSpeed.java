@@ -199,6 +199,10 @@ public class NeedForSpeed implements GLEventListener {
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+
 		GLU glu = new GLU();
 		double aspectRatio = (double)width / height;
 		glu.gluPerspective(
