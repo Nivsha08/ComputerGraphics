@@ -6,7 +6,6 @@ import java.util.TimerTask;
 
 import edu.cg.algebra.Vec;
 /**
- * TODO Use getCarRotation and getNextTranslation
  * This class is already implemented. Use it to track the car movement when the user interacts with the game.
  * @author MOAB
  *
@@ -99,8 +98,6 @@ public class GameState {
 	}
 
 	/**
-	 * TODO: Use this method to move the car, camera and positional light sources (on night mode) between frames.
-	 * 
 	 * The method returns the offset by which the car moved, relative to the last time this method was invoked.
 	 * So if the method was invoked at t1 and t2. And assume that car position at t1 is p.x, p.y and p.z. So the new 
 	 * car position at t2 is p.x+d.x, p.y+d.y and p.z+d.z, where d is the returned value of getNextTranslation at t2.

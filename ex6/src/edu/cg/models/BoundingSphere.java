@@ -34,7 +34,8 @@ public class BoundingSphere implements IRenderable {
 	 */
 	public boolean checkIntersection(BoundingSphere s) {
 		double distance = Ops.dist(this.center, s.getCenter());
-		return (distance >= this.radius + s.getRadius());
+		double radiiSum = this.radius + s.getRadius();
+		return (distance <= radiiSum);
 	}
 
 	public void translateCenter(double dx, double dy, double dz) {
