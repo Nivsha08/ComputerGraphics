@@ -1,8 +1,12 @@
 package edu.cg;
 
 import java.awt.Component;
+import java.util.Set;
 
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import edu.cg.models.Car.Materials;
+import edu.cg.models.Car.Specification;
 import edu.cg.models.Colors;
 
 import javax.swing.JOptionPane;
@@ -134,9 +138,9 @@ public class NeedForSpeed implements GLEventListener {
 			gl.glEnable(dayLight);
 		} else {
 			disableDayLightning(gl);
-			gl.glLightfv(moonLight, GL2.GL_POSITION, Settings.DIRECTION_TO_MOON, 0);
-			gl.glLightfv(moonLight, GL2.GL_AMBIENT, Settings.MOON_INTENSITY, 0);
-			gl.glEnable(moonLight);
+			setupCarSpotlights(gl);
+			gl.glEnable(carRightSpotlight);
+			gl.glEnable(carLeftSpotlight);
 			// TODO Setup night lighting.
 			// * Remember: switch-off any light sources that are used in day mode
 			// * Remember: spotlight sources also move with the camera.
@@ -144,6 +148,35 @@ public class NeedForSpeed implements GLEventListener {
 		}
 
 	}
+
+	private void setupCarSpotlights(GL2 gl) {
+		gl.glLightfv(carRightSpotlight, GL2.GL_POSITION, getSpotlightPosition(true), 0);
+		gl.glLightf(carRightSpotlight, GL2.GL_SPOT_CUTOFF, Settings.SPOTLIGHT_CUTOFF_ANGLE);
+		gl.glLightfv(carRightSpotlight, GL2.GL_AMBIENT, Settings.SPOTLIGHT_INTENSITY, 0);
+		gl.glLightfv(carRightSpotlight, GL2.GL_SPOT_DIRECTION, new float[] { 0.0f, 0.0f, -1.0f }, 0);
+		gl.glLightf(carRightSpotlight, GL2.GL_SPOT_EXPONENT, 50);
+		gl.glLightf(carRightSpotlight, GL2.GL_LINEAR_ATTENUATION, 0.3f);
+
+		gl.glLightfv(carLeftSpotlight, GL2.GL_POSITION, getSpotlightPosition(false), 0);
+		gl.glLightf(carLeftSpotlight, GL2.GL_SPOT_CUTOFF, Settings.SPOTLIGHT_CUTOFF_ANGLE);
+		gl.glLightfv(carLeftSpotlight, GL2.GL_AMBIENT, Settings.SPOTLIGHT_INTENSITY, 0);
+		gl.glLightfv(carLeftSpotlight, GL2.GL_SPOT_DIRECTION, new float[] { 0.0f, 0.0f, -1.0f }, 0);
+		gl.glLightf(carLeftSpotlight, GL2.GL_SPOT_EXPONENT, 5);
+		gl.glLightf(carLeftSpotlight, GL2.GL_LINEAR_ATTENUATION, 1.0f);
+	}
+
+	private float[] getSpotlightPosition(boolean right) {
+		double rSpotX = Settings.CAR_SCALE_FACTOR * (Specification.F_BUMPER_DEPTH / 2.0 + Specification.F_BUMPER_WINGS_DEPTH / 2.0);
+		double rSpotY = Settings.CAR_INIT_POS.y + Settings.CAR_SCALE_FACTOR * Specification.F_BUMPER_WINGS_HEIGHT_1 / 2.0;
+		double rSpotZ = Settings.CAR_INIT_POS.z + carCameraTranslation.z -
+				Settings.CAR_LENGTH / 2.0 + Settings.CAR_SCALE_FACTOR * Specification.F_BUMPER_LENGTH / 3.0;
+		return new float[] {
+				right ? (float)rSpotX : -(float)rSpotX,
+				(float)rSpotY,
+				(float)rSpotZ,
+				1.0f
+		};
+	};
 
 	private void disableDayLightning(GL2 gl) {
 		gl.glDisable(dayLight);
