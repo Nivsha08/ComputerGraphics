@@ -164,9 +164,11 @@ public class NeedForSpeed implements GLEventListener {
 
 	private void renderCar(GL2 gl) {
 		Vec totalTranslation = Settings.CAR_INIT_POS.add(carCameraTranslation).toVec();
+		double rotationAngle = -gameState.getCarRotation();
 		gl.glPushMatrix();
 		gl.glTranslated(totalTranslation.x, totalTranslation.y, totalTranslation.z);
 		gl.glRotated(90, 0.0, 1.0, 0.0);
+		gl.glRotated(rotationAngle, 0.0, 1.0, 0.0);
 		gl.glScaled(Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR, Settings.CAR_SCALE_FACTOR);
 		car.render(gl);
 		gl.glPopMatrix();

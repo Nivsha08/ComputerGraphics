@@ -69,8 +69,6 @@ public class GameState {
 	}
 
 	/**
-	 * TODO Use this method to orient the car properly in the scene.
-	 * 
 	 * @return The rotation of the car about its axis. The rotation value
 	 * 		   depends on the steering state (RIGHT, LEFT or Straight).
 	 */
