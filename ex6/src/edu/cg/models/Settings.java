@@ -39,5 +39,6 @@ public class Settings {
 
     // Lights settings
     public static final float[] SUN_INTENSITY = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+    public static final float[] DIRECTION_TO_SUN = new float[] { 0.0f, 1.0f, 1.0f, 0.0f };
 
 }

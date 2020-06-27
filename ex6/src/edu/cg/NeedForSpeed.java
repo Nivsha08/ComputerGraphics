@@ -36,6 +36,11 @@ public class NeedForSpeed implements GLEventListener {
 	private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
 											// looking towards the car direction.
 
+	private int dayLight = GL2.GL_LIGHT0;
+	private int carLeftSpotlight = GL2.GL_LIGHT1;
+	private int carRightSpotlight = GL2.GL_LIGHT2;
+	private int moonLight = GL2.GL_LIGHT3;
+
 	public NeedForSpeed(Component glPanel) {
 		this.glPanel = glPanel;
 		gameState = new GameState();
@@ -134,9 +139,13 @@ public class NeedForSpeed implements GLEventListener {
 
 	private void setupLights(GL2 gl) {
 		if (isDayMode) {
-			// TODO Setup day lighting.
-			// * Remember: switch-off any light sources that were used in night mode and are not use in day mode.
+			disableNightLightning(gl);
+			gl.glLightfv(dayLight, GL2.GL_POSITION, Settings.DIRECTION_TO_SUN, 0);
+			gl.glLightfv(dayLight, GL2.GL_SPECULAR, Settings.SUN_INTENSITY, 0);
+			gl.glLightfv(dayLight, GL2.GL_DIFFUSE, Settings.SUN_INTENSITY, 0);
+			gl.glEnable(dayLight);
 		} else {
+			disableDayLightning(gl);
 			// TODO Setup night lighting.
 			// * Remember: switch-off any light sources that are used in day mode
 			// * Remember: spotlight sources also move with the camera.
@@ -144,6 +153,16 @@ public class NeedForSpeed implements GLEventListener {
 		}
 
 	}
+
+	private void disableDayLightning(GL2 gl) {
+		gl.glDisable(dayLight);
+	};
+
+	private void disableNightLightning(GL2 gl) {
+		gl.glDisable(carLeftSpotlight);
+		gl.glDisable(carRightSpotlight);
+		gl.glDisable(moonLight);
+	};
 
 	private void renderTrack(GL2 gl) {
 		// * Note: the track is not translated. It should be fixed.
