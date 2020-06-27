@@ -1,10 +1,8 @@
 package edu.cg;
 
 import java.awt.Component;
-import java.util.Set;
 
 import com.jogamp.opengl.glu.GLU;
-import edu.cg.algebra.Point;
 import edu.cg.models.Colors;
 
 import javax.swing.JOptionPane;
@@ -113,26 +111,16 @@ public class NeedForSpeed implements GLEventListener {
 	private void setupCamera(GL2 gl) {
 	   	GLU glu = new GLU();
 		if (isBirdseyeView) {
-			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT_POS.x,
-					Settings.BIRDS_EYE_CAM_INIT_POS.y,
-					Settings.BIRDS_EYE_CAM_INIT_POS.z,
-					Settings.BIRDS_EYE_CAM_INIT_POS.x,
-					Settings.BIRDS_EYE_CAM_INIT_POS.y - 1,
-					Settings.BIRDS_EYE_CAM_INIT_POS.z,
-					Settings.BIRDS_EYE_V_UP.x,
-					Settings.BIRDS_EYE_V_UP.y,
-					Settings.BIRDS_EYE_V_UP.z
+			double cameraNewZPosition = carCameraTranslation.z + Settings.BIRDS_EYE_CAM_INIT.z;
+			glu.gluLookAt(Settings.BIRDS_EYE_CAM_INIT.x, Settings.BIRDS_EYE_CAM_INIT.y, cameraNewZPosition,
+					Settings.BIRDS_EYE_CAM_INIT.x, Settings.BIRDS_EYE_CAM_INIT.y - 1, cameraNewZPosition,
+					Settings.BIRDS_EYE_V_UP.x, Settings.BIRDS_EYE_V_UP.y, Settings.BIRDS_EYE_V_UP.z
 			);
 		} else {
-			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT_POS.x,
-					Settings.THIRD_PERSON_CAM_INIT_POS.y,
-					Settings.THIRD_PERSON_CAM_INIT_POS.z,
-					Settings.THIRD_PERSON_CAM_INIT_POS.x,
-					Settings.THIRD_PERSON_CAM_INIT_POS.y,
-					Settings.THIRD_PERSON_CAM_INIT_POS.z - 1,
-					Settings.THIRD_PERSON_V_UP.x,
-					Settings.THIRD_PERSON_V_UP.y,
-					Settings.THIRD_PERSON_V_UP.z
+			double cameraNewZPosition = carCameraTranslation.z + Settings.THIRD_PERSON_CAM_INIT.z;
+			glu.gluLookAt(Settings.THIRD_PERSON_CAM_INIT.x, Settings.THIRD_PERSON_CAM_INIT.y, cameraNewZPosition,
+					Settings.THIRD_PERSON_CAM_INIT.x, Settings.THIRD_PERSON_CAM_INIT.y, cameraNewZPosition - 1,
+					Settings.THIRD_PERSON_V_UP.x, Settings.THIRD_PERSON_V_UP.y, Settings.THIRD_PERSON_V_UP.z
 			);
 		}
 	}
