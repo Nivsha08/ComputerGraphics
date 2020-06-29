@@ -33,7 +33,7 @@ public class NeedForSpeed implements GLEventListener {
     private Component glPanel; // The canvas we draw on.
     private boolean isModelInitialized = false; // Whether model.init() was called.
     private boolean isDayMode = true; // Indicates whether the lighting mode is day/night.
-    private boolean isBirdseyeView = true; // Indicates whether the camera is looking from above on the scene or
+    private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
     // looking towards the car direction.
 
     private int dayLight = GL2.GL_LIGHT0;
